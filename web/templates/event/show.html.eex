@@ -1,0 +1,23 @@
+<h2>Show event</h2>
+
+<ul>
+
+  <li>
+    <strong>Status:</strong>
+    <%= @event.status %>
+  </li>
+
+  <li>
+    <strong>Device:</strong>
+    <%= @event.device %>
+  </li>
+
+  <li>
+    <strong>Location:</strong>
+    <%= @event.location %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: event_path(@conn, :edit, @event) %>
+<%= link "Back", to: event_path(@conn, :index) %>

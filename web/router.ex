@@ -18,6 +18,8 @@ defmodule Inout.Router do
 
     get "/", PageController, :index
     post "/in", PageController, :check_in
+
+    resources "/events", EventController
   end
 
   # Other scopes may use custom stacks.
