@@ -7,7 +7,8 @@ defmodule Inout.EventController do
 
   def index(conn, _params) do
     events = Repo.all(Event)
-    render(conn, "index.html", events: events)
+    json conn, %{ events: events }
+    #render(conn, "index.html", events: events)
   end
 
   def new(conn, _params) do

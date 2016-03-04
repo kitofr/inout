@@ -1,6 +1,7 @@
 defmodule Inout.Event do
   use Inout.Web, :model
 
+  @derive {Poison.Encoder, only: [:status, :device, :location, :inserted_at, :updated_at]}
   schema "events" do
     field :status, :string
     field :device, :string
