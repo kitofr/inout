@@ -4,10 +4,6 @@ defmodule Inout.EventController do
   alias Inout.Event
 
   plug :scrub_params, "event" when action in [:create, :update]
-  case Mix.env do
-    :prod -> plug Corsica, origins: "https://inout-backend.herokuapp.com"
-    _ -> plug Corsica, origins: "http://localhost"
-  end
 
   def index(conn, _params) do
     events = Repo.all(Event)
@@ -24,11 +20,9 @@ defmodule Inout.EventController do
 
     case Repo.insert(changeset) do
       {:ok, _event} ->
-        conn
-        |> put_flash(:info, "Event created successfully.")
-        |> redirect(to: event_path(conn, :index))
+        json conn, %{ event: changeset }
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        json conn, %{ error: changeset }
     end
   end
 

@@ -35,5 +35,6 @@ defmodule Inout.Endpoint do
     key: "_inout_key",
     signing_salt: "RWQcd5ID"
 
+  plug Corsica, origins: "*"
   plug Inout.Router
 end
