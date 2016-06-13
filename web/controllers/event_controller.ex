@@ -4,11 +4,14 @@ defmodule Inout.EventController do
   alias Inout.Event
 
   plug :scrub_params, "event" when action in [:create, :update]
+  case Mix.env do
+    :prod -> plug Corsica, origins: "https://inout-backend.herokuapp.com"
+    _ -> plug Corsica, origins: "http://localhost"
+  end
 
   def index(conn, _params) do
     events = Repo.all(Event)
     json conn, %{ events: events }
-    #render(conn, "index.html", events: events)
   end
 
   def new(conn, _params) do

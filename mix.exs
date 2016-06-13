@@ -19,7 +19,7 @@ defmodule Inout.Mixfile do
   def application do
     [mod: {Inout, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :httpotion]]
   end
 
   # Specifies which paths to compile per environment.
@@ -38,6 +38,9 @@ defmodule Inout.Mixfile do
      {:poison, "~> 1.5.2"},
      {:gettext, "~> 0.9"},
      {:good_times, "~> 1.1"},
+     {:httpotion, "~> 3.0.0"},
+     {:plug, "~> 1.0"},
+     {:corsica, "~> 0.4"},
      {:cowboy, "~> 1.0"}]
   end
 
