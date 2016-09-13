@@ -1,6 +1,6 @@
-module InOut
+module InOut exposing (main)
 
-import Html
+import Html exposing (..)
 
 main =
   Html.text "Hello from ELM"
