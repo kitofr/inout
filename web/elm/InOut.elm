@@ -14,18 +14,35 @@ main =
                , subscriptions = \_ -> Sub.none
                }
 
-type alias Model = String
+type alias Event = { insertedAt: String
+                   , event: String
+                   }
+type alias Model = { events: List Event }
 type Msg =
-  Foo
+  CheckIn
+  | CheckOut
+  | Load
 
 init : (Model, Cmd Msg)
 init = 
-    ("Foo", Cmd.none)
+    ({ events = [{ insertedAt = "today", event = "check-in"}, { insertedAt = "today",  event = "check-out"}] }
+      , Cmd.none)
 
+eventsComponent events =
+  [div []
+    [text "Events: "]
+    , ul []
+      (List.map (\e -> li [] [text e.event]) events)
+  ]
 
 view : Model -> Html Msg
 view model =
-  div [] [text model] 
+  div [] 
+    [div []
+    (eventsComponent model.events) 
+    , button [] [text "check in"]
+    , button [] [text "check out"]
+    ]
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
