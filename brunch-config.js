@@ -1,4 +1,5 @@
 exports.config = {
+  watcher: { usePolling: true },
   // See http://brunch.io/#documentation for docs.
   files: {
     javascripts: {
@@ -40,8 +41,8 @@ exports.config = {
     // Dependencies and current project directories to watch
     watched: [
       "web/static",
-      "web/elm/InOut.elm",
-      "test/static"
+      "test/static",
+      "web/elm/InOut.elm"
     ],
 
     // Where to compile files to
