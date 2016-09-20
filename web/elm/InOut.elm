@@ -7,7 +7,9 @@ import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
 import List exposing (..)
 import Http
-import Json.Decode as Json
+import Json.Encode
+import Json.Decode exposing (Decoder, decodeValue, succeed, string, list, (:=))
+import Json.Decode.Extra exposing ((|:))
 import Task
 
 main : Program Never
@@ -18,27 +20,29 @@ main =
                , subscriptions = \_ -> Sub.none
                }
 
-type alias Event = { insertedAt: String
-                   , event: String }
+type alias Event =
+    { updated_at : String
+    , status : String
+    , location : String
+    , inserted_at : String
+    }
+
 type alias Model =
-  { events : List Event 
-  , text : String }
+  { events : List Event }
   
 type Msg =
   CheckIn
   | CheckOut
-  | Load
-  | FetchSucceed String
+  | Load 
+  | FetchSucceed Model
   | FetchFail Http.Error
 
 init : (Model, Cmd Msg)
 init = 
-    ({ events = [{ insertedAt = "today", event = "check-in"}, { insertedAt = "today",  event = "check-out"}]
-    , text = "nothing" }
-      , Cmd.none)
+    ({ events = [] },  Cmd.none)
 
 eventItem event =
-  li [ class "event" ] [ text event.event]
+  li [ class "event" ] [ text event.status]
 
 eventsComponent events =
   [div []
@@ -52,8 +56,7 @@ view model =
   div [] 
     [div []
     (eventsComponent model.events) 
-    , text model.text
-    , button [class ("button"), onClick Load] [text "load"]
+    , button [class ("button"), onClick Load ] [text "load"]
     , button [class ("button is-primary")] [text "check in"]
     , button [class ("button is-primary")] [text "check out"]
     ]
@@ -61,10 +64,14 @@ view model =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Load -> (model, getEvents)
-    FetchSucceed json -> ({ model | text = json }, Cmd.none)
-    FetchFail _ -> (model, Cmd.none)
-    _ -> (model, Cmd.none)
+    Load -> 
+      (model, getEvents)
+    FetchSucceed newModel -> 
+      (newModel, Cmd.none)
+    FetchFail error -> 
+      (model, Cmd.none)
+    _ -> 
+      (model, Cmd.none)
 
 
 -- HTTP
@@ -72,9 +79,28 @@ update msg model =
 getEvents : Cmd Msg
 getEvents =
   let url = "http://localhost:4000/events"
+      get = (Http.get decodeEvents url)
   in
-      Task.perform FetchFail FetchSucceed (Http.get decodeEvents url)
+      Task.perform FetchFail FetchSucceed get 
 
-decodeEvents : Json.Decoder String
+decodeEvents : Json.Decode.Decoder Model
 decodeEvents =
-  Json.at ["events"] Json.string
+      Json.Decode.succeed Model
+              |: ("events" := Json.Decode.list decodeEvent)
+
+decodeEvent : Json.Decode.Decoder Event
+decodeEvent =
+    Json.Decode.succeed Event
+        |: ("updated_at" := Json.Decode.string)
+        |: ("status" := Json.Decode.string)
+        |: ("location" := Json.Decode.string)
+        |: ("inserted_at" := Json.Decode.string)
+
+encodeEvent : Event -> Json.Encode.Value
+encodeEvent record =
+    Json.Encode.object
+        [ ("updated_at",  Json.Encode.string <| record.updated_at)
+        , ("status",  Json.Encode.string <| record.status)
+        , ("location",  Json.Encode.string <| record.location)
+        , ("inserted_at",  Json.Encode.string <| record.inserted_at)
+        ]
