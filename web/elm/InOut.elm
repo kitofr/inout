@@ -114,7 +114,7 @@ post decoder url body =
 
 check : String -> Cmd Msg
 check inOrOut=
-  let rec = Debug.log "encode" encodeEvent { status = "check-" ++ inOrOut, location = "work" }
+  let rec = Debug.log "encode" encodeEvent { status = "check-" ++ inOrOut, location = "tv4play" }
   in
       Task.perform HttpFail HttpSuccess 
         (post (succeed "") getUrl (Debug.log "payload" (Http.string rec)))
