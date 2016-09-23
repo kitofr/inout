@@ -11,6 +11,7 @@ import Json.Encode as Encode
 import Json.Decode exposing (Decoder, decodeValue, succeed, string, list, (:=))
 import Json.Decode.Extra exposing ((|:))
 import Task exposing (Task)
+import Date exposing (..)
 
 getUrl : String
 --getUrl = "http://localhost:4000/events"
@@ -55,6 +56,7 @@ eventItem event =
     li [ class ("list-group-item list-group-item-" ++ color) ] 
         [h5 [class "list-group-item-heading"] [text event.status]
         ,p [class "list-group-item-text"] [text event.inserted_at]
+        ,p [class "list-group-item-text"] [text event.device]
         ,p [class "list-group-item-text"] [text event.location]
         ]
 
@@ -128,6 +130,11 @@ decodeEvents : Json.Decode.Decoder Model
 decodeEvents =
       Json.Decode.succeed Model
               |: ("events" := Json.Decode.list decodeEvent)
+
+-- parseDate date =
+--   case Date.fromString date of
+--     Ok value -> value
+--     Err error -> Debug.crash ("error parsing date" ++ error)
 
 decodeEvent : Json.Decode.Decoder Event
 decodeEvent =
