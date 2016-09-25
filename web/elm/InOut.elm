@@ -95,14 +95,28 @@ eventItem event =
         ,p [class "list-group-item-text"] [text event.device]
         ,p [class "list-group-item-text"] [text event.location]
         ]
-
-eventsGroupedPerDay events =
+sortEvents events = 
   events
     |> List.sortBy (\x -> monthOrder x.inserted_at)
+    |> List.sortBy (\x -> Date.day x.inserted_at)
+
+eventsGroupedPerDay events =
+  sortEvents events
+    --TODO PR on extra so that it is clear that it groups only adjacent
     |> List.Extra.groupWhile (\ x y -> (dateToString x.inserted_at) == (dateToString y.inserted_at))
 
+--timeDifference dates =
+--  case dates of
+--    Just (h::t) ->
+--      let d1 = h
+--          d2 = Maybe.withDefault Date.now List.head t
+--      in
+--          d1 - d2
+--    _ -> Debug.crash "boo!"
+
 eventsComponent events =
-  let _ = Debug.log "events" (List.map (\x -> List.map (\z -> (dateToString z.inserted_at)) x) (eventsGroupedPerDay events))
+  let group = (List.map (\x -> List.map (\z -> z.inserted_at) x) (eventsGroupedPerDay events))
+--      last = Debug.log "last" (timeDifference (List.Extra.last group))
   in
   div []
     [h3 [] [text "Events: "]
