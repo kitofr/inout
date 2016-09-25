@@ -8,8 +8,8 @@ import Html.Attributes exposing (class)
 import List exposing (..)
 import Http
 import Json.Encode as Encode
-import Json.Decode exposing (Decoder, decodeValue, succeed, string, list, (:=))
-import Json.Decode.Extra exposing ((|:))
+import Json.Decode as JD exposing (Decoder, decodeValue, succeed, string, list, (:=))
+import Json.Decode.Extra as Extra exposing ((|:))
 import Task exposing (Task)
 import Date exposing (..)
 
@@ -26,11 +26,11 @@ main =
                }
 
 type alias Event =
-    { updated_at : String
-    , status : String
+    { status : String
     , location : String
     , device : String
-    , inserted_at : String
+    , inserted_at : Date
+    , updated_at : Date
     }
 
 type alias Model =
@@ -50,12 +50,31 @@ init : (Model, Cmd Msg)
 init = 
     ({ events = [] },  Cmd.none)
 
+dateToString : Date -> String
+dateToString date =
+  let month = 
+      case Date.month date of
+        Jan -> "Jan"
+        Feb -> "Feb"
+        Mar -> "Mar"
+        Apr -> "Apr"
+        May -> "May"
+        Jun -> "Jun"
+        Jul -> "Jul"
+        Aug -> "Aug"
+        Sep -> "Sep"
+        Oct -> "Oct"
+        Nov -> "Nov"
+        Dec -> "Dec"
+  in
+    month ++ " " ++ (toString <| Date.day date)
+
 eventItem event =
   let color = if event.status == "check-in" then "success" else "info"
   in
     li [ class ("list-group-item list-group-item-" ++ color) ] 
         [h5 [class "list-group-item-heading"] [text event.status]
-        ,p [class "list-group-item-text"] [text event.inserted_at]
+        ,p [class "list-group-item-text"] [text <| dateToString event.inserted_at]
         ,p [class "list-group-item-text"] [text event.device]
         ,p [class "list-group-item-text"] [text event.location]
         ]
@@ -126,24 +145,18 @@ getEvents =
   Task.perform FetchFail FetchSucceed 
     (Http.get decodeEvents getUrl)
 
-decodeEvents : Json.Decode.Decoder Model
+decodeEvents : JD.Decoder Model
 decodeEvents =
-      Json.Decode.succeed Model
-              |: ("events" := Json.Decode.list decodeEvent)
+  JD.succeed Model
+    |: ("events" := JD.list decodeEvent)
 
--- parseDate date =
---   case Date.fromString date of
---     Ok value -> value
---     Err error -> Debug.crash ("error parsing date" ++ error)
-
-decodeEvent : Json.Decode.Decoder Event
+decodeEvent : JD.Decoder Event
 decodeEvent =
-    Json.Decode.succeed Event
-        |: ("updated_at" := Json.Decode.string)
-        |: ("status" := Json.Decode.string)
-        |: ("device" := Json.Decode.string)
-        |: ("location" := Json.Decode.string)
-        |: ("inserted_at" := Json.Decode.string)
+    JD.map Event ("status" := JD.string)
+        |: ("location" := JD.string)
+        |: ("device" := JD.string)
+        |: ("inserted_at" := Extra.date)
+        |: ("updated_at" := Extra.date)
 
 encodeEvent : { status: String, location: String } -> String
 encodeEvent record =
