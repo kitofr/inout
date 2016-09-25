@@ -12,6 +12,7 @@ import Json.Decode as JD exposing (Decoder, decodeValue, succeed, string, list, 
 import Json.Decode.Extra as Extra exposing ((|:))
 import Task exposing (Task)
 import Date exposing (..)
+import List.Extra exposing (..)
 
 getUrl : String
 --getUrl = "http://localhost:4000/events"
@@ -50,6 +51,22 @@ init : (Model, Cmd Msg)
 init = 
     ({ events = [] },  Cmd.none)
 
+monthOrder : Date -> Int
+monthOrder date =
+  case Date.month date of
+    Jan -> 1
+    Feb -> 2
+    Mar -> 3
+    Apr -> 4
+    May -> 5
+    Jun -> 6
+    Jul -> 7
+    Aug -> 8
+    Sep -> 9
+    Oct -> 10
+    Nov -> 11
+    Dec -> 12
+
 dateToString : Date -> String
 dateToString date =
   let month = 
@@ -79,7 +96,14 @@ eventItem event =
         ,p [class "list-group-item-text"] [text event.location]
         ]
 
+eventsGroupedPerDay events =
+  events
+    |> List.sortBy (\x -> monthOrder x.inserted_at)
+    |> List.Extra.groupWhile (\ x y -> (dateToString x.inserted_at) == (dateToString y.inserted_at))
+
 eventsComponent events =
+  let _ = Debug.log "events" (List.map (\x -> List.map (\z -> (dateToString z.inserted_at)) x) (eventsGroupedPerDay events))
+  in
   div []
     [h3 [] [text "Events: "]
      , ul [ class "list-group" ]
