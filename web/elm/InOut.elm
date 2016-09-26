@@ -149,7 +149,7 @@ eventsComponent events =
   div []
     [h3 [] [text "Events: "]
      , ul [ class "list-group" ]
-      (List.map eventItem (List.reverse events))
+      (List.map eventItem (sortEventsDesc events))
     ]
   
 
