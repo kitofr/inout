@@ -12,11 +12,12 @@ import Json.Decode as JD exposing (Decoder, decodeValue, succeed, string, list, 
 import Json.Decode.Extra as Extra exposing ((|:))
 import Task exposing (Task)
 import Date exposing (..)
+import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import List.Extra exposing (..)
 
 getUrl : String
---getUrl = "http://localhost:4000/events"
-getUrl = "https://inout-backend.herokuapp.com/events"
+getUrl = "http://localhost:4000/events"
+--getUrl = "https://inout-backend.herokuapp.com/events"
 
 main : Program Never
 main =
@@ -96,9 +97,27 @@ eventItem event =
         ,p [class "list-group-item-text"] [text event.location]
         ]
 sortEvents events = 
+  let insertCompare a b =
+      case is SameOrBefore a.inserted_at b.inserted_at of
+        True -> GT
+        _ -> LT
+  in
   events
-    |> List.sortBy (\x -> monthOrder x.inserted_at)
-    |> List.sortBy (\x -> Date.day x.inserted_at)
+    |> List.sortWith insertCompare
+
+-- (defn group-by 
+--   "Returns a map of the elements of coll keyed by the result of
+--   f on each element. The value at each key will be a vector of the
+--   corresponding elements, in the order they appeared in coll."
+--   {:added "1.2"
+--    :static true}
+--   [f coll]  
+--   (persistent!
+--    (reduce
+--     (fn [ret x]
+--       (let [k (f x)]
+--         (assoc! ret k (conj (get ret k []) x))))
+--     (transient {}) coll)))
 
 eventsGroupedPerDay events =
   sortEvents events
