@@ -6,6 +6,7 @@ import Html exposing (..)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
 import List exposing (..)
+import Dict exposing (get, empty)
 import Http
 import Json.Encode as Encode
 import Json.Decode as JD exposing (Decoder, decodeValue, succeed, string, list, (:=))
@@ -119,19 +120,27 @@ sortEventsDesc events =
 --         (assoc! ret k (conj (get ret k []) x))))
 --     (transient {}) coll)))
 
+groupBy toCompareable f coll =
+  List.foldl (\ret x -> 
+--    let k = f x
+--        list = case Dict.get k ret of
+--              Just v -> v
+--              Nothing -> []
+--             
+--    in
+--      Dict.insert k (x :: list)
+      let update mv = 
+          case mv of
+            Nothing -> []
+            Just v -> v 
+      in
+          Dict.insert (toCompareable x) update ret
+    ) Dict.empty coll
+
 eventsGroupedPerDay events =
   sortEventsDesc events
     --TODO PR on extra so that it is clear that it groups only adjacent
     |> List.Extra.groupWhile (\ x y -> (dateToString x.inserted_at) == (dateToString y.inserted_at))
-
---timeDifference dates =
---  case dates of
---    Just (h::t) ->
---      let d1 = h
---          d2 = Maybe.withDefault Date.now List.head t
---      in
---          d1 - d2
---    _ -> Debug.crash "boo!"
 
 eventsComponent events =
   let group = (List.map (\x -> List.map (\z -> z.inserted_at) x) (eventsGroupedPerDay events))
