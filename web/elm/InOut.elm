@@ -96,7 +96,7 @@ eventItem event =
         ,p [class "list-group-item-text"] [text event.device]
         ,p [class "list-group-item-text"] [text event.location]
         ]
-sortEvents events = 
+sortEventsDesc events = 
   let insertCompare a b =
       case is SameOrBefore a.inserted_at b.inserted_at of
         True -> GT
@@ -120,7 +120,7 @@ sortEvents events =
 --     (transient {}) coll)))
 
 eventsGroupedPerDay events =
-  sortEvents events
+  sortEventsDesc events
     --TODO PR on extra so that it is clear that it groups only adjacent
     |> List.Extra.groupWhile (\ x y -> (dateToString x.inserted_at) == (dateToString y.inserted_at))
 
