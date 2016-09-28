@@ -17,8 +17,8 @@ import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import List.Extra exposing (..)
 
 getUrl : String
---getUrl = "http://localhost:4000/events"
-getUrl = "https://inout-backend.herokuapp.com/events"
+getUrl = "http://localhost:4000/events"
+--getUrl = "https://inout-backend.herokuapp.com/events"
 
 main : Program Never
 main =
@@ -106,36 +106,14 @@ sortEventsDesc events =
   events
     |> List.sortWith insertCompare
 
--- (defn group-by 
---   "Returns a map of the elements of coll keyed by the result of
---   f on each element. The value at each key will be a vector of the
---   corresponding elements, in the order they appeared in coll."
---   {:added "1.2"
---    :static true}
---   [f coll]  
---   (persistent!
---    (reduce
---     (fn [ret x]
---       (let [k (f x)]
---         (assoc! ret k (conj (get ret k []) x))))
---     (transient {}) coll)))
-
-groupBy toCompareable f coll =
-  List.foldl (\ret x -> 
---    let k = f x
---        list = case Dict.get k ret of
---              Just v -> v
---              Nothing -> []
---             
---    in
---      Dict.insert k (x :: list)
-      let update mv = 
-          case mv of
-            Nothing -> []
-            Just v -> v 
-      in
-          Dict.insert (toCompareable x) update ret
-    ) Dict.empty coll
+groupBy fun coll =
+  let reducer x acc =
+    let key = fun x
+        list = Maybe.withDefault [] (Dict.get key acc)
+    in
+      Dict.insert key (x :: list) acc
+  in 
+    List.foldl reducer Dict.empty coll
 
 eventsGroupedPerDay events =
   sortEventsDesc events
@@ -144,7 +122,7 @@ eventsGroupedPerDay events =
 
 eventsComponent events =
   let group = (List.map (\x -> List.map (\z -> z.inserted_at) x) (eventsGroupedPerDay events))
---      last = Debug.log "last" (timeDifference (List.Extra.last group))
+      _ = Debug.log "groupBy: " (groupBy (\x -> dateToString x.inserted_at) events) |> Dict.keys
   in
   div []
     [h3 [] [text "Events: "]
