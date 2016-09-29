@@ -18,8 +18,8 @@ import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import List.Extra exposing (..)
 
 getUrl : String
-getUrl = "http://localhost:4000/events"
---getUrl = "https://inout-backend.herokuapp.com/events"
+--getUrl = "http://localhost:4000/events"
+getUrl = "https://inout-backend.herokuapp.com/events"
 
 main : Program Never
 main =
