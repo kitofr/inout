@@ -13,6 +13,7 @@ import Json.Decode as JD exposing (Decoder, decodeValue, succeed, string, list, 
 import Json.Decode.Extra as Extra exposing ((|:))
 import Task exposing (Task)
 import Date exposing (..)
+import Date.Extra.Duration as Duration exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import List.Extra exposing (..)
 
@@ -97,14 +98,18 @@ eventItem event =
         ,p [class "list-group-item-text"] [text event.device]
         ,p [class "list-group-item-text"] [text event.location]
         ]
-sortEventsDesc events = 
+
+sortEvents events order =
   let insertCompare a b =
-      case is SameOrBefore a.inserted_at b.inserted_at of
+      case is order a.inserted_at b.inserted_at of
         True -> GT
         _ -> LT
   in
   events
     |> List.sortWith insertCompare
+
+sortEventsDesc events = 
+  sortEvents events SameOrBefore 
 
 groupBy fun coll =
   let reducer x acc =
@@ -120,9 +125,38 @@ eventsGroupedPerDay events =
     --TODO PR on extra so that it is clear that it groups only adjacent
     |> List.Extra.groupWhile (\ x y -> (dateToString x.inserted_at) == (dateToString y.inserted_at))
 
+emptyEvent : Event
+emptyEvent =
+  let date = case Date.fromString("2000-01-01") of
+                    Ok val -> val
+                    Err err -> Debug.crash "Can't create date"
+  in
+  { status = "empty"
+  , location = "elm"
+  , device = "none"
+  , inserted_at = date  
+  , updated_at = date
+  }
+
+timeDifference coll  =
+  let sorted = sortEvents coll SameOrBefore
+      first = List.head sorted |> Maybe.withDefault emptyEvent |> Debug.log "first" 
+      last = List.reverse sorted |> List.head |> Maybe.withDefault emptyEvent |> Debug.log "last"
+      _ = Debug.log "coll" sorted
+  in
+      Duration.diff first.inserted_at last.inserted_at
+
+periodToStr : DeltaRecord -> String
+periodToStr period =
+      (toString period.hour) ++ "h " ++ (toString period.minute) ++ "min " ++ (toString period.second) ++ "sec" 
+
 eventsComponent events =
   let group = (List.map (\x -> List.map (\z -> z.inserted_at) x) (eventsGroupedPerDay events))
-      _ = Debug.log "groupBy: " (groupBy (\x -> dateToString x.inserted_at) events) |> Dict.keys
+      by = Debug.log "groupBy: " (groupBy (\x -> dateToString x.inserted_at) events)
+      diff = Debug.log "diff" ((Dict.get "Sep 21" by)
+                            |> Maybe.withDefault []
+                            |> timeDifference )
+      _ = Debug.log "diff in str" (periodToStr diff)
   in
   div []
     [h3 [] [text "Events: "]
