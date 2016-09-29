@@ -152,16 +152,20 @@ dayItem day =
       ]
 
 eventsComponent events =
-  let by = groupBy (\x -> dateToString x.inserted_at) events
-      es = Debug.log "dayItem" (List.map 
+  let grouped = groupBy (\x -> dateToString x.inserted_at) events
+      dayItems = (List.map 
             (\x -> 
               { dateStr = (fst x)
               , diff = (timeDifference (snd x))
               , date = (List.head (snd x) |> Maybe.withDefault emptyEvent).inserted_at
-              , events = (snd x) 
+              --, events = (snd x) 
               } ) 
-              (Dict.toList by))
-      sorted = es |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
+              (Dict.toList grouped))
+      sorted = dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
+      perMonth = Debug.log "perMonth" ( groupBy (\x -> monthOrder x.date ) sorted )
+      _ = Debug.log "per month total" (List.map
+        (\x -> { month = (fst x), total = "reduce add diffs together" })
+        (Dict.toList perMonth))
   in
   div []
     [h3 [] [text "Events: "]
