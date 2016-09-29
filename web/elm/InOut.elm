@@ -89,16 +89,6 @@ dateToString date =
   in
     month ++ " " ++ (toString <| Date.day date)
 
-eventItem event =
-  let color = if event.status == "check-in" then "success" else "info"
-  in
-    li [ class ("list-group-item list-group-item-" ++ color) ] 
-        [h5 [class "list-group-item-heading"] [text event.status]
-        ,p [class "list-group-item-text"] [text <| dateToString event.inserted_at]
-        ,p [class "list-group-item-text"] [text event.device]
-        ,p [class "list-group-item-text"] [text event.location]
-        ]
-
 sortEvents events order =
   let insertCompare a b =
       case is order a.inserted_at b.inserted_at of
@@ -150,18 +140,35 @@ periodToStr : DeltaRecord -> String
 periodToStr period =
       (toString period.hour) ++ "h " ++ (toString period.minute) ++ "min " ++ (toString period.second) ++ "sec" 
 
+eventItem event =
+  let color = if event.status == "check-in" then "success" else "info"
+  in
+    li [ class ("list-group-item list-group-item-" ++ color) ] 
+        [h5 [class "list-group-item-heading"] [text event.status]
+        ,p [class "list-group-item-text"] [text <| dateToString event.inserted_at]
+        ,p [class "list-group-item-text"] [text event.device]
+        ,p [class "list-group-item-text"] [text event.location]
+        ]
+
+dayItem day =
+  li [ class ("list-group-item list-group-item-success") ] 
+      [h5 [class "list-group-item-heading"] [text day.date]
+      ,p [class "list-group-item-text"] [text day.diff]
+      ]
+
 eventsComponent events =
   let group = (List.map (\x -> List.map (\z -> z.inserted_at) x) (eventsGroupedPerDay events))
       by = Debug.log "groupBy: " (groupBy (\x -> dateToString x.inserted_at) events)
-      diff = Debug.log "diff" ((Dict.get "Sep 21" by)
-                            |> Maybe.withDefault []
-                            |> timeDifference )
-      _ = Debug.log "diff in str" (periodToStr diff)
+      es = Debug.log "by to list" 
+          (List.map 
+            (\x -> { date = (fst x), diff = (timeDifference (snd x) |> periodToStr) } ) 
+              (Dict.toList by))
   in
   div []
     [h3 [] [text "Events: "]
      , ul [ class "list-group" ]
-      (List.map eventItem (sortEventsDesc events))
+      --(List.map eventItem (sortEventsDesc events))
+      (List.map dayItem es)
     ]
   
 
