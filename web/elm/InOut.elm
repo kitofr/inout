@@ -73,30 +73,30 @@ monthOrder date =
 dateToString : Date -> String
 dateToString date =
   let month = 
-      case Date.month date of
-        Jan -> "Jan"
-        Feb -> "Feb"
-        Mar -> "Mar"
-        Apr -> "Apr"
-        May -> "May"
-        Jun -> "Jun"
-        Jul -> "Jul"
-        Aug -> "Aug"
-        Sep -> "Sep"
-        Oct -> "Oct"
-        Nov -> "Nov"
-        Dec -> "Dec"
+    case Date.month date of
+      Jan -> "Jan"
+      Feb -> "Feb"
+      Mar -> "Mar"
+      Apr -> "Apr"
+      May -> "May"
+      Jun -> "Jun"
+      Jul -> "Jul"
+      Aug -> "Aug"
+      Sep -> "Sep"
+      Oct -> "Oct"
+      Nov -> "Nov"
+      Dec -> "Dec"
   in
     month ++ " " ++ (toString <| Date.day date)
 
+sortDates order a b =
+  case is order a b of
+    True -> GT
+    _ -> LT
+
 sortEvents events order =
-  let insertCompare a b =
-      case is order a.inserted_at b.inserted_at of
-        True -> GT
-        _ -> LT
-  in
   events
-    |> List.sortWith insertCompare
+    |> List.sortWith (\a b -> sortDates order a.inserted_at b.inserted_at)
 
 sortEventsDesc events = 
   sortEvents events SameOrBefore 
@@ -109,11 +109,6 @@ groupBy fun coll =
       Dict.insert key (x :: list) acc
   in 
     List.foldl reducer Dict.empty coll
-
-eventsGroupedPerDay events =
-  sortEventsDesc events
-    --TODO PR on extra so that it is clear that it groups only adjacent
-    |> List.Extra.groupWhile (\ x y -> (dateToString x.inserted_at) == (dateToString y.inserted_at))
 
 emptyEvent : Event
 emptyEvent =
@@ -128,11 +123,11 @@ emptyEvent =
   , updated_at = date
   }
 
+timeDifference : List Event -> DeltaRecord
 timeDifference coll  =
   let sorted = sortEvents coll SameOrBefore
-      first = List.head sorted |> Maybe.withDefault emptyEvent |> Debug.log "first" 
-      last = List.reverse sorted |> List.head |> Maybe.withDefault emptyEvent |> Debug.log "last"
-      _ = Debug.log "coll" sorted
+      first = List.head sorted |> Maybe.withDefault emptyEvent
+      last = List.reverse sorted |> List.head |> Maybe.withDefault emptyEvent
   in
       Duration.diff first.inserted_at last.inserted_at
 
@@ -152,23 +147,27 @@ eventItem event =
 
 dayItem day =
   li [ class ("list-group-item list-group-item-success") ] 
-      [h5 [class "list-group-item-heading"] [text day.date]
-      ,p [class "list-group-item-text"] [text day.diff]
+      [h5 [class "list-group-item-heading"] [text day.dateStr]
+      ,p [class "list-group-item-text"] [text (periodToStr day.diff)]
       ]
 
 eventsComponent events =
-  let group = (List.map (\x -> List.map (\z -> z.inserted_at) x) (eventsGroupedPerDay events))
-      by = Debug.log "groupBy: " (groupBy (\x -> dateToString x.inserted_at) events)
-      es = Debug.log "by to list" 
-          (List.map 
-            (\x -> { date = (fst x), diff = (timeDifference (snd x) |> periodToStr) } ) 
+  let by = groupBy (\x -> dateToString x.inserted_at) events
+      es = Debug.log "dayItem" (List.map 
+            (\x -> 
+              { dateStr = (fst x)
+              , diff = (timeDifference (snd x))
+              , date = (List.head (snd x) |> Maybe.withDefault emptyEvent).inserted_at
+              , events = (snd x) 
+              } ) 
               (Dict.toList by))
+      sorted = es |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
   in
   div []
     [h3 [] [text "Events: "]
      , ul [ class "list-group" ]
       --(List.map eventItem (sortEventsDesc events))
-      (List.map dayItem es)
+      (List.map dayItem sorted)
     ]
   
 
