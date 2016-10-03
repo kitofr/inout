@@ -148,7 +148,7 @@ timeDifference coll  =
   in
       Duration.diff first.inserted_at last.inserted_at
 
-periodToStr : DeltaRecord -> String
+periodToStr : TimeDuration -> String
 periodToStr period =
       (toString period.hour) ++ "h " ++ (toString period.minute) ++ "min " ++ (toString period.second) ++ "sec" 
 
@@ -168,6 +168,12 @@ dayItem day =
       ,p [class "list-group-item-text"] [text (periodToStr day.diff)]
       ]
 
+monthItem month =
+  li [ class ("list-group-item list-group-item-success") ] 
+      [h5 [class "list-group-item-heading"] [text month.month]
+      ,p [class "list-group-item-text"] [text (periodToStr month.total)]
+      ]
+
 type alias TimeDuration =
   { hour : Int, minute : Int, second : Int, millisecond : Int}
 
@@ -183,13 +189,25 @@ emptyTimeDuration : TimeDuration
 emptyTimeDuration =
   { hour = 0 , minute = 0 , second = 0 , millisecond = 0}
 
+addTime : Int -> (Int, Int)
+addTime t =
+  (t%60, t//60)
+
 addTimeDurations : TimeDuration -> TimeDuration -> TimeDuration
 addTimeDurations a b =
-  { hour = a.hour + b.hour 
-  , minute = a.minute + b.minute 
-  , second = a.second + b.second
-  , millisecond = a.millisecond + b.millisecond }
+  let mil = addTime (a.millisecond + b.millisecond) 
+      sec = addTime (a.second + b.second + (snd mil))
+      min = addTime (a.minute + b.minute + (snd sec))
+      hour = a.hour + b.hour + (snd min) 
+  in
+  { 
+  millisecond = fst mil
+  , second = fst sec
+  , minute = fst min
+  , hour = hour
+  }
 
+--monthlySum : List { diff : DeltaRecord } -> TimeDuration
 monthlySum month =
   List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
 
@@ -205,7 +223,7 @@ eventsComponent events =
       sorted = dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
       perMonth = Debug.log "perMonth" ( groupBy (\x -> monthOrder x.date ) sorted )
 
-      _ = Debug.log "per month total" (List.map
+      monthTotals = Debug.log "per month total" (List.map
         (\x -> { month = toMonthStr (fst x)
                , total = monthlySum (snd x) 
                })
@@ -215,7 +233,8 @@ eventsComponent events =
     [h3 [] [text "Events: "]
      , ul [ class "list-group" ]
       --(List.map eventItem (sortEventsDesc events))
-      (List.map dayItem sorted)
+      --(List.map dayItem sorted)
+      (List.map monthItem (List.reverse monthTotals))
     ]
   
 
