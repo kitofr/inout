@@ -54,6 +54,23 @@ init : (Model, Cmd Msg)
 init = 
     ({ events = [] },  Cmd.none)
 
+toMonthStr : Int -> String
+toMonthStr num =
+  case num of
+    1 -> "Jan"
+    2 -> "Feb"
+    3 -> "Mar"
+    4 -> "Apr"
+    5 -> "May"
+    6 -> "Jun"
+    7 -> "Jul"
+    8 -> "Aug"
+    9 -> "Sep"
+    10 -> "Oct"
+    11 -> "Nov"
+    12 -> "Dec"
+    _ -> "wft month: " ++ toString num
+
 monthOrder : Date -> Int
 monthOrder date =
   case Date.month date of
@@ -70,8 +87,8 @@ monthOrder date =
     Nov -> 11
     Dec -> 12
 
-dateToString : Date -> String
-dateToString date =
+dateToMonthStr : Date -> String
+dateToMonthStr date =
   let month = 
     case Date.month date of
       Jan -> "Jan"
@@ -140,7 +157,7 @@ eventItem event =
   in
     li [ class ("list-group-item list-group-item-" ++ color) ] 
         [h5 [class "list-group-item-heading"] [text event.status]
-        ,p [class "list-group-item-text"] [text <| dateToString event.inserted_at]
+        ,p [class "list-group-item-text"] [text <| dateToMonthStr event.inserted_at]
         ,p [class "list-group-item-text"] [text event.device]
         ,p [class "list-group-item-text"] [text event.location]
         ]
@@ -151,20 +168,47 @@ dayItem day =
       ,p [class "list-group-item-text"] [text (periodToStr day.diff)]
       ]
 
+type alias TimeDuration =
+  { hour : Int, minute : Int, second : Int, millisecond : Int}
+
+toTimeDuration : DeltaRecord -> TimeDuration
+toTimeDuration duration =
+  { hour = duration.hour
+  , minute = duration.minute
+  , second = duration.second
+  , millisecond = duration.millisecond
+  }
+
+emptyTimeDuration : TimeDuration
+emptyTimeDuration =
+  { hour = 0 , minute = 0 , second = 0 , millisecond = 0}
+
+addTimeDurations : TimeDuration -> TimeDuration -> TimeDuration
+addTimeDurations a b =
+  { hour = a.hour + b.hour 
+  , minute = a.minute + b.minute 
+  , second = a.second + b.second
+  , millisecond = a.millisecond + b.millisecond }
+
+monthlySum month =
+  List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
+
 eventsComponent events =
-  let grouped = groupBy (\x -> dateToString x.inserted_at) events
+  let grouped = groupBy (\x -> dateToMonthStr x.inserted_at) events
       dayItems = (List.map 
             (\x -> 
               { dateStr = (fst x)
               , diff = (timeDifference (snd x))
               , date = (List.head (snd x) |> Maybe.withDefault emptyEvent).inserted_at
-              --, events = (snd x) 
               } ) 
               (Dict.toList grouped))
       sorted = dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
       perMonth = Debug.log "perMonth" ( groupBy (\x -> monthOrder x.date ) sorted )
+
       _ = Debug.log "per month total" (List.map
-        (\x -> { month = (fst x), total = "reduce add diffs together" })
+        (\x -> { month = toMonthStr (fst x)
+               , total = monthlySum (snd x) 
+               })
         (Dict.toList perMonth))
   in
   div []
