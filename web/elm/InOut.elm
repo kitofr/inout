@@ -165,7 +165,7 @@ eventItem event =
 dayItem day =
   li [ class ("list-group-item list-group-item-success") ] 
       [h5 [class "list-group-item-heading"] [text day.dateStr]
-      ,p [class "list-group-item-text"] [text (periodToStr day.diff)]
+      ,p [class "list-group-item-text"] [text (periodToStr (toTimeDuration day.diff))]
       ]
 
 monthItem month =
@@ -230,10 +230,13 @@ eventsComponent events =
         (Dict.toList perMonth))
   in
   div []
-    [h3 [] [text "Events: "]
+    [h3 [] [text "Last 5: "]
      , ul [ class "list-group" ]
       --(List.map eventItem (sortEventsDesc events))
-      --(List.map dayItem sorted)
+      (List.map dayItem (List.take 5 sorted))
+    , 
+    h3 [] [text "Montly totals: "]
+    , ul [ class "list-group" ]
       (List.map monthItem (List.reverse monthTotals))
     ]
   
