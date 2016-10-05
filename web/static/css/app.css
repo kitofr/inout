@@ -76,3 +76,18 @@ form.link, form.button {
     border-bottom: 0;
   }
 }
+
+.monthly-hours {
+  display: inline-block;
+  margin-right: 40px;
+}
+
+.monthly-count {
+  display: inline-block;
+  font-size: 18px;
+  padding: 0.6em;
+  border: 1px solid gray;
+  border-radius: 15px;
+  background-color: gray;
+  color: white;
+}

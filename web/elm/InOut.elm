@@ -163,16 +163,16 @@ eventItem event =
         ]
 
 dayItem day =
-  li [ class ("list-group-item list-group-item-success") ] 
+  li [ class ("list-group-item list-group-item-warning") ] 
       [h5 [class "list-group-item-heading"] [text day.dateStr]
       ,p [class "list-group-item-text"] [text (periodToStr (toTimeDuration day.diff))]
       ]
 
 monthItem month =
-  li [ class ("list-group-item list-group-item-success") ] 
+  li [ class ("list-group-item list-group-item-success row") ] 
       [h5 [class "list-group-item-heading"] [text month.month]
-      ,p [class "list-group-item-text"] [text (periodToStr month.total)]
-      ,p [class "list-group-item-text"] [text (toString month.count)]
+      ,p [class "list-group-item-text monthly-hours col-md-6"] [text (periodToStr month.total)]
+      ,p [class "list-group-item-text monthly-count col-md-6"] [text (toString month.count)]
       ]
 
 type alias TimeDuration =
@@ -231,7 +231,7 @@ eventsComponent events =
                })
         (Dict.toList perMonth))
   in
-  div []
+  div [ class "container-fluid" ]
     [h3 [] [text "Last 5: "]
      , ul [ class "list-group" ]
       --(List.map eventItem (sortEventsDesc events))
