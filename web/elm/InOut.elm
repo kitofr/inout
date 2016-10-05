@@ -172,6 +172,7 @@ monthItem month =
   li [ class ("list-group-item list-group-item-success") ] 
       [h5 [class "list-group-item-heading"] [text month.month]
       ,p [class "list-group-item-text"] [text (periodToStr month.total)]
+      ,p [class "list-group-item-text"] [text (toString month.count)]
       ]
 
 type alias TimeDuration =
@@ -226,6 +227,7 @@ eventsComponent events =
       monthTotals = Debug.log "per month total" (List.map
         (\x -> { month = toMonthStr (fst x)
                , total = monthlySum (snd x) 
+               , count = List.length (snd x)
                })
         (Dict.toList perMonth))
   in
