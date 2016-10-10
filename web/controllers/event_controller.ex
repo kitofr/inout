@@ -18,7 +18,8 @@ defmodule Inout.EventController do
   end
 
   def create(conn, %{"event" => event_params}) do
-    changeset = Event.changeset(%Event{}, event_params)
+    user_id = Inout.Session.current_user(conn).id
+    changeset = Event.changeset(%Event{}, Map.merge(event_params, %{ "user_id" => "#{user_id}" } ))
 
     case Repo.insert(changeset) do
       {:ok, _event} ->

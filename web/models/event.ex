@@ -12,7 +12,7 @@ defmodule Inout.Event do
     timestamps
   end
 
-  @required_fields ~w(status device location user)
+  @required_fields ~w(status device location user_id)
   @optional_fields ~w()
 
   @doc """
