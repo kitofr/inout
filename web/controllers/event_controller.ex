@@ -6,7 +6,8 @@ defmodule Inout.EventController do
   plug :scrub_params, "event" when action in [:create, :update]
 
   def index(conn, _params) do
-    events = Repo.all(Event)
+    user_id = Inout.Session.current_user(conn).id
+    events = Repo.all(from e in Inout.Event, where: e.user_id == ^user_id)
     clear_flash(conn)
     json conn, %{ events: events }
   end

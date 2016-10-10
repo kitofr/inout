@@ -1,10 +1,12 @@
 defmodule Inout.User do
   use Inout.Web, :model
+  use Ecto.Schema
 
   schema "users" do
     field :email, :string
     field :crypted_password, :string
     field :password, :string, virtual: true
+    has_many :events, Event
     timestamps
   end
 

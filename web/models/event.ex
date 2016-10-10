@@ -1,5 +1,6 @@
 defmodule Inout.Event do
   use Inout.Web, :model
+  use Ecto.Schema
 
   @derive {Poison.Encoder, only: [:status, :device, :location, :inserted_at, :updated_at]}
   schema "events" do
@@ -7,10 +8,11 @@ defmodule Inout.Event do
     field :device, :string
     field :location, :string
 
+    belongs_to :user, User
     timestamps
   end
 
-  @required_fields ~w(status device location)
+  @required_fields ~w(status device location user)
   @optional_fields ~w()
 
   @doc """
