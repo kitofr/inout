@@ -20,6 +20,7 @@ defmodule Inout.Router do
     post "/in", PageController, :check_in
 
     resources "/events", EventController
+    resources "/registrations", RegistrationController, only: [:new, :create]
   end
 
   # Other scopes may use custom stacks.
