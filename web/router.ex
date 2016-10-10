@@ -19,6 +19,10 @@ defmodule Inout.Router do
     get "/", PageController, :index
     post "/in", PageController, :check_in
 
+    get    "/login",  SessionController, :new
+    post   "/login",  SessionController, :create
+    delete "/logout", SessionController, :delete
+
     resources "/events", EventController
     resources "/registrations", RegistrationController, only: [:new, :create]
   end

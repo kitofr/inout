@@ -13,6 +13,7 @@ defmodule Inout.RegistrationController do
      case Inout.Registration.create(changeset, Inout.Repo) do
        { :ok, changeset } -> #user sign in
        conn
+       |> put_session(:current_user, changeset.id)
        |> put_flash(:info, "Your account was created")
        |> redirect(to: "/")
 

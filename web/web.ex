@@ -52,6 +52,7 @@ defmodule Inout.Web do
       import Inout.Router.Helpers
       import Inout.ErrorHelpers
       import Inout.Gettext
+      import Inout.Session, only: [current_user: 1, logged_in?: 1]
     end
   end
 
