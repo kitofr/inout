@@ -35,6 +35,7 @@ defmodule Inout.Mixfile do
      {:phoenix_ecto, "~> 2.0"},
      {:phoenix_html, "~> 2.4"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
+     {:comeonin, "~> 1.0"},
      {:poison, "~> 1.5.2"},
      {:gettext, "~> 0.9"},
      {:good_times, "~> 1.1"},
