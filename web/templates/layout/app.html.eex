@@ -12,6 +12,9 @@
   </head>
 
   <body>
+    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+
     <%= if logged_in?(@conn) do %>
       <li><%= current_user(@conn).email %></li>
       <li><%= link "Logout", to: session_path(@conn, :delete), method: :delete %></li>
