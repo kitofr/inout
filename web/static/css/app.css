@@ -91,3 +91,13 @@ form.link, form.button {
   background-color: gray;
   color: white;
 }
+
+.logout {
+  display: block;
+  padding-top: 15px;
+  padding: 1em;
+}
+
+.content {
+  margin-top: 50px
+}
