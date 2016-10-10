@@ -7,6 +7,7 @@ defmodule Inout.EventController do
 
   def index(conn, _params) do
     events = Repo.all(Event)
+    clear_flash(conn)
     json conn, %{ events: events }
   end
 
