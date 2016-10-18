@@ -18,8 +18,8 @@ import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import List.Extra exposing (..)
 
 getUrl : String
---getUrl = "http://localhost:4000/events"
-getUrl = "https://inout-backend.herokuapp.com/events"
+getUrl = "http://localhost:4000/events"
+--getUrl = "https://inout-backend.herokuapp.com/events"
 
 main : Program Never
 main =
@@ -39,19 +39,19 @@ type alias Event =
 
 type alias Model =
   { events : List Event }
-  
+
 type Msg =
   CheckIn
   | CheckOut
-  | Load 
+  | Load
   | FetchSucceed Model
   | FetchFail Http.Error
   | HttpSuccess String
   | HttpFail Http.Error
-    
+
 
 init : (Model, Cmd Msg)
-init = 
+init =
     ({ events = [] },  Cmd.none)
 
 toMonthStr : Int -> String
@@ -89,7 +89,7 @@ monthOrder date =
 
 dateToMonthStr : Date -> String
 dateToMonthStr date =
-  let month = 
+  let month =
     case Date.month date of
       Jan -> "Jan"
       Feb -> "Feb"
@@ -115,8 +115,8 @@ sortEvents events order =
   events
     |> List.sortWith (\a b -> sortDates order a.inserted_at b.inserted_at)
 
-sortEventsDesc events = 
-  sortEvents events SameOrBefore 
+sortEventsDesc events =
+  sortEvents events SameOrBefore
 
 groupBy fun coll =
   let reducer x acc =
@@ -124,7 +124,7 @@ groupBy fun coll =
         list = Maybe.withDefault [] (Dict.get key acc)
     in
       Dict.insert key (x :: list) acc
-  in 
+  in
     List.foldl reducer Dict.empty coll
 
 emptyEvent : Event
@@ -136,7 +136,7 @@ emptyEvent =
   { status = "empty"
   , location = "elm"
   , device = "none"
-  , inserted_at = date  
+  , inserted_at = date
   , updated_at = date
   }
 
@@ -150,12 +150,12 @@ timeDifference coll  =
 
 periodToStr : TimeDuration -> String
 periodToStr period =
-      (toString period.hour) ++ "h " ++ (toString period.minute) ++ "min " ++ (toString period.second) ++ "sec" 
+      (toString period.hour) ++ "h " ++ (toString period.minute) ++ "min " ++ (toString period.second) ++ "sec"
 
 eventItem event =
   let color = if event.status == "check-in" then "success" else "info"
   in
-    li [ class ("list-group-item list-group-item-" ++ color) ] 
+    li [ class ("list-group-item list-group-item-" ++ color) ]
         [h5 [class "list-group-item-heading"] [text event.status]
         ,p [class "list-group-item-text"] [text <| dateToMonthStr event.inserted_at]
         ,p [class "list-group-item-text"] [text event.device]
@@ -163,13 +163,13 @@ eventItem event =
         ]
 
 dayItem day =
-  li [ class ("list-group-item list-group-item-warning") ] 
+  li [ class ("list-group-item list-group-item-warning") ]
       [h5 [class "list-group-item-heading"] [text day.dateStr]
       ,p [class "list-group-item-text"] [text (periodToStr (toTimeDuration day.diff))]
       ]
 
 monthItem month =
-  li [ class ("list-group-item list-group-item-success row") ] 
+  li [ class ("list-group-item list-group-item-success row") ]
       [h5 [class "list-group-item-heading"] [text month.month]
       ,p [class "list-group-item-text monthly-hours col-md-6"] [text (periodToStr month.total)]
       ,p [class "list-group-item-text monthly-count col-md-6"] [text (toString month.count)]
@@ -196,12 +196,12 @@ addTime t =
 
 addTimeDurations : TimeDuration -> TimeDuration -> TimeDuration
 addTimeDurations a b =
-  let mil = addTime (a.millisecond + b.millisecond) 
+  let mil = addTime (a.millisecond + b.millisecond)
       sec = addTime (a.second + b.second + (snd mil))
       min = addTime (a.minute + b.minute + (snd sec))
-      hour = a.hour + b.hour + (snd min) 
+      hour = a.hour + b.hour + (snd min)
   in
-  { 
+  {
   millisecond = fst mil
   , second = fst sec
   , minute = fst min
@@ -214,19 +214,19 @@ monthlySum month =
 
 eventsComponent events =
   let grouped = groupBy (\x -> dateToMonthStr x.inserted_at) events
-      dayItems = (List.map 
-            (\x -> 
+      dayItems = (List.map
+            (\x ->
               { dateStr = (fst x)
               , diff = (timeDifference (snd x))
               , date = (List.head (snd x) |> Maybe.withDefault emptyEvent).inserted_at
-              } ) 
+              } )
               (Dict.toList grouped))
       sorted = dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
       perMonth = Debug.log "perMonth" ( groupBy (\x -> monthOrder x.date ) sorted )
 
       monthTotals = Debug.log "per month total" (List.map
         (\x -> { month = toMonthStr (fst x)
-               , total = monthlySum (snd x) 
+               , total = monthlySum (snd x)
                , count = List.length (snd x)
                })
         (Dict.toList perMonth))
@@ -236,16 +236,16 @@ eventsComponent events =
      , ul [ class "list-group" ]
       --(List.map eventItem (sortEventsDesc events))
       (List.map dayItem (List.take 5 sorted))
-    , 
+    ,
     h3 [] [text "Montly totals: "]
     , ul [ class "list-group" ]
       (List.map monthItem (List.reverse monthTotals))
     ]
-  
+
 
 view : Model -> Html Msg
 view model =
-  div [] 
+  div []
     [div []
       [ button [class ("btn"), onClick Load ] [text "load"]
       , button [class ("btn btn-success"), onClick CheckIn] [text "check in"]
@@ -257,11 +257,11 @@ view model =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Load -> 
+    Load ->
       (model, getEvents)
-    FetchSucceed newModel -> 
+    FetchSucceed newModel ->
       (newModel, Cmd.none)
-    FetchFail error -> 
+    FetchFail error ->
       (model, Cmd.none)
     CheckIn ->
       (model, (check "in"))
@@ -293,12 +293,12 @@ check : String -> Cmd Msg
 check inOrOut=
   let rec = Debug.log "encode" encodeEvent { status = "check-" ++ inOrOut, location = "tv4play" }
   in
-      Task.perform HttpFail HttpSuccess 
+      Task.perform HttpFail HttpSuccess
         (post (succeed "") getUrl (Debug.log "payload" (Http.string rec)))
 
 getEvents : Cmd Msg
 getEvents =
-  Task.perform FetchFail FetchSucceed 
+  Task.perform FetchFail FetchSucceed
     (Http.get decodeEvents getUrl)
 
 decodeEvents : JD.Decoder Model
