@@ -8,8 +8,13 @@ defmodule Inout.EventController do
   def index(conn, _params) do
     user_id = Inout.Session.current_user(conn).id
     events = Repo.all(from e in Inout.Event, where: e.user_id == ^user_id)
-    clear_flash(conn)
-    json conn, %{ events: events }
+    render(conn, "index.html", events: events)
+  end
+
+  def as_json(conn, _params) do
+    user_id = Inout.Session.current_user(conn).id
+    events = Repo.all(from e in Inout.Event, where: e.user_id == ^user_id)
+    json(conn, %{ events: events })
   end
 
   def new(conn, _params) do

@@ -23,6 +23,7 @@ defmodule Inout.Router do
     post   "/login",  SessionController, :create
     delete "/logout", SessionController, :delete
 
+    get "/events.json", EventController, :as_json
     resources "/events", EventController
     resources "/registrations", RegistrationController, only: [:new, :create]
   end
