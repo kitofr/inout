@@ -44,6 +44,9 @@
         </div>
       </div>
     </div> <!-- /container -->
+    <script type="application/javascript">
+      hostUrl = "<%= System.get_env("HOST_URL") || "https://inout-backend.herokuapp.com" %>";
+    </script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

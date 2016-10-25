@@ -17,10 +17,6 @@ import Date.Extra.Duration as Duration exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import List.Extra exposing (..)
 
---getUrl : String
-----getUrl = "http://localhost:4000/events"
---getUrl = "https://inout-backend.herokuapp.com/events"
-
 main =
   App.programWithFlags
     { init = init
