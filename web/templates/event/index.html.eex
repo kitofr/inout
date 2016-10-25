@@ -6,6 +6,7 @@
       <th>Status</th>
       <th>Device</th>
       <th>Location</th>
+      <th>Time</th>
 
       <th></th>
     </tr>
@@ -16,6 +17,7 @@
       <td><%= event.status %></td>
       <td><%= event.device %></td>
       <td><%= event.location %></td>
+      <td><%= event.inserted_at %></td>
 
       <td class="text-right">
         <%= link "Show", to: event_path(@conn, :show, event), class: "btn btn-default btn-xs" %>

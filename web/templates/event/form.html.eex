@@ -7,7 +7,7 @@
 
   <div class="form-group">
     <%= label f, :status, class: "control-label" %>
-    <%= text_input f, :status, class: "form-control" %>
+    <%= select f, :status, [ "Check in": "check-in", "Check out": "check-out"], class: "form-control" %>
     <%= error_tag f, :status %>
   </div>
 
@@ -21,6 +21,12 @@
     <%= label f, :location, class: "control-label" %>
     <%= text_input f, :location, class: "form-control" %>
     <%= error_tag f, :location %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :inserted_at, class: "control-label" %>
+    <%= datetime_select f, :inserted_at, class: "form-control" %>
+    <%= error_tag f, :inserted_at %>
   </div>
 
   <div class="form-group">
