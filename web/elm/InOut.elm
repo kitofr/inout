@@ -21,13 +21,13 @@ getUrl : String
 --getUrl = "http://localhost:4000/events"
 getUrl = "https://inout-backend.herokuapp.com/events"
 
-main : Program Never
 main =
-  App.program { init = init
-               , view = view
-               , update = update
-               , subscriptions = \_ -> Sub.none
-               }
+  App.programWithFlags
+    { init = init
+    , view = view
+    , update = update
+    , subscriptions = \_ -> Sub.none
+    }
 
 type alias Event =
     { status : String
@@ -37,22 +37,28 @@ type alias Event =
     , updated_at : Date
     }
 
+type alias EventList = List Event
+
+type alias Flags = { hostUrl : String }
+
 type alias Model =
-  { events : List Event }
+  { events : EventList
+  , hostUrl : String
+  }
 
 type Msg =
   CheckIn
   | CheckOut
   | Load
-  | FetchSucceed Model
+  | FetchSucceed EventList
   | FetchFail Http.Error
   | HttpSuccess String
   | HttpFail Http.Error
 
 
-init : (Model, Cmd Msg)
-init =
-    ({ events = [] },  Cmd.none)
+init: Flags -> (Model, Cmd Msg)
+init flags =
+    ({ events = [], hostUrl = flags.hostUrl },  Cmd.none)
 
 toMonthStr : Int -> String
 toMonthStr num =
@@ -259,8 +265,8 @@ update msg model =
   case msg of
     Load ->
       (model, getEvents)
-    FetchSucceed newModel ->
-      (newModel, Cmd.none)
+    FetchSucceed eventList ->
+      ({ model | events = eventList }, Cmd.none)
     FetchFail error ->
       (model, Cmd.none)
     CheckIn ->
@@ -301,10 +307,9 @@ getEvents =
   Task.perform FetchFail FetchSucceed
     (Http.get decodeEvents getUrl)
 
-decodeEvents : JD.Decoder Model
+decodeEvents : JD.Decoder EventList 
 decodeEvents =
-  JD.succeed Model
-    |: ("events" := JD.list decodeEvent)
+  JD.list decodeEvent
 
 decodeEvent : JD.Decoder Event
 decodeEvent =
