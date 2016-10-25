@@ -17,9 +17,9 @@ import Date.Extra.Duration as Duration exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import List.Extra exposing (..)
 
-getUrl : String
---getUrl = "http://localhost:4000/events"
-getUrl = "https://inout-backend.herokuapp.com/events"
+--getUrl : String
+----getUrl = "http://localhost:4000/events"
+--getUrl = "https://inout-backend.herokuapp.com/events"
 
 main =
   App.programWithFlags
@@ -37,12 +37,10 @@ type alias Event =
     , updated_at : Date
     }
 
-type alias EventList = List Event
-
 type alias Flags = { hostUrl : String }
 
 type alias Model =
-  { events : EventList
+  { events : List Event
   , hostUrl : String
   }
 
@@ -50,7 +48,7 @@ type Msg =
   CheckIn
   | CheckOut
   | Load
-  | FetchSucceed EventList
+  | FetchSucceed (List Event)
   | FetchFail Http.Error
   | HttpSuccess String
   | HttpFail Http.Error
@@ -264,15 +262,19 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     Load ->
-      (model, getEvents)
+      (model, getEvents model.hostUrl)
     FetchSucceed eventList ->
+      let _ = Debug.log "events" eventList
+      in
       ({ model | events = eventList }, Cmd.none)
     FetchFail error ->
+      let _ = Debug.log "error#events" error
+      in
       (model, Cmd.none)
     CheckIn ->
-      (model, (check "in"))
+      (model, (check "in" model.hostUrl))
     CheckOut ->
-      (model, (check "out"))
+      (model, (check "out" model.hostUrl))
     HttpFail error ->
       let _ = Debug.log "error" error
       in
@@ -280,7 +282,7 @@ update msg model =
     HttpSuccess things ->
       let _ = Debug.log "success" things
       in
-      (model, getEvents)
+      (model, getEvents model.hostUrl)
 
 -- HTTP
 post : Decoder value -> String -> Http.Body -> Task Http.Error value
@@ -295,21 +297,22 @@ post decoder url body =
       Http.fromJson decoder (Http.send Http.defaultSettings request)
 
 
-check : String -> Cmd Msg
-check inOrOut=
+check : String -> String -> Cmd Msg
+check inOrOut hostUrl=
   let rec = Debug.log "encode" encodeEvent { status = "check-" ++ inOrOut, location = "tv4play" }
   in
       Task.perform HttpFail HttpSuccess
-        (post (succeed "") getUrl (Debug.log "payload" (Http.string rec)))
+        (post (succeed "") hostUrl (Debug.log "payload" (Http.string rec)))
 
-getEvents : Cmd Msg
-getEvents =
+getEvents : String -> Cmd Msg
+getEvents hostUrl=
   Task.perform FetchFail FetchSucceed
-    (Http.get decodeEvents getUrl)
+    (Http.get decodeEvents hostUrl)
 
-decodeEvents : JD.Decoder EventList 
+decodeEvents : JD.Decoder (List Event)
 decodeEvents =
-  JD.list decodeEvent
+  JD.succeed identity
+    |: ("events" := JD.list decodeEvent)
 
 decodeEvent : JD.Decoder Event
 decodeEvent =
