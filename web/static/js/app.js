@@ -22,6 +22,6 @@ import "phoenix_html"
 
 const elmDiv = document.getElementById('elm-main')
     , elmApp = Elm.InOut.embed(elmDiv, {
-          hostUrl: hostUrl + '/events.json'
+          hostUrl: hostUrl 
         });
 

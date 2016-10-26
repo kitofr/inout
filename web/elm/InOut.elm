@@ -298,12 +298,12 @@ check inOrOut hostUrl=
   let rec = Debug.log "encode" encodeEvent { status = "check-" ++ inOrOut, location = "tv4play" }
   in
       Task.perform HttpFail HttpSuccess
-        (post (succeed "") hostUrl (Debug.log "payload" (Http.string rec)))
+        (post (succeed "") (hostUrl ++ "/events") (Debug.log "payload" (Http.string rec)))
 
 getEvents : String -> Cmd Msg
 getEvents hostUrl=
   Task.perform FetchFail FetchSucceed
-    (Http.get decodeEvents hostUrl)
+    (Http.get decodeEvents (hostUrl ++ "/events.json"))
 
 decodeEvents : JD.Decoder (List Event)
 decodeEvents =
