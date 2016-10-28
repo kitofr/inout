@@ -31,11 +31,13 @@ init flags =
     ( { events = [], hostUrl = flags.hostUrl }, getEvents flags.hostUrl )
 
 
+sortEvents: List Event -> Compare2 -> List Event
 sortEvents events order =
     events
         |> List.sortWith (\a b -> sortDates order a.inserted_at b.inserted_at)
 
 
+sortEventsDesc: List Event -> List Event
 sortEventsDesc events =
     sortEvents events SameOrBefore
 
@@ -74,11 +76,7 @@ timeDifference coll =
         Duration.diff first.inserted_at last.inserted_at
 
 
-periodToStr : TimeDuration -> String
-periodToStr period =
-    (toString period.hour) ++ "h " ++ (toString period.minute) ++ "min " ++ (toString period.second) ++ "sec"
-
-
+eventItem: Event -> Html Msg
 eventItem event =
     let
         color =
@@ -94,7 +92,7 @@ eventItem event =
             , p [ class "list-group-item-text" ] [ text event.location ]
             ]
 
-
+dayItem : { date : Date, dateStr : String, diff :  DeltaRecord } -> Html Msg
 dayItem day =
     li [ class ("list-group-item list-group-item-warning") ]
         [ h5 [ class "list-group-item-heading" ] [ text day.dateStr ]
@@ -102,6 +100,7 @@ dayItem day =
         ]
 
 
+monthItem : { count : Int, month : String, total : TimeDuration } -> Html Msg
 monthItem month =
     li [ class ("list-group-item list-group-item-success row") ]
         [ h5 [ class "list-group-item-heading" ] [ text month.month ]
@@ -111,11 +110,12 @@ monthItem month =
 
 
 
-
+--monthlySum : List { diff: Int} -> TimeDuration
 monthlySum month =
     List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
 
 
+eventsComponent: List Event -> Html Msg
 eventsComponent events =
     let
         grouped =

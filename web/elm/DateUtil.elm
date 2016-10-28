@@ -104,3 +104,9 @@ addTimeDurations a b =
         , minute = fst min
         , hour = hour
         }
+
+periodToStr : TimeDuration -> String
+periodToStr period =
+    (toString period.hour) ++ "h " ++ (toString period.minute) ++ "min " ++ (toString period.second) ++ "sec"
+
+
