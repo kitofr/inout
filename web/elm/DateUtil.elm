@@ -2,6 +2,7 @@ module DateUtil exposing (..)
 
 import Date exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
+import Date.Extra.Duration as Duration exposing (..)
 
 sortDates order a b =
   case is order a b of
@@ -60,3 +61,46 @@ dateToMonthStr date =
   in
     month ++ " " ++ (toString <| Date.day date)
 
+type alias TimeDuration =
+    { hour : Int, minute : Int, second : Int, millisecond : Int }
+
+
+toTimeDuration : DeltaRecord -> TimeDuration
+toTimeDuration duration =
+    { hour = duration.hour
+    , minute = duration.minute
+    , second = duration.second
+    , millisecond = duration.millisecond
+    }
+
+
+emptyTimeDuration : TimeDuration
+emptyTimeDuration =
+    { hour = 0, minute = 0, second = 0, millisecond = 0 }
+
+
+addTime : Int -> ( Int, Int )
+addTime t =
+    ( t % 60, t // 60 )
+
+
+addTimeDurations : TimeDuration -> TimeDuration -> TimeDuration
+addTimeDurations a b =
+    let
+        mil =
+            addTime (a.millisecond + b.millisecond)
+
+        sec =
+            addTime (a.second + b.second + (snd mil))
+
+        min =
+            addTime (a.minute + b.minute + (snd sec))
+
+        hour =
+            a.hour + b.hour + (snd min)
+    in
+        { millisecond = fst mil
+        , second = fst sec
+        , minute = fst min
+        , hour = hour
+        }
