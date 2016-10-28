@@ -152,12 +152,11 @@ eventsComponent events =
     in
         div [ class "container-fluid" ]
             [ h3 [] [ text "Last 5: " ]
-            , ul [ class "list-group" ]
-                --(List.map eventItem (sortEventsDesc events))
-                (List.map dayItem (List.take 5 sorted))
+            , List.map dayItem (List.take 5 sorted)
+                  |> ul [class "list-group" ]
             , h3 [] [ text "Montly totals: " ]
-            , ul [ class "list-group" ]
-                (List.map monthItem (List.reverse monthTotals))
+            , List.map monthItem (List.reverse monthTotals)
+              |> ul [ class "list-group" ]
             ]
 
 
@@ -165,7 +164,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ div []
-            [ button [ class ("btn"), onClick Load ] [ text "load" ]
+            [ button [ class ("btn"), onClick Load ] [ text "refresh" ]
             , button [ class ("btn btn-success"), onClick CheckIn ] [ text "check in" ]
             , button [ class ("btn btn-primary"), onClick CheckOut ] [ text "check out" ]
             , (eventsComponent model.events)
