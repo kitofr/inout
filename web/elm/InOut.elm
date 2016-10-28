@@ -5,12 +5,7 @@ import Html.App as App exposing (..)
 import Html exposing (..)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
-import List exposing (..)
 import Dict exposing (get, empty)
-import Http
-import Json.Encode as Encode
-import Json.Decode as JD exposing (Decoder, decodeValue, succeed, string, list, (:=))
-import Json.Decode.Extra as Extra exposing ((|:))
 import Task exposing (Task)
 import Date exposing (..)
 import Date.Extra.Duration as Duration exposing (..)
@@ -18,6 +13,8 @@ import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import List.Extra exposing (..)
 import Types exposing (..)
 import DateUtil exposing (..)
+import Api exposing (..)
+import Seq exposing (groupBy)
 
 main =
   App.programWithFlags
@@ -37,15 +34,6 @@ sortEvents events order =
 
 sortEventsDesc events =
   sortEvents events SameOrBefore
-
-groupBy fun coll =
-  let reducer x acc =
-    let key = fun x
-        list = Maybe.withDefault [] (Dict.get key acc)
-    in
-      Dict.insert key (x :: list) acc
-  in
-    List.foldl reducer Dict.empty coll
 
 emptyEvent : Event
 emptyEvent =
@@ -199,51 +187,3 @@ update msg model =
       let _ = Debug.log "success" things
       in
       (model, getEvents model.hostUrl)
-
--- HTTP
-post : Decoder value -> String -> Http.Body -> Task Http.Error value
-post decoder url body =
-  let request =
-        { verb = "POST"
-        , headers = [("Content-Type", "application/json")]
-        , url = url
-        , body = body
-        }
-  in
-      Http.fromJson decoder (Http.send Http.defaultSettings request)
-
-
-check : String -> String -> Cmd Msg
-check inOrOut hostUrl=
-  let rec = Debug.log "encode" encodeEvent { status = "check-" ++ inOrOut, location = "tv4play" }
-  in
-      Task.perform HttpFail HttpSuccess
-        (post (succeed "") (hostUrl ++ "/events") (Debug.log "payload" (Http.string rec)))
-
-getEvents : String -> Cmd Msg
-getEvents hostUrl=
-  Task.perform FetchFail FetchSucceed
-    (Http.get decodeEvents (hostUrl ++ "/events.json"))
-
-decodeEvents : JD.Decoder (List Event)
-decodeEvents =
-  JD.succeed identity
-    |: ("events" := JD.list decodeEvent)
-
-decodeEvent : JD.Decoder Event
-decodeEvent =
-    JD.map Event ("status" := JD.string)
-        |: ("location" := JD.string)
-        |: ("device" := JD.string)
-        |: ("inserted_at" := Extra.date)
-        |: ("updated_at" := Extra.date)
-
-encodeEvent : { status: String, location: String } -> String
-encodeEvent record =
-    Encode.encode 0 (Encode.object
-        [("event", Encode.object [
-          ("status",  Encode.string <| record.status)
-          , ("location",  Encode.string <| record.location)
-          , ("device",  Encode.string <| "internetz")
-          ])
-        ])
