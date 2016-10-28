@@ -52,7 +52,7 @@ type Msg =
 
 init: Flags -> (Model, Cmd Msg)
 init flags =
-    ({ events = [], hostUrl = flags.hostUrl },  Cmd.none)
+    ({ events = [], hostUrl = flags.hostUrl }, getEvents flags.hostUrl )
 
 toMonthStr : Int -> String
 toMonthStr num =
