@@ -16,6 +16,8 @@ import Date exposing (..)
 import Date.Extra.Duration as Duration exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import List.Extra exposing (..)
+import Types exposing (..)
+import DateUtil exposing (..)
 
 main =
   App.programWithFlags
@@ -25,91 +27,9 @@ main =
     , subscriptions = \_ -> Sub.none
     }
 
-type alias Event =
-    { status : String
-    , location : String
-    , device : String
-    , inserted_at : Date
-    , updated_at : Date
-    }
-
-type alias Flags = { hostUrl : String }
-
-type alias Model =
-  { events : List Event
-  , hostUrl : String
-  }
-
-type Msg =
-  CheckIn
-  | CheckOut
-  | Load
-  | FetchSucceed (List Event)
-  | FetchFail Http.Error
-  | HttpSuccess String
-  | HttpFail Http.Error
-
-
 init: Flags -> (Model, Cmd Msg)
 init flags =
     ({ events = [], hostUrl = flags.hostUrl }, getEvents flags.hostUrl )
-
-toMonthStr : Int -> String
-toMonthStr num =
-  case num of
-    1 -> "Jan"
-    2 -> "Feb"
-    3 -> "Mar"
-    4 -> "Apr"
-    5 -> "May"
-    6 -> "Jun"
-    7 -> "Jul"
-    8 -> "Aug"
-    9 -> "Sep"
-    10 -> "Oct"
-    11 -> "Nov"
-    12 -> "Dec"
-    _ -> "wft month: " ++ toString num
-
-monthOrder : Date -> Int
-monthOrder date =
-  case Date.month date of
-    Jan -> 1
-    Feb -> 2
-    Mar -> 3
-    Apr -> 4
-    May -> 5
-    Jun -> 6
-    Jul -> 7
-    Aug -> 8
-    Sep -> 9
-    Oct -> 10
-    Nov -> 11
-    Dec -> 12
-
-dateToMonthStr : Date -> String
-dateToMonthStr date =
-  let month =
-    case Date.month date of
-      Jan -> "Jan"
-      Feb -> "Feb"
-      Mar -> "Mar"
-      Apr -> "Apr"
-      May -> "May"
-      Jun -> "Jun"
-      Jul -> "Jul"
-      Aug -> "Aug"
-      Sep -> "Sep"
-      Oct -> "Oct"
-      Nov -> "Nov"
-      Dec -> "Dec"
-  in
-    month ++ " " ++ (toString <| Date.day date)
-
-sortDates order a b =
-  case is order a b of
-    True -> GT
-    _ -> LT
 
 sortEvents events order =
   events
