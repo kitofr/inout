@@ -110,7 +110,6 @@ monthItem month =
 
 
 
---monthlySum : List { diff: Int} -> TimeDuration
 monthlySum month =
     List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
 
