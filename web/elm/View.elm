@@ -8,6 +8,7 @@ import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Dict exposing (get, empty)
 import Date.Extra.Duration as Duration exposing (..)
 
+import Charts exposing (barChart)
 import DateUtil exposing (..)
 import Types exposing (..)
 import Seq exposing (..)
@@ -38,12 +39,13 @@ dayItem day =
         ]
 
 
-monthItem : { count : Int, month : String, total : TimeDuration } -> Html Msg
+monthItem : { count : Int, month : String, total : TimeDuration, monthlyDayCount: List { hour : Int, minute : Int} } -> Html Msg
 monthItem month =
     li [ class ("list-group-item list-group-item-success row") ]
         [ h5 [ class "list-group-item-heading" ] [ text month.month ]
         , p [ class "list-group-item-text monthly-hours col-md-6" ] [ text (periodToStr month.total) ]
-        , p [ class "list-group-item-text monthly-count col-md-6" ] [ text (toString month.count) ]
+        , p [ class "list-group-item-text monthly-count col-md-2" ] [ text (toString month.count) ]
+        , p [ class "list-group-item-text monthly-chart col-md-6" ] [ barChart month.monthlyDayCount ]
         ]
 
 
@@ -81,6 +83,7 @@ eventsComponent events =
                     { month = toMonthStr (fst x)
                     , total = monthlySum (snd x)
                     , count = List.length (snd x)
+                    , monthlyDayCount = [ { hour = 7, minute = 12 }, { hour = 6, minute = 5 }  ]
                     }
                 )
                 (Dict.toList perMonth)
