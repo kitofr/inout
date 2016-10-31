@@ -2,18 +2,11 @@ module InOut exposing (main)
 
 import Platform.Cmd as Cmd exposing (Cmd)
 import Html.App as App exposing (..)
-import Html exposing (..)
-import Html.Attributes exposing (class)
-import Task exposing (Task)
-import Date exposing (..)
-import List.Extra exposing (..)
 import Types exposing (..)
-import DateUtil exposing (..)
 import Api exposing (..)
-import Seq exposing (groupBy)
 import View exposing (..)
 
-
+main : Program Flags
 main =
     App.programWithFlags
         { init = init
