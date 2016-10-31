@@ -19,7 +19,7 @@ barChart dayCount =
                     , x ((toString (i + 1)) ++ "0")
                     , y "5"
                     , width "9"
-                    , height ((toString day.hour) ++ "0")
+                    , height ((toString (1 + day.hour)) ++ "0")
                     ]
                     []
             )
