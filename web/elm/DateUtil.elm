@@ -24,7 +24,7 @@ toMonthStr num =
     10 -> "Oct"
     11 -> "Nov"
     12 -> "Dec"
-    _ -> "wft month: " ++ toString num
+    _ -> "WFT month: " ++ toString num
 
 monthOrder : Date -> Int
 monthOrder date =
