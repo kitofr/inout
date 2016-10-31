@@ -7,7 +7,6 @@ import Date exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Dict exposing (get, empty)
 import Date.Extra.Duration as Duration exposing (..)
-
 import Charts exposing (barChart)
 import DateUtil exposing (..)
 import Types exposing (..)
@@ -31,7 +30,7 @@ eventItem event =
             ]
 
 
-dayItem : { date : Date, dateStr : String, diff : DeltaRecord } -> Html Msg
+dayItem : { date : Date, dateStr : String, diff : DeltaRecord, dayNumber : Int } -> Html Msg
 dayItem day =
     li [ class ("list-group-item list-group-item-warning") ]
         [ h5 [ class "list-group-item-heading" ] [ text day.dateStr ]
@@ -39,7 +38,7 @@ dayItem day =
         ]
 
 
-monthItem : { count : Int, month : String, total : TimeDuration, monthlyDayCount: List { hour : Int, minute : Int} } -> Html Msg
+monthItem : { count : Int, month : String, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
 monthItem month =
     li [ class ("list-group-item list-group-item-success row") ]
         [ h5 [ class "list-group-item-heading" ] [ text month.month ]
@@ -63,10 +62,15 @@ eventsComponent events =
         dayItems =
             (List.map
                 (\x ->
-                    { dateStr = (fst x)
-                    , diff = (timeDifference (snd x))
-                    , date = (List.head (snd x) |> Maybe.withDefault emptyEvent).inserted_at
-                    }
+                    let
+                        date =
+                            (List.head (snd x) |> Maybe.withDefault emptyEvent).inserted_at
+                    in
+                        { dateStr = (fst x)
+                        , diff = (timeDifference (snd x))
+                        , date = date
+                        , dayNumber = Date.day date
+                        }
                 )
                 (Dict.toList grouped)
             )
@@ -83,55 +87,53 @@ eventsComponent events =
                 (\x ->
                     { month = toMonthStr (fst x)
                     , total = monthlySum (snd x)
-                    , count = List.length (snd x)
-                    , monthlyDayCount = 
---                      List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute} ) (snd x)
-                      [ 
-                      { hour = 4, minute = 12 }
-                    , { hour = 5, minute = 5 }  
-                    , { hour = 0, minute = 0 }
-                    , { hour = 5, minute = 5 }  
-                    , { hour = 6, minute = 30 }  
-                    , { hour = 8, minute = 50 }  
-                    , { hour = 0, minute = 59 }  
-                    , { hour = 0, minute = 30 }  
-                    , { hour = 8, minute = 50 }  
-                    , { hour = 6, minute = 59 }  
-                    , { hour = 8, minute = 50 }  
-                    , { hour = 6, minute = 30 }  
-                    , { hour = 6, minute = 59 }  
-                    , { hour = 0, minute = 30 }  
-                    , { hour = 0, minute = 50 }  
-                    , { hour = 8, minute = 50 }  
-                    , { hour = 6, minute = 30 }  
-                    , { hour = 8, minute = 50 }  
-                    , { hour = 6, minute = 59 }  
-                    , { hour = 6, minute = 59 }  
-                    , { hour = 0, minute = 30 }  
-                    , { hour = 0, minute = 50 }  
-                    , { hour = 8, minute = 50 }  
-                    , { hour = 6, minute = 30 }  
-                    , { hour = 6, minute = 59 }  
-                    , { hour = 8, minute = 50 }  
-                    , { hour = 6, minute = 59 }  
-                    , { hour = 0, minute = 30 }  
-                    , { hour = 0, minute = 50 }  
-                    , { hour = 10, minute = 59 }  
-                    ]
+                    , count = List.length (snd (Debug.log "x" x))
+                    , monthlyDayCount =
+                        List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute }) (snd x)
+                        --                      [
+                        --                      { hour = 4, minute = 12 }
+                        --                    , { hour = 5, minute = 5 }
+                        --                    , { hour = 0, minute = 0 }
+                        --                    , { hour = 5, minute = 5 }
+                        --                    , { hour = 6, minute = 30 }
+                        --                    , { hour = 8, minute = 50 }
+                        --                    , { hour = 0, minute = 59 }
+                        --                    , { hour = 0, minute = 30 }
+                        --                    , { hour = 8, minute = 50 }
+                        --                    , { hour = 6, minute = 59 }
+                        --                    , { hour = 8, minute = 50 }
+                        --                    , { hour = 6, minute = 30 }
+                        --                    , { hour = 6, minute = 59 }
+                        --                    , { hour = 0, minute = 30 }
+                        --                    , { hour = 0, minute = 50 }
+                        --                    , { hour = 8, minute = 50 }
+                        --                    , { hour = 6, minute = 30 }
+                        --                    , { hour = 8, minute = 50 }
+                        --                    , { hour = 6, minute = 59 }
+                        --                    , { hour = 6, minute = 59 }
+                        --                    , { hour = 0, minute = 30 }
+                        --                    , { hour = 0, minute = 50 }
+                        --                    , { hour = 8, minute = 50 }
+                        --                    , { hour = 6, minute = 30 }
+                        --                    , { hour = 6, minute = 59 }
+                        --                    , { hour = 8, minute = 50 }
+                        --                    , { hour = 6, minute = 59 }
+                        --                    , { hour = 0, minute = 30 }
+                        --                    , { hour = 0, minute = 50 }
+                        --                    , { hour = 10, minute = 59 }
+                        --                    ]
                     }
                 )
                 (Dict.toList perMonth)
                 |> Debug.log "per month total"
     in
         div [ class "container-fluid" ]
-            [ 
-            h3 [] [ text "Last 5: " ]
+            [ h3 [] [ text "Last 5: " ]
             , List.map dayItem (List.take 5 sorted)
                 |> ul [ class "list-group" ]
             , h3 [] [ text "Montly totals: " ]
-            , 
-             List.map monthItem (List.reverse monthTotals)
-                 |> ul [ class "list-group" ]
+            , List.map monthItem (List.reverse monthTotals)
+                |> ul [ class "list-group" ]
             ]
 
 
