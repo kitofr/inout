@@ -42,7 +42,7 @@ exports.config = {
     watched: [
       "web/static",
       "test/static",
-      "web/elm/InOut.elm"
+      "web/elm/"
     ],
 
     // Where to compile files to
@@ -55,7 +55,8 @@ exports.config = {
       executablePath: "../../node_modules/elm/binwrappers",
       elmFolder: "web/elm",
       mainModules: ["InOut.elm"],
-      outputFolder: "../static/vendor"
+      outputFolder: "../static/vendor",
+      makeParameters : ['--warn']
     },
     babel: {
       // Do not use ES6 compiler in vendor code
