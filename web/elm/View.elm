@@ -124,11 +124,10 @@ eventsComponent events =
     in
         div [ class "container-fluid" ]
             [ 
-            -- h3 [] [ text "Last 5: " ]
-            --, List.map dayItem (List.take 5 sorted)
-            --    |> ul [ class "list-group" ]
-            --, 
-            h3 [] [ text "Montly totals: " ]
+             h3 [] [ text "Last 5: " ]
+            , List.map dayItem (List.take 5 sorted)
+                |> ul [ class "list-group" ]
+            , h3 [] [ text "Montly totals: " ]
             , List.map monthItem (List.reverse monthTotals)
                 |> ul [ class "list-group" ]
             ]
