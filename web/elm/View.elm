@@ -44,7 +44,7 @@ monthItem month =
     li [ class ("list-group-item list-group-item-success row") ]
         [ h5 [ class "list-group-item-heading" ] [ text month.month ]
         , p [ class "list-group-item-text monthly-hours col-md-6" ] [ text (periodToStr month.total) ]
-        --, p [ class "list-group-item-text monthly-count col-md-2" ] [ text (toString month.count) ]
+        , p [ class "list-group-item-text monthly-count col-md-2" ] [ text (toString month.count) ]
         , p [ class "list-group-item-text monthly-chart col-md-6" ] [ barChart month.monthlyDayCount ]
         ]
 
