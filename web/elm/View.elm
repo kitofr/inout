@@ -49,6 +49,7 @@ monthItem month =
         ]
 
 
+monthlySum : List { a | diff : DeltaRecord } -> TimeDuration
 monthlySum month =
     List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
 
@@ -84,39 +85,39 @@ eventsComponent events =
                     , total = monthlySum (snd x)
                     , count = List.length (snd x)
                     , monthlyDayCount = 
-                      List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute} ) (snd x)
---                      [ 
---                      { hour = 4, minute = 12 }
---                    , { hour = 5, minute = 5 }  
---                    , { hour = 7, minute = 12 }
---                    , { hour = 5, minute = 5 }  
---                    , { hour = 6, minute = 30 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 6, minute = 59 }  
---                    , { hour = 6, minute = 30 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 6, minute = 59 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 6, minute = 30 }  
---                    , { hour = 6, minute = 59 }  
---                    , { hour = 6, minute = 30 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 6, minute = 30 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 6, minute = 59 }  
---                    , { hour = 6, minute = 59 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 6, minute = 30 }  
---                    , { hour = 6, minute = 30 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 6, minute = 59 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 6, minute = 30 }  
---                    , { hour = 8, minute = 50 }  
---                    , { hour = 6, minute = 59 }  
---                    , { hour = 10, minute = 59 }  
---                    ]
+--                      List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute} ) (snd x)
+                      [ 
+                      { hour = 4, minute = 12 }
+                    , { hour = 5, minute = 5 }  
+                    , { hour = 0, minute = 0 }
+                    , { hour = 5, minute = 5 }  
+                    , { hour = 6, minute = 30 }  
+                    , { hour = 8, minute = 50 }  
+                    , { hour = 0, minute = 59 }  
+                    , { hour = 0, minute = 30 }  
+                    , { hour = 8, minute = 50 }  
+                    , { hour = 6, minute = 59 }  
+                    , { hour = 8, minute = 50 }  
+                    , { hour = 6, minute = 30 }  
+                    , { hour = 6, minute = 59 }  
+                    , { hour = 0, minute = 30 }  
+                    , { hour = 0, minute = 50 }  
+                    , { hour = 8, minute = 50 }  
+                    , { hour = 6, minute = 30 }  
+                    , { hour = 8, minute = 50 }  
+                    , { hour = 6, minute = 59 }  
+                    , { hour = 6, minute = 59 }  
+                    , { hour = 0, minute = 30 }  
+                    , { hour = 0, minute = 50 }  
+                    , { hour = 8, minute = 50 }  
+                    , { hour = 6, minute = 30 }  
+                    , { hour = 6, minute = 59 }  
+                    , { hour = 8, minute = 50 }  
+                    , { hour = 6, minute = 59 }  
+                    , { hour = 0, minute = 30 }  
+                    , { hour = 0, minute = 50 }  
+                    , { hour = 10, minute = 59 }  
+                    ]
                     }
                 )
                 (Dict.toList perMonth)
