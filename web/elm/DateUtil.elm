@@ -4,6 +4,7 @@ import Date exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2 (..))
 import Date.Extra.Duration as Duration exposing (..)
 
+sortDates : Compare2 -> Date -> Date -> Order
 sortDates order a b =
   case is order a b of
     True -> GT

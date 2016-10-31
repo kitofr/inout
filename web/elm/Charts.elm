@@ -1,12 +1,11 @@
 module Charts exposing (..)
 
 import List
-import Html exposing (Html, div)
-import Html.Attributes as A
+import Html exposing (Html)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
-
+barChart : List { a | hour : number } -> Html msg
 barChart dayCount =
     svg [ viewBox "0 0 350 110", width "250px" ]
         (List.indexedMap
