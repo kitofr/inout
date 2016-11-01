@@ -7,6 +7,10 @@ import DateUtil exposing (..)
 import Http
 
 
+type alias Flags =
+    { hostUrl : String }
+
+
 type alias Event =
     { status : String
     , location : String
@@ -14,10 +18,6 @@ type alias Event =
     , inserted_at : Date
     , updated_at : Date
     }
-
-
-type alias Flags =
-    { hostUrl : String }
 
 
 type alias Model =
@@ -35,7 +35,10 @@ type Msg
     | HttpSuccess String
     | HttpFail Http.Error
 
--- Functions
+
+
+-- Util Functions
+
 
 sortEvents : List Event -> Compare2 -> List Event
 sortEvents events order =
