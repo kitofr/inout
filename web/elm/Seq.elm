@@ -3,6 +3,11 @@ module Seq exposing (..)
 import Dict exposing (get, empty)
 
 
+nth : Int -> List a -> a -> a
+nth n lst def =
+    List.drop n lst |> List.head |> Maybe.withDefault def
+
+
 groupBy : (a -> comparable) -> List a -> Dict.Dict comparable (List a)
 groupBy fun coll =
     let
