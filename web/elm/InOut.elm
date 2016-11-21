@@ -1,14 +1,15 @@
 module InOut exposing (main)
 
 import Platform.Cmd as Cmd exposing (Cmd)
-import Html.App as App exposing (..)
+import Html exposing (..)
 import Types exposing (..)
 import Api exposing (..)
 import View exposing (..)
 
-main : Program Flags
+
+main : Program Flags Model Msg
 main =
-    App.programWithFlags
+    Html.programWithFlags
         { init = init
         , view = view
         , update = update
@@ -27,20 +28,20 @@ update msg model =
         Load ->
             ( model, getEvents model.hostUrl )
 
-        FetchSucceed eventList ->
-            ( { model | events = eventList }, Cmd.none )
-
-        FetchFail error ->
-            ( model, Cmd.none )
-
         CheckIn ->
             ( model, (check "in" model.hostUrl) )
 
         CheckOut ->
             ( model, (check "out" model.hostUrl) )
 
-        HttpFail error ->
+        CreateEvent (Ok event) ->
+            ( model, getEvents model.hostUrl )
+
+        CreateEvent (Err _) ->
             ( model, Cmd.none )
 
-        HttpSuccess things ->
-            ( model, getEvents model.hostUrl )
+        LoadEvents (Ok events) ->
+            ( { model | events = events }, Cmd.none )
+
+        LoadEvents (Err _) ->
+            ( model, Cmd.none )

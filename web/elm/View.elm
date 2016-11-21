@@ -64,10 +64,10 @@ eventsComponent events =
                 (\x ->
                     let
                         date =
-                            (List.head (snd x) |> Maybe.withDefault emptyEvent).inserted_at
+                            (List.head (Tuple.second x) |> Maybe.withDefault emptyEvent).inserted_at
                     in
-                        { dateStr = (fst x)
-                        , diff = (timeDifference (snd x))
+                        { dateStr = (Tuple.first x)
+                        , diff = (timeDifference (Tuple.second x))
                         , date = date
                         , dayNumber = Date.day date
                         }
@@ -85,11 +85,11 @@ eventsComponent events =
         monthTotals =
             List.map
                 (\x ->
-                    { month = toMonthStr (fst x)
-                    , total = monthlySum (snd x)
-                    , count = List.length (snd (Debug.log "x" x))
+                    { month = toMonthStr (Tuple.first x)
+                    , total = monthlySum (Tuple.second x)
+                    , count = List.length (Tuple.second (Debug.log "x" x))
                     , monthlyDayCount =
-                        List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute }) (snd x)
+                        List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute }) (Tuple.second x)
                         --                      [
                         --                      { hour = 4, minute = 12 }
                         --                    , { hour = 5, minute = 5 }

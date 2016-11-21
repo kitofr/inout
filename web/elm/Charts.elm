@@ -35,7 +35,7 @@ barChart dayCount =
         (List.indexedMap
             (\i day ->
                 rect
-                    [ stroke "#333" 
+                    [ stroke "#333"
                     , strokeWidth "1"
                     , fill (Seq.nth (i % (List.length rainbowColors)) rainbowColors "#442299")
                     , x ((toString (i + 1)) ++ "0")

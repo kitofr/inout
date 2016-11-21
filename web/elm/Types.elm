@@ -30,10 +30,8 @@ type Msg
     = CheckIn
     | CheckOut
     | Load
-    | FetchSucceed (List Event)
-    | FetchFail Http.Error
-    | HttpSuccess String
-    | HttpFail Http.Error
+    | CreateEvent (Result Http.Error String)
+    | LoadEvents (Result Http.Error (List Event))
 
 
 

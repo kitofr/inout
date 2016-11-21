@@ -11,7 +11,7 @@
     "phoenix_html": "file:deps/phoenix_html"
   },
   "devDependencies": {
-    "elm": "^0.17.0",
+    "elm": "^0.18.0",
     "elm-brunch": "^0.7.0"
   }
 }
