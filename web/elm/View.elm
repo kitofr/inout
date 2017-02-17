@@ -11,6 +11,7 @@ import Charts exposing (barChart)
 import DateUtil exposing (..)
 import Types exposing (..)
 import Seq exposing (..)
+import Time exposing (..)
 
 
 eventItem : Event -> Html Msg
@@ -87,7 +88,9 @@ eventsComponent events =
                 (\x ->
                     { month = toMonthStr (Tuple.first x)
                     , total = monthlySum (Tuple.second x)
-                    , count = List.length (Tuple.second (Debug.log "x" x))
+                    , count =
+                        List.length (Tuple.second x)
+                        --(Debug.log "x" x))
                     , monthlyDayCount =
                         List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute }) (Tuple.second x)
                         --                      [
@@ -125,7 +128,8 @@ eventsComponent events =
                     }
                 )
                 (Dict.toList perMonth)
-                |> Debug.log "per month total"
+
+        --|> Debug.log "per month total"
     in
         div [ class "container-fluid" ]
             [ h3 [] [ text "Last 5: " ]
@@ -139,11 +143,16 @@ eventsComponent events =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ div []
-            [ button [ class ("btn"), onClick Load ] [ text "refresh" ]
-            , button [ class ("btn btn-success"), onClick CheckIn ] [ text "check in" ]
-            , button [ class ("btn btn-primary"), onClick CheckOut ] [ text "check out" ]
-            , (eventsComponent model.events)
+    let
+        time =
+            Debug.log "time" model.currentTime
+    in
+        div []
+            [ div []
+                [ button [ class ("btn"), onClick Load ] [ text "refresh" ]
+                , button [ class ("btn btn-success"), onClick CheckIn ] [ text "check in" ]
+                , button [ class ("btn btn-primary"), onClick CheckOut ] [ text "check out" ]
+                  --, p [] [ text (toString time) ]
+                , (eventsComponent model.events)
+                ]
             ]
-        ]

@@ -58,6 +58,11 @@ toMonthStr num =
             "WFT month: " ++ toString num
 
 
+
+-- TODO this also need to take year in consideration
+-- or I have to group on year first and make a monthType
+
+
 monthOrder : Date -> Int
 monthOrder date =
     case Date.month date of
@@ -101,6 +106,29 @@ monthOrder date =
 dateToMonthStr : Date -> String
 dateToMonthStr date =
     let
+        day =
+            case Debug.log "day" (Date.dayOfWeek date) of
+                Mon ->
+                    "Mon"
+
+                Tue ->
+                    "Tue"
+
+                Wed ->
+                    "Wed"
+
+                Thu ->
+                    "Thu"
+
+                Fri ->
+                    "Fri"
+
+                Sat ->
+                    "Sat"
+
+                Sun ->
+                    "Sun"
+
         month =
             case Date.month date of
                 Jan ->
@@ -139,7 +167,7 @@ dateToMonthStr date =
                 Dec ->
                     "Dec"
     in
-        month ++ " " ++ (toString <| Date.day date)
+        day ++ " " ++ (toString <| Date.day date) ++ " " ++ month
 
 
 type alias TimeDuration =

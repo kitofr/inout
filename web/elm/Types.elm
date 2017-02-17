@@ -4,6 +4,7 @@ import Date exposing (Date)
 import Date.Extra.Duration as Duration exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import DateUtil exposing (..)
+import Time exposing (Time, second)
 import Http
 
 
@@ -23,6 +24,7 @@ type alias Event =
 type alias Model =
     { events : List Event
     , hostUrl : String
+    , currentTime : Time
     }
 
 
@@ -32,6 +34,7 @@ type Msg
     | Load
     | CreateEvent (Result Http.Error String)
     | LoadEvents (Result Http.Error (List Event))
+    | Tick Time
 
 
 

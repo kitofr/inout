@@ -1,6 +1,7 @@
 module InOut exposing (main)
 
 import Platform.Cmd as Cmd exposing (Cmd)
+import Time exposing (Time, second)
 import Html exposing (..)
 import Types exposing (..)
 import Api exposing (..)
@@ -13,13 +14,19 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    --Time.every second Tick
+    Sub.none
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { events = [], hostUrl = flags.hostUrl }, getEvents flags.hostUrl )
+    ( { events = [], hostUrl = flags.hostUrl, currentTime = 0 }, getEvents flags.hostUrl )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -45,3 +52,6 @@ update msg model =
 
         LoadEvents (Err _) ->
             ( model, Cmd.none )
+
+        Tick t ->
+            ( { model | currentTime = t }, Cmd.none )
