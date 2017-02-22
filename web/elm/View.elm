@@ -39,10 +39,10 @@ dayItem day =
         ]
 
 
-monthItem : { count : Int, month : String, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
+monthItem : { count : Int, year : Int, month : String, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
 monthItem month =
     li [ class ("list-group-item list-group-item-success row") ]
-        [ h5 [ class "list-group-item-heading" ] [ text month.month ]
+        [ h5 [ class "list-group-item-heading" ] [ text (month.month ++ " " ++ (toString month.year)) ]
         , p [ class "list-group-item-text monthly-hours col-md-6" ] [ text (periodToStr month.total) ]
         , p [ class "list-group-item-text monthly-count col-md-2" ] [ text (toString month.count) ]
         , p [ class "list-group-item-text monthly-chart col-md-6" ] [ barChart month.monthlyDayCount ]
@@ -52,6 +52,29 @@ monthItem month =
 monthlySum : List { a | diff : DeltaRecord } -> TimeDuration
 monthlySum month =
     List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
+
+
+totalsRect x =
+    let
+        data =
+            (Tuple.second x)
+
+        year =
+            case (List.head data) of
+                Just d ->
+                    Date.year d.date
+
+                _ ->
+                    0
+    in
+        { year = year
+        , month = toMonthStr (Tuple.first x)
+        , total = monthlySum data
+        , count =
+            List.length data
+        , monthlyDayCount =
+            List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute }) data
+        }
 
 
 eventsComponent : List Event -> Html Msg
@@ -85,48 +108,7 @@ eventsComponent events =
 
         monthTotals =
             List.map
-                (\x ->
-                    { month = toMonthStr (Tuple.first x)
-                    , total = monthlySum (Tuple.second x)
-                    , count =
-                        List.length (Tuple.second x)
-                        --(Debug.log "x" x))
-                    , monthlyDayCount =
-                        List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute }) (Tuple.second x)
-                        --                      [
-                        --                      { hour = 4, minute = 12 }
-                        --                    , { hour = 5, minute = 5 }
-                        --                    , { hour = 0, minute = 0 }
-                        --                    , { hour = 5, minute = 5 }
-                        --                    , { hour = 6, minute = 30 }
-                        --                    , { hour = 8, minute = 50 }
-                        --                    , { hour = 0, minute = 59 }
-                        --                    , { hour = 0, minute = 30 }
-                        --                    , { hour = 8, minute = 50 }
-                        --                    , { hour = 6, minute = 59 }
-                        --                    , { hour = 8, minute = 50 }
-                        --                    , { hour = 6, minute = 30 }
-                        --                    , { hour = 6, minute = 59 }
-                        --                    , { hour = 0, minute = 30 }
-                        --                    , { hour = 0, minute = 50 }
-                        --                    , { hour = 8, minute = 50 }
-                        --                    , { hour = 6, minute = 30 }
-                        --                    , { hour = 8, minute = 50 }
-                        --                    , { hour = 6, minute = 59 }
-                        --                    , { hour = 6, minute = 59 }
-                        --                    , { hour = 0, minute = 30 }
-                        --                    , { hour = 0, minute = 50 }
-                        --                    , { hour = 8, minute = 50 }
-                        --                    , { hour = 6, minute = 30 }
-                        --                    , { hour = 6, minute = 59 }
-                        --                    , { hour = 8, minute = 50 }
-                        --                    , { hour = 6, minute = 59 }
-                        --                    , { hour = 0, minute = 30 }
-                        --                    , { hour = 0, minute = 50 }
-                        --                    , { hour = 10, minute = 59 }
-                        --                    ]
-                    }
-                )
+                totalsRect
                 (Dict.toList perMonth)
 
         --|> Debug.log "per month total"
