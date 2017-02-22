@@ -118,6 +118,7 @@ eventsComponent events =
             , List.map dayItem (List.take 5 sorted)
                 |> ul [ class "list-group" ]
             , h3 [] [ text "Montly totals: " ]
+              -- TODO sort by date including year
             , List.map monthItem (List.reverse monthTotals)
                 |> ul [ class "list-group" ]
             ]
