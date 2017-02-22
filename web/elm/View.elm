@@ -111,6 +111,18 @@ eventsComponent events =
                 totalsRect
                 (Dict.toList perMonth)
 
+        sortedMonthTotals =
+            monthTotals
+                |> List.sortWith
+                    (\a b ->
+                        case a.year > b.year of
+                            True ->
+                                LT
+
+                            _ ->
+                                GT
+                    )
+
         --|> Debug.log "per month total"
     in
         div [ class "container-fluid" ]
@@ -118,8 +130,7 @@ eventsComponent events =
             , List.map dayItem (List.take 5 sorted)
                 |> ul [ class "list-group" ]
             , h3 [] [ text "Montly totals: " ]
-              -- TODO sort by date including year
-            , List.map monthItem (List.reverse monthTotals)
+            , List.map monthItem sortedMonthTotals
                 |> ul [ class "list-group" ]
             ]
 
