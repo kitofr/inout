@@ -101,3 +101,30 @@ form.link, form.button {
 .content {
   margin-top: 50px
 }
+
+.btn {
+  margin-right: 10px; 
+}
+
+.check-timer {
+  margin-top: 20px;
+}
+.time-period {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.time-period .amount {
+  font-size: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  background: #ccc;
+}
+
+.time-period .period {
+  font-size: 50%;
+  display: block;
+  color: #7B7D7D;
+  padding-top: 10px;
+  text-transform: uppercase;
+}

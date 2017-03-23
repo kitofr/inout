@@ -104,8 +104,8 @@ eventsComponent events =
 
         perMonth =
             groupBy (\x -> monthOrder x.date) sorted
-                |> Debug.log "perMonth"
 
+        --|> Debug.log "perMonth"
         monthTotals =
             List.map
                 totalsRect
@@ -135,18 +135,33 @@ eventsComponent events =
             ]
 
 
+viewTimeSinceLastCheckIn : Time -> List (Html msg)
+viewTimeSinceLastCheckIn t =
+    List.map viewTimePeriod (timePeriods t)
+
+
+viewTimePeriod : ( String, String ) -> Html msg
+viewTimePeriod ( period, amount ) =
+    div [ class "time-period" ]
+        [ span [ class "amount" ] [ text amount ]
+        , span [ class "period" ] [ text period ]
+        ]
+
+
 view : Model -> Html Msg
 view model =
     let
         time =
-            Debug.log "time" model.currentTime
+            Debug.log "time" (timePeriods model.timeSinceLastCheckIn)
     in
         div []
-            [ div []
-                [ button [ class ("btn"), onClick Load ] [ text "refresh" ]
-                , button [ class ("btn btn-success"), onClick CheckIn ] [ text "check in" ]
-                , button [ class ("btn btn-primary"), onClick CheckOut ] [ text "check out" ]
-                  --, p [] [ text (toString time) ]
+            [ div [ class ("container") ]
+                [ div [ class ("row") ]
+                    [ button [ class ("btn"), onClick Load ] [ text "refresh" ]
+                    , button [ class ("btn btn-success"), onClick CheckIn ] [ text "check in" ]
+                    , button [ class ("btn btn-primary"), onClick CheckOut ] [ text "check out" ]
+                    ]
+                , div [ class ("row check-timer") ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
                 , (eventsComponent model.events)
                 ]
             ]

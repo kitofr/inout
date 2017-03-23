@@ -24,7 +24,8 @@ type alias Event =
 type alias Model =
     { events : List Event
     , hostUrl : String
-    , currentTime : Time
+    , checkInAt : Time
+    , timeSinceLastCheckIn: Time
     }
 
 

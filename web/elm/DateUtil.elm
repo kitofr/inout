@@ -1,5 +1,6 @@
 module DateUtil exposing (..)
 
+import Time exposing (..)
 import Date exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Date.Extra.Duration as Duration exposing (..)
@@ -107,7 +108,7 @@ dateToMonthStr : Date -> String
 dateToMonthStr date =
     let
         day =
-            case Debug.log "day" (Date.dayOfWeek date) of
+            case (Date.dayOfWeek date) of
                 Mon ->
                     "Mon"
 
@@ -218,3 +219,33 @@ addTimeDurations a b =
 periodToStr : TimeDuration -> String
 periodToStr period =
     (toString period.hour) ++ "h " ++ (toString period.minute) ++ "min " ++ (toString period.second) ++ "sec"
+
+
+
+-- The remaining time is represented in milliseconds. Here we
+-- calculate the remaining number of days, hours, minutes, and seconds.
+-- It returns a list of tuples that looks like this, for example:
+-- [ ("days", "02"), ("hours", "06"), ("minutes", "15"), ("seconds", "03")]
+
+
+timePeriods : Time -> List ( String, String )
+timePeriods t =
+    let
+        seconds =
+            floor (t / 1000) % 60
+
+        minutes =
+            floor (t / 1000 / 60) % 60
+
+        hours =
+            floor (t / (1000 * 60 * 60)) % 24
+
+        days =
+            floor (t / (1000 * 60 * 60 * 24))
+
+        addLeadingZeros n =
+            String.padLeft 2 '0' (toString n)
+    in
+        [ days, hours, minutes, seconds ]
+            |> List.map addLeadingZeros
+            |> List.map2 (,) [ "days", "hours", "minutes", "seconds" ]

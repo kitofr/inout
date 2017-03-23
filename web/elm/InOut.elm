@@ -6,6 +6,9 @@ import Html exposing (..)
 import Types exposing (..)
 import Api exposing (..)
 import View exposing (..)
+import DateUtil exposing (sortDates)
+import Date.Extra.Compare as Compare exposing (is, Compare2(..))
+import Date
 
 
 main : Program Flags Model Msg
@@ -20,13 +23,17 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    --Time.every second Tick
-    Sub.none
+    case model.checkInAt of
+        0 ->
+            Sub.none
+
+        _ ->
+            Time.every second Tick
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { events = [], hostUrl = flags.hostUrl, currentTime = 0 }, getEvents flags.hostUrl )
+    ( { events = [], hostUrl = flags.hostUrl, checkInAt = 0, timeSinceLastCheckIn = 0 }, getEvents flags.hostUrl )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -48,10 +55,33 @@ update msg model =
             ( model, Cmd.none )
 
         LoadEvents (Ok events) ->
-            ( { model | events = events }, Cmd.none )
+            let
+                ev =
+                    List.sortWith (\a b -> sortDates SameOrBefore a.inserted_at b.inserted_at) events
+                        --|> Debug.log "events"
+
+                first =
+                    List.head ev
+
+                checkedIn =
+                    case first of
+                        Just e ->
+                            let
+                                _ =
+                                    Debug.log "e" e
+                            in
+                                if e.status == "check-in" then
+                                    Date.toTime e.inserted_at
+                                else
+                                    0
+
+                        _ ->
+                            0
+            in
+                ( { model | events = ev, checkInAt = checkedIn }, Cmd.none )
 
         LoadEvents (Err _) ->
             ( model, Cmd.none )
 
         Tick t ->
-            ( { model | currentTime = t }, Cmd.none )
+            ( { model | timeSinceLastCheckIn = t - model.checkInAt }, Cmd.none )
