@@ -25,7 +25,17 @@ type alias Model =
     { events : List Event
     , hostUrl : String
     , checkInAt : Time
-    , timeSinceLastCheckIn: Time
+    , edit: Maybe DayItem
+    , timeSinceLastCheckIn : Time
+    }
+
+
+type alias DayItem =
+    { date : Date
+    , dateStr : String
+    , diff : DeltaRecord
+    , dayNumber : Int 
+    , events : List Event
     }
 
 
@@ -33,6 +43,8 @@ type Msg
     = CheckIn
     | CheckOut
     | Load
+    | EditItem DayItem
+    | Delete Event
     | CreateEvent (Result Http.Error String)
     | LoadEvents (Result Http.Error (List Event))
     | Tick Time

@@ -7,6 +7,8 @@ import Date exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Dict exposing (get, empty)
 import Date.Extra.Duration as Duration exposing (..)
+import Date.Extra.Format exposing (format)
+import Date.Extra.Config.Config_en_us exposing (config)
 import Charts exposing (barChart)
 import DateUtil exposing (..)
 import Types exposing (..)
@@ -31,9 +33,9 @@ eventItem event =
             ]
 
 
-dayItem : { date : Date, dateStr : String, diff : DeltaRecord, dayNumber : Int } -> Html Msg
+dayItem : DayItem -> Html Msg
 dayItem day =
-    li [ class ("list-group-item list-group-item-warning") ]
+    li [ class ("list-group-item list-group-item-warning"), onClick (EditItem day)]
         [ h5 [ class "list-group-item-heading" ] [ text day.dateStr ]
         , p [ class "list-group-item-text" ] [ text (periodToStr (toTimeDuration day.diff)) ]
         ]
@@ -94,6 +96,7 @@ eventsComponent events =
                         , diff = (timeDifference (Tuple.second x))
                         , date = date
                         , dayNumber = Date.day date
+                        , events = Tuple.second x
                         }
                 )
                 (Dict.toList grouped)
@@ -105,7 +108,6 @@ eventsComponent events =
         perMonth =
             groupBy (\x -> monthOrder x.date) sorted
 
-        --|> Debug.log "perMonth"
         monthTotals =
             List.map
                 totalsRect
@@ -147,12 +149,31 @@ viewTimePeriod ( period, amount ) =
         , span [ class "period" ] [ text period ]
         ]
 
+status event =
+  let _ = Debug.log "event" event
+  in
+  li [] [
+    span [] [ text ( event.status ++  " - " )]
+  , input [placeholder (format config "%a %-d %b %Y at  %-H:%M:%S" event.inserted_at) ] []
+  , button [ onClick (Delete event)] [text "Delete" ]
+  ]
+
+edit: DayItem -> Html Msg
+edit dayItem =
+  ul [ class "row" ] 
+    ( List.map status dayItem.events )
+  
 
 view : Model -> Html Msg
 view model =
     let
         time =
             Debug.log "time" (timePeriods model.timeSinceLastCheckIn)
+
+        shouldEdit =
+          case model.edit of
+            Just dayItem -> (edit dayItem)
+            _ -> div [] []
     in
         div []
             [ div [ class ("container") ]
@@ -162,6 +183,7 @@ view model =
                     , button [ class ("btn btn-primary"), onClick CheckOut ] [ text "check out" ]
                     ]
                 , div [ class ("row check-timer") ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
+                , shouldEdit
                 , (eventsComponent model.events)
                 ]
             ]

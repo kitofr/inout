@@ -33,7 +33,13 @@ subscriptions model =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { events = [], hostUrl = flags.hostUrl, checkInAt = 0, timeSinceLastCheckIn = 0 }, getEvents flags.hostUrl )
+    ( 
+      { events = []
+      , hostUrl = flags.hostUrl
+      , checkInAt = 0
+      , timeSinceLastCheckIn = 0 
+      , edit = Nothing
+      }, getEvents flags.hostUrl )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -41,6 +47,12 @@ update msg model =
     case msg of
         Load ->
             ( model, getEvents model.hostUrl )
+
+        Delete event ->
+            (model, Cmd.none )
+
+        EditItem dayItem ->
+            ( { model | edit = Just dayItem }, Cmd.none )
 
         CheckIn ->
             ( model, (check "in" model.hostUrl) )
@@ -58,8 +70,8 @@ update msg model =
             let
                 ev =
                     List.sortWith (\a b -> sortDates SameOrBefore a.inserted_at b.inserted_at) events
-                        --|> Debug.log "events"
 
+                --|> Debug.log "events"
                 first =
                     List.head ev
 
