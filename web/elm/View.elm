@@ -88,7 +88,7 @@ last5 sorted =
 
 
 monthlyTotals sorted =
-  let 
+    let
         perMonth =
             groupBy (\x -> monthOrder x.date) sorted
 
@@ -108,17 +108,16 @@ monthlyTotals sorted =
                             _ ->
                                 GT
                     )
+    in
+        div []
+            [ h3 [] [ text "Montly totals: " ]
+            , List.map monthItem sortedMonthTotals
+                |> ul [ class "list-group" ]
+            ]
 
-  in
-    div []
-        [ h3 [] [ text "Montly totals: " ]
-        , List.map monthItem sortedMonthTotals
-            |> ul [ class "list-group" ]
-        ]
 
-
-eventsComponent : List Event -> Html Msg
-eventsComponent events =
+sortedDayItems : List Event -> List DayItem
+sortedDayItems events =
     let
         grouped =
             groupBy (\x -> dateToMonthStr x.inserted_at) events
@@ -139,10 +138,15 @@ eventsComponent events =
                 )
                 (Dict.toList grouped)
             )
+    in
+        dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
 
+
+eventsComponent : List Event -> Html Msg
+eventsComponent events =
+    let
         sorted =
-            dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
-
+            sortedDayItems events
     in
         div [ class "container-fluid" ]
             [ last5 sorted
