@@ -168,15 +168,12 @@ viewTimePeriod ( period, amount ) =
 
 
 status event =
-    let
-        _ =
-            Debug.log "event" event
-    in
-        li []
-            [ span [] [ text (event.status ++ " - ") ]
-            , input [ placeholder (format config "%a %-d %b %Y at  %-H:%M:%S" event.inserted_at) ] []
-            , button [ onClick (Delete event) ] [ text "Delete" ]
-            ]
+    li []
+        [ span [] [ text (event.status ++ " ") ]
+        , input [ placeholder (format config "%a %-d %b %Y at  %-H:%M:%S" event.inserted_at) ] []
+        , button [ onClick (Update event) ] [ text "Update" ]
+        , button [ onClick (Delete event) ] [ text "Delete" ]
+        ]
 
 
 edit : DayItem -> Html Msg

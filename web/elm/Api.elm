@@ -29,6 +29,24 @@ getEvents hostUrl =
         Http.get (hostUrl ++ "/events.json") decodeEvents
 
 
+updateEvent : Event -> String -> Cmd Msg
+updateEvent event hostUrl =
+    let
+        _ =
+            Debug.log "update" event
+    in
+        Cmd.none
+
+
+deleteEvent : Event -> String -> Cmd Msg
+deleteEvent event hostUrl =
+    let
+        _ =
+            Debug.log "delete" event
+    in
+        Cmd.none
+
+
 decodeEvents : JD.Decoder (List Event)
 decodeEvents =
     JD.succeed identity
