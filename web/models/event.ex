@@ -13,7 +13,7 @@ defmodule Inout.Event do
   end
 
   @required_fields ~w(status device location user_id)
-  @optional_fields ~w(inserted_at)
+  @optional_fields ~w(inserted_at id)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

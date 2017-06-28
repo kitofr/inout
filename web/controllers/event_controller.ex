@@ -13,7 +13,17 @@ defmodule Inout.EventController do
 
   def as_json(conn, _params) do
     user_id = Inout.Session.current_user(conn).id
-    events = Repo.all(from e in Inout.Event, where: e.user_id == ^user_id)
+    events = Repo.all(from e in Inout.Event,
+     where: e.user_id == ^user_id,
+     select: %{
+       id: e.id,
+       inserted_at: e.inserted_at,
+       updated_at: e.updated_at,
+       device: e.device,
+       location: e.location,
+       status: e.status
+     }
+    )
     json(conn, %{ events: events })
   end
 
