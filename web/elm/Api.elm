@@ -56,7 +56,8 @@ decodeEvents =
 decodeEvent : JD.Decoder Event
 decodeEvent =
     JD.map Event
-        (field "status" JD.string)
+        (field "id" JD.int)
+        |: (field "status" JD.string)
         |: (field "location" JD.string)
         |: (field "device" JD.string)
         |: (field "inserted_at" Extra.date)

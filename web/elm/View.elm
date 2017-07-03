@@ -169,7 +169,7 @@ viewTimePeriod ( period, amount ) =
 
 status event =
     li []
-        [ span [] [ text (event.status ++ " ") ]
+        [ span [] [ text (event.id ++ ". " ++ event.status ++ " ") ]
         , input [ placeholder (format config "%a %-d %b %Y at  %-H:%M:%S" event.inserted_at) ] []
         , button [ onClick (Update event) ] [ text "Update" ]
         , button [ onClick (Delete event) ] [ text "Delete" ]

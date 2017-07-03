@@ -13,7 +13,8 @@ type alias Flags =
 
 
 type alias Event =
-    { status : String
+    { id : Int
+    , status : String
     , location : String
     , device : String
     , inserted_at : Date
@@ -77,7 +78,8 @@ emptyEvent =
                 Err err ->
                     Debug.crash "Can't create date"
     in
-        { status = "empty"
+        { id = 0
+        , status = "empty"
         , location = "elm"
         , device = "none"
         , inserted_at = date
