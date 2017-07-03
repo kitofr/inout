@@ -90,6 +90,7 @@ last5 sorted =
 monthlyTotals sorted =
     let
         perMonth =
+            -- need to group by year as well
             groupBy (\x -> monthOrder x.date) sorted
 
         monthTotals =
@@ -168,8 +169,10 @@ viewTimePeriod ( period, amount ) =
 
 
 status event =
+  let _ = Debug.log "edit event" event
+  in
     li []
-        [ span [] [ text (event.id ++ ". " ++ event.status ++ " ") ]
+        [ span [] [ text ((toString event.id)++ ". " ++ event.status ++ " ") ]
         , input [ placeholder (format config "%a %-d %b %Y at  %-H:%M:%S" event.inserted_at) ] []
         , button [ onClick (Update event) ] [ text "Update" ]
         , button [ onClick (Delete event) ] [ text "Delete" ]
