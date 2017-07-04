@@ -111,8 +111,7 @@ monthlyTotals sorted =
                     )
     in
         div []
-            [ h3 [] [ text "Montly totals: " ]
-            , List.map monthItem sortedMonthTotals
+            [ List.map monthItem sortedMonthTotals
                 |> ul [ class "list-group" ]
             ]
 
@@ -143,15 +142,35 @@ sortedDayItems events =
         dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
 
 
+yearTab (year, list) =
+  span [class "tab"] 
+    [ h3 [] [text ("Montly totals for " ++ (toString year))]
+    , monthlyTotals (sortedDayItems list) 
+    ]
+
+desc a b =
+   case compare a b of
+     LT -> GT
+     EQ -> EQ
+     GT -> LT
+
 eventsComponent : List Event -> Html Msg
 eventsComponent events =
     let
-        sorted =
+        groupedByYear =
+          Debug.log "grouped by year"
+            (groupBy (\x -> Date.year x.inserted_at) events)
+            |> Dict.toList
+            |> List.sortWith (\(a, _) (b, _) -> desc a b) 
+
+        monthlySorted =
             sortedDayItems events
     in
         div [ class "container-fluid" ]
-            [ last5 sorted
-            , monthlyTotals sorted
+            [ last5 monthlySorted
+            , div [class "tabs"] 
+              (List.map yearTab groupedByYear)
+              --, monthlyTotals monthlySorted
             ]
 
 
