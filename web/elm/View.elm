@@ -14,6 +14,7 @@ import DateUtil exposing (..)
 import Types exposing (..)
 import Seq exposing (..)
 import Time exposing (..)
+import Last5 exposing (last5)
 
 
 eventItem : Event -> Html Msg
@@ -33,12 +34,6 @@ eventItem event =
             ]
 
 
-dayItem : DayItem -> Html Msg
-dayItem day =
-    li [ class ("list-group-item list-group-item-warning"), onClick (EditItem day) ]
-        [ h5 [ class "list-group-item-heading" ] [ text day.dateStr ]
-        , p [ class "list-group-item-text" ] [ text (periodToStr (toTimeDuration day.diff)) ]
-        ]
 
 
 monthItem : { count : Int, year : Int, month : String, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
@@ -79,18 +74,10 @@ totalsRect x =
         }
 
 
-last5 sorted =
-    div []
-        [ h3 [] [ text "Last 5: " ]
-        , List.map dayItem (List.take 5 sorted)
-            |> ul [ class "list-group" ]
-        ]
-
 
 monthlyTotals sorted =
     let
         perMonth =
-            -- need to group by year as well
             groupBy (\x -> monthOrder x.date) sorted
 
         monthTotals =
@@ -142,6 +129,7 @@ sortedDayItems events =
         dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
 
 
+yearTab : (Int, List Event) -> Html Msg
 yearTab (year, list) =
   span [class "tab"] 
     [ h3 [] [text ("Montly totals for " ++ (toString year))]
@@ -187,7 +175,8 @@ viewTimePeriod ( period, amount ) =
         ]
 
 
-status event =
+editEvent : Event -> Html Msg
+editEvent event =
   let _ = Debug.log "edit event" event
   in
     li []
@@ -201,7 +190,7 @@ status event =
 edit : DayItem -> Html Msg
 edit dayItem =
     ul [ class "row" ]
-        (List.map status dayItem.events)
+        (List.map editEvent dayItem.events)
 
 
 view : Model -> Html Msg
