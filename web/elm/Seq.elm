@@ -22,3 +22,16 @@ groupBy fun coll =
                 Dict.insert key (x :: list) acc
     in
         List.foldl reducer Dict.empty coll
+
+desc : comparable -> comparable -> Order
+desc a b =
+    case compare a b of
+        LT ->
+            GT
+
+        EQ ->
+            EQ
+
+        GT ->
+            LT
+

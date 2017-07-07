@@ -135,18 +135,6 @@ yearTab ( year, list ) =
         ]
 
 
-desc a b =
-    case compare a b of
-        LT ->
-            GT
-
-        EQ ->
-            EQ
-
-        GT ->
-            LT
-
-
 eventsComponent : List Event -> Html Msg
 eventsComponent events =
     let
@@ -163,7 +151,6 @@ eventsComponent events =
             [ last5 monthlySorted
             , div [ class "tabs" ]
                 (List.map yearTab groupedByYear)
-              --, monthlyTotals monthlySorted
             ]
 
 
