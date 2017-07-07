@@ -5,7 +5,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Date.Extra.Format exposing (format)
 import Date.Extra.Config.Config_en_us exposing (config)
-import Types exposing (..)
+import Msgs exposing (..)
+import Types exposing (DayItem, Event)
 
 
 editEvent : Event -> Html Msg

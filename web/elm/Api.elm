@@ -5,6 +5,7 @@ import Json.Decode as JD exposing (Decoder, decodeValue, succeed, string, list, 
 import Json.Decode.Extra as Extra exposing ((|:))
 import Http
 import Task exposing (Task)
+import Msgs exposing (..)
 import Types exposing (..)
 
 

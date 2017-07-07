@@ -7,6 +7,7 @@ import List exposing (map)
 import Time exposing (..)
 import DateUtil exposing (periodToStr, toTimeDuration)
 import Types exposing (..)
+import Msgs exposing (..)
 
 
 dayItem : DayItem -> Html Msg
