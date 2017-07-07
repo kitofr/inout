@@ -7,14 +7,14 @@ import Date exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Dict exposing (get, empty)
 import Date.Extra.Duration as Duration exposing (..)
-import Date.Extra.Format exposing (format)
-import Date.Extra.Config.Config_en_us exposing (config)
 import Charts exposing (barChart)
 import DateUtil exposing (..)
 import Types exposing (..)
 import Seq exposing (..)
 import Time exposing (..)
 import Last5 exposing (last5)
+import EditEvent exposing (edit)
+import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
 
 
 eventItem : Event -> Html Msg
@@ -32,8 +32,6 @@ eventItem event =
             , p [ class "list-group-item-text" ] [ text event.device ]
             , p [ class "list-group-item-text" ] [ text event.location ]
             ]
-
-
 
 
 monthItem : { count : Int, year : Int, month : String, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
@@ -72,7 +70,6 @@ totalsRect x =
         , monthlyDayCount =
             List.map (\x -> { hour = x.diff.hour, minute = x.diff.minute }) data
         }
-
 
 
 monthlyTotals sorted =
@@ -129,68 +126,44 @@ sortedDayItems events =
         dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
 
 
-yearTab : (Int, List Event) -> Html Msg
-yearTab (year, list) =
-  span [class "tab"] 
-    [ h3 [] [text ("Montly totals for " ++ (toString year))]
-    , monthlyTotals (sortedDayItems list) 
-    ]
+yearTab : ( Int, List Event ) -> Html Msg
+yearTab ( year, list ) =
+    span [ class "tab" ]
+        [ h3 [] [ text ("Montly totals for " ++ (toString year)) ]
+        , monthlyTotals (sortedDayItems list)
+        ]
+
 
 desc a b =
-   case compare a b of
-     LT -> GT
-     EQ -> EQ
-     GT -> LT
+    case compare a b of
+        LT ->
+            GT
+
+        EQ ->
+            EQ
+
+        GT ->
+            LT
+
 
 eventsComponent : List Event -> Html Msg
 eventsComponent events =
     let
         groupedByYear =
-          Debug.log "grouped by year"
-            (groupBy (\x -> Date.year x.inserted_at) events)
-            |> Dict.toList
-            |> List.sortWith (\(a, _) (b, _) -> desc a b) 
+            Debug.log "grouped by year"
+                (groupBy (\x -> Date.year x.inserted_at) events)
+                |> Dict.toList
+                |> List.sortWith (\( a, _ ) ( b, _ ) -> desc a b)
 
         monthlySorted =
             sortedDayItems events
     in
         div [ class "container-fluid" ]
             [ last5 monthlySorted
-            , div [class "tabs"] 
-              (List.map yearTab groupedByYear)
+            , div [ class "tabs" ]
+                (List.map yearTab groupedByYear)
               --, monthlyTotals monthlySorted
             ]
-
-
-viewTimeSinceLastCheckIn : Time -> List (Html msg)
-viewTimeSinceLastCheckIn t =
-    List.map viewTimePeriod (timePeriods t)
-
-
-viewTimePeriod : ( String, String ) -> Html msg
-viewTimePeriod ( period, amount ) =
-    div [ class "time-period" ]
-        [ span [ class "amount" ] [ text amount ]
-        , span [ class "period" ] [ text period ]
-        ]
-
-
-editEvent : Event -> Html Msg
-editEvent event =
-  let _ = Debug.log "edit event" event
-  in
-    li []
-        [ span [] [ text ((toString event.id)++ ". " ++ event.status ++ " ") ]
-        , input [ placeholder (format config "%a %-d %b %Y at  %-H:%M:%S" event.inserted_at) ] []
-        , button [ onClick (Update event) ] [ text "Update" ]
-        , button [ onClick (Delete event) ] [ text "Delete" ]
-        ]
-
-
-edit : DayItem -> Html Msg
-edit dayItem =
-    ul [ class "row" ]
-        (List.map editEvent dayItem.events)
 
 
 view : Model -> Html Msg

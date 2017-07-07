@@ -1,13 +1,13 @@
-module Last5 exposing(..)
+module Last5 exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import List exposing (map)
 import Time exposing (..)
-import DateUtil exposing(periodToStr, toTimeDuration)
-
+import DateUtil exposing (periodToStr, toTimeDuration)
 import Types exposing (..)
+
 
 dayItem : DayItem -> Html Msg
 dayItem day =
@@ -16,10 +16,10 @@ dayItem day =
         , p [ class "list-group-item-text" ] [ text (periodToStr (toTimeDuration day.diff)) ]
         ]
 
+
 last5 sorted =
     div []
         [ h3 [] [ text "Last 5: " ]
         , List.map dayItem (List.take 5 sorted)
             |> ul [ class "list-group" ]
         ]
-
