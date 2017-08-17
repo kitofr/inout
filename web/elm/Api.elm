@@ -53,12 +53,8 @@ delete url =
 
 deleteEvent : Event -> String -> Cmd Msg
 deleteEvent event hostUrl =
-    let
-        _ =
-            Debug.log "delete -> " event.id
-    in
-      Http.send DeleteEvent <|
-        delete (hostUrl ++ "/events/" ++ (toString event.id))
+    Http.send DeleteEvent <|
+      delete (hostUrl ++ "/events/" ++ (toString event.id))
 
 
 decodeEvents : JD.Decoder (List Event)
