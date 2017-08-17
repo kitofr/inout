@@ -11,6 +11,7 @@ type Msg
     | EditItem DayItem
     | Delete Event
     | Update Event
-    | ApiEvent (Result Http.Error String)
+    | DeleteEvent (Result Http.Error String)
+    | CheckEvent (Result Http.Error String)
     | LoadEvents (Result Http.Error (List Event))
     | Tick Time

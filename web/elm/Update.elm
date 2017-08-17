@@ -29,11 +29,19 @@ update msg model =
         CheckOut ->
             ( model, (check "out" model.hostUrl) )
 
-        ApiEvent (Ok event) ->
+        CheckEvent (Ok event) ->
             ( model, getEvents model.hostUrl )
 
-        ApiEvent (Err _) ->
+        CheckEvent (Err _) ->
             ( model, Cmd.none )
+
+        DeleteEvent (Ok event) ->
+          let _ = Debug.log "delete event in update" event
+          in
+          ( { model | edit = Nothing }, getEvents model.hostUrl )
+
+        DeleteEvent (Err _) ->
+          ( model, Cmd.none )
 
         LoadEvents (Ok events) ->
             let

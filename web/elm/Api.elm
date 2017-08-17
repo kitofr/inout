@@ -11,7 +11,7 @@ import Types exposing (..)
 
 post : Decoder String -> String -> Encode.Value -> Cmd Msg
 post decoder url body =
-    Http.send ApiEvent <|
+    Http.send CheckEvent <|
         Http.post url (Http.jsonBody body) decoder
 
 
@@ -57,7 +57,7 @@ deleteEvent event hostUrl =
         _ =
             Debug.log "delete -> " event.id
     in
-      Http.send ApiEvent <|
+      Http.send DeleteEvent <|
         delete (hostUrl ++ "/events/" ++ (toString event.id))
 
 
