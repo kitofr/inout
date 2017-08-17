@@ -139,7 +139,7 @@ eventsComponent : List Event -> Html Msg
 eventsComponent events =
     let
         groupedByYear =
-            Debug.log "grouped by year"
+            -- Debug.log "grouped by year"
                 (groupBy (\x -> Date.year x.inserted_at) events)
                 |> Dict.toList
                 |> List.sortWith (\( a, _ ) ( b, _ ) -> desc a b)
