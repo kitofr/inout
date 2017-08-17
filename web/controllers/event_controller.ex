@@ -78,6 +78,6 @@ defmodule Inout.EventController do
 
     conn
     |> put_flash(:info, "Event deleted successfully.")
-    |> redirect(to: event_path(conn, :index))
+    |> json nil
   end
 end
