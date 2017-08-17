@@ -29,10 +29,10 @@ update msg model =
         CheckOut ->
             ( model, (check "out" model.hostUrl) )
 
-        CreateEvent (Ok event) ->
+        ApiEvent (Ok event) ->
             ( model, getEvents model.hostUrl )
 
-        CreateEvent (Err _) ->
+        ApiEvent (Err _) ->
             ( model, Cmd.none )
 
         LoadEvents (Ok events) ->

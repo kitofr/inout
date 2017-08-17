@@ -11,7 +11,7 @@ import Types exposing (..)
 
 post : Decoder String -> String -> Encode.Value -> Cmd Msg
 post decoder url body =
-    Http.send CreateEvent <|
+    Http.send ApiEvent <|
         Http.post url (Http.jsonBody body) decoder
 
 
@@ -19,7 +19,7 @@ check : String -> String -> Cmd Msg
 check inOrOut hostUrl =
     let
         rec =
-            Debug.log "encode" encodeEvent { status = "check-" ++ inOrOut, location = "tv4play" }
+            Debug.log "encode" createCheck { status = "check-" ++ inOrOut, location = "tv4play" }
     in
         (post (succeed "") (hostUrl ++ "/events") rec)
 
@@ -39,13 +39,26 @@ updateEvent event hostUrl =
         Cmd.none
 
 
+delete : String -> Http.Request String
+delete url =
+  Http.request 
+    { method = "DELETE"
+    , headers = []
+    , url = url
+    , body = Http.emptyBody
+    , expect = Http.expectStringResponse (\_ -> Ok "DELETED")
+    , timeout = Nothing
+    , withCredentials = False
+    }
+
 deleteEvent : Event -> String -> Cmd Msg
 deleteEvent event hostUrl =
     let
         _ =
-            Debug.log "delete" event
+            Debug.log "delete -> " event.id
     in
-        Cmd.none
+      Http.send ApiEvent <|
+        delete (hostUrl ++ "/events/" ++ (toString event.id))
 
 
 decodeEvents : JD.Decoder (List Event)
@@ -65,8 +78,8 @@ decodeEvent =
         |: (field "updated_at" Extra.date)
 
 
-encodeEvent : { status : String, location : String } -> Encode.Value
-encodeEvent record =
+createCheck : { status : String, location : String } -> Encode.Value
+createCheck record =
     Encode.object
         [ ( "event"
           , Encode.object
