@@ -15,14 +15,6 @@ defmodule Inout.EventController do
     user_id = Inout.Session.current_user(conn).id
     events = Repo.all(from e in Inout.Event,
      where: e.user_id == ^user_id
-     #select: %{
-     #  id: e.id,
-     #  inserted_at: e.inserted_at,
-     #  updated_at: e.updated_at,
-     #  device: e.device,
-     #  location: e.location,
-     #  status: e.status
-     #}
     )
     json(conn, %{ events: events })
   end
@@ -63,7 +55,7 @@ defmodule Inout.EventController do
       {:ok, event} ->
         conn
         |> put_flash(:info, "Event updated successfully.")
-        |> redirect(to: event_path(conn, :show, event))
+        |> json event
       {:error, changeset} ->
         render(conn, "edit.html", event: event, changeset: changeset)
     end
