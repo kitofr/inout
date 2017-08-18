@@ -3,6 +3,7 @@ module Api exposing (..)
 import Json.Encode as Encode
 import Json.Decode as JD exposing (Decoder, decodeValue, succeed, string, list, field)
 import Json.Decode.Extra as Extra exposing ((|:))
+import Date.Extra.Format exposing (utcIsoString)
 import Http
 import Task exposing (Task)
 import Msgs exposing (..)
@@ -19,7 +20,8 @@ check : String -> String -> Cmd Msg
 check inOrOut hostUrl =
     let
         rec =
-            Debug.log "encode" createCheck { status = "check-" ++ inOrOut, location = "tv4play" }
+            createCheck { status = "check-" ++ inOrOut, location = "tv4play" }
+              |> Debug.log "encode"
     in
         (post (succeed "") (hostUrl ++ "/events") rec)
 
@@ -29,18 +31,38 @@ getEvents hostUrl =
     Http.send LoadEvents <|
         Http.get (hostUrl ++ "/events.json") decodeEvents
 
+encodeEvent : Event -> Encode.Value
+encodeEvent {id, status, location, device, inserted_at, updated_at} = 
+  Encode.object
+      [ ( "event"
+        , Encode.object
+              [ ( "id", Encode.int <| id )
+              , ( "status", Encode.string <| status )
+              , ( "location", Encode.string <| location )
+              , ( "inserted_at", Encode.string <| (utcIsoString inserted_at))
+              , ( "updated_at", Encode.string <| (utcIsoString updated_at))
+              ]
+        )
+      ]
+
+updateRequest url event =
+  Http.request
+    { method = "PUT"
+    , headers = []
+    , url = url
+    , body = Http.jsonBody <| encodeEvent event    
+    , expect = Http.expectStringResponse (\_ -> Ok "UPDATED" )
+    , timeout = Nothing
+    , withCredentials = False
+    }
 
 updateEvent : Event -> String -> Cmd Msg
 updateEvent event hostUrl =
-    let
-        _ =
-            Debug.log "update" event
-    in
-        Cmd.none
+  Http.send UpdateEvent <|
+    updateRequest (hostUrl ++ "/events/" ++ (toString event.id)) event
 
-
-delete : String -> Http.Request String
-delete url =
+deleteRequest : String -> Http.Request String
+deleteRequest url =
   Http.request 
     { method = "DELETE"
     , headers = []
@@ -54,7 +76,7 @@ delete url =
 deleteEvent : Event -> String -> Cmd Msg
 deleteEvent event hostUrl =
     Http.send DeleteEvent <|
-      delete (hostUrl ++ "/events/" ++ (toString event.id))
+      deleteRequest (hostUrl ++ "/events/" ++ (toString event.id))
 
 
 decodeEvents : JD.Decoder (List Event)

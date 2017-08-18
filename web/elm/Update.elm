@@ -35,6 +35,14 @@ update msg model =
         CheckEvent (Err _) ->
             ( model, Cmd.none )
 
+        UpdateEvent (Ok event) ->
+          let _ = Debug.log "update event in update" event
+          in
+          ( { model | edit = Nothing }, getEvents model.hostUrl )
+
+        UpdateEvent (Err _) ->
+          ( model, Cmd.none )
+
         DeleteEvent (Ok event) ->
           let _ = Debug.log "delete event in update" event
           in
