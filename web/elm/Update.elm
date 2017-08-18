@@ -77,6 +77,12 @@ update msg model =
             in
                 ( { model | events = ev, checkInAt = checkedIn }, Cmd.none )
 
+        NewCheckInTime event time ->
+          let _ = time |> Debug.log "new check in time"
+              _ = event |> Debug.log "new check in event"
+          in
+            ( model, Cmd.none )
+
         LoadEvents (Err _) ->
             ( model, Cmd.none )
 
