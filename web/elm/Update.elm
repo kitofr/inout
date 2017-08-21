@@ -43,6 +43,28 @@ update msg model =
         UpdateEvent (Err _) ->
           ( model, Cmd.none )
 
+        NewCheckInTime event time ->
+          let _ = time |> Debug.log "new check in time"
+              event_ = { event | inserted_at = time }
+                  |> Debug.log "new event"
+
+              changeEvent lst e =
+                List.map (\event ->
+                  if event.id == e.id then
+                    e
+                      |> Debug.log "change"
+                  else
+                    event) lst
+
+              edit = case model.edit of
+                      Just dayitem ->
+                        Just { dayitem | events = (changeEvent dayitem.events event) }
+                      _ -> Nothing
+
+          in
+            ( { model | edit = edit } , Cmd.none )
+
+
         DeleteEvent (Ok event) ->
           let _ = Debug.log "delete event in update" event
           in
@@ -76,12 +98,6 @@ update msg model =
                             0
             in
                 ( { model | events = ev, checkInAt = checkedIn }, Cmd.none )
-
-        NewCheckInTime event time ->
-          let _ = time |> Debug.log "new check in time"
-              _ = event |> Debug.log "new check in event"
-          in
-            ( model, Cmd.none )
 
         LoadEvents (Err _) ->
             ( model, Cmd.none )
