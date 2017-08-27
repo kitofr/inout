@@ -2,7 +2,7 @@ module Update exposing (update)
 
 import Types exposing (..)
 import Api exposing (..)
-import DateUtil exposing (sortDates)
+import DateUtil exposing (sortDates, parseStringDate)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Date
 import Msgs exposing (..)
@@ -44,23 +44,20 @@ update msg model =
           ( model, Cmd.none )
 
         NewCheckInTime event time ->
-          let _ = time |> Debug.log "new check in time"
-              event_ = { event | inserted_at = time }
+          let event_ = { event | inserted_at = parseStringDate time }
                   |> Debug.log "new event"
 
               changeEvent lst e =
                 List.map (\event ->
                   if event.id == e.id then
                     e
-                      |> Debug.log "change"
                   else
                     event) lst
 
               edit = case model.edit of
                       Just dayitem ->
-                        Just { dayitem | events = (changeEvent dayitem.events event) }
+                        Just { dayitem | events = (changeEvent dayitem.events event_) }
                       _ -> Nothing
-
           in
             ( { model | edit = edit } , Cmd.none )
 

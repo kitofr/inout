@@ -5,6 +5,9 @@ import Date exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Date.Extra.Duration as Duration exposing (..)
 
+parseStringDate : String -> Date
+parseStringDate isoString =
+  Date.fromString isoString |> Result.withDefault (Date.fromTime 0)
 
 sortDates : Compare2 -> Date -> Date -> Order
 sortDates order a b =
