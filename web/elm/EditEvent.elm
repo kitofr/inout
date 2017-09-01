@@ -1,20 +1,19 @@
 module EditEvent exposing (edit)
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes as Attr exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Date.Extra.Format exposing (utcIsoString)
 import Msgs exposing (..)
 import Types exposing (DayItem, Event)
 
+dateInput : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+dateInput attr children =
+      input (attr ++ [ type_ "date", step "1", Attr.min "2017-01-01" ]) children
 
-dateInput attr html =
-    let
-        attr_ =
-            List.append [ (type_ "datetime-local") ] attr
-              |> Debug.log "dateInput attr_"
-    in
-        Html.node "input" attr html
+timeInput : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+timeInput attr children =
+  input (attr ++ [ type_ "time", step "5"]) children
 
 
 editEvent event =
@@ -24,7 +23,9 @@ editEvent event =
     in
         li []
             [ span [] [ text ((toString event.id) ++ ". " ++ event.status ++ " ") ]
-            , dateInput
+--            , dateInput [] []
+--            , timeInput [] []
+            , input
                 [ value (utcIsoString event.inserted_at)
                 , onInput (NewCheckInTime event)
                 ]

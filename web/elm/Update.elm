@@ -75,7 +75,6 @@ update msg model =
                 ev =
                     List.sortWith (\a b -> sortDates SameOrBefore a.inserted_at b.inserted_at) events
 
-                --|> Debug.log "events"
                 first =
                     List.head ev
 
