@@ -36,39 +36,64 @@ update msg model =
             ( model, Cmd.none )
 
         UpdateEvent (Ok event) ->
-          let _ = Debug.log "update event in update" event
-          in
-          ( { model | edit = Nothing }, getEvents model.hostUrl )
+            let
+                _ =
+                    Debug.log "update event in update" event
+            in
+                ( { model | edit = Nothing }, getEvents model.hostUrl )
 
         UpdateEvent (Err _) ->
-          ( model, Cmd.none )
+            ( model, Cmd.none )
+
+        TimeUpdated event time ->
+            let
+                _ =
+                    Debug.log "time updated>" time
+            in
+                ( model, Cmd.none )
+
+        DateUpdated event date ->
+            let
+                _ =
+                    Debug.log "date updated>" date
+            in
+                ( model, Cmd.none )
 
         NewCheckInTime event time ->
-          let event_ = { event | inserted_at = parseStringDate time }
-                  |> Debug.log "new event"
+            let
+                event_ =
+                    { event | inserted_at = parseStringDate time }
+                        |> Debug.log "new event"
 
-              changeEvent lst e =
-                List.map (\event ->
-                  if event.id == e.id then
-                    e
-                  else
-                    event) lst
+                changeEvent lst e =
+                    List.map
+                        (\event ->
+                            if event.id == e.id then
+                                e
+                            else
+                                event
+                        )
+                        lst
 
-              edit = case model.edit of
-                      Just dayitem ->
-                        Just { dayitem | events = (changeEvent dayitem.events event_) }
-                      _ -> Nothing
-          in
-            ( { model | edit = edit } , Cmd.none )
+                edit =
+                    case model.edit of
+                        Just dayitem ->
+                            Just { dayitem | events = (changeEvent dayitem.events event_) }
 
+                        _ ->
+                            Nothing
+            in
+                ( { model | edit = edit }, Cmd.none )
 
         DeleteEvent (Ok event) ->
-          let _ = Debug.log "delete event in update" event
-          in
-          ( { model | edit = Nothing }, getEvents model.hostUrl )
+            let
+                _ =
+                    Debug.log "delete event in update" event
+            in
+                ( { model | edit = Nothing }, getEvents model.hostUrl )
 
         DeleteEvent (Err _) ->
-          ( model, Cmd.none )
+            ( model, Cmd.none )
 
         LoadEvents (Ok events) ->
             let

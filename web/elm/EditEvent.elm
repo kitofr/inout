@@ -3,18 +3,66 @@ module EditEvent exposing (edit)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
 import Html.Events exposing (onClick, onInput)
+import Date exposing (Date)
 import Date.Extra.Format exposing (utcIsoString)
 import Msgs exposing (..)
 import Types exposing (DayItem, Event)
+import InputExtra exposing (dateInput, timeInput)
 
-dateInput : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-dateInput attr children =
-      input (attr ++ [ type_ "date", step "1", Attr.min "2017-01-01" ]) children
 
-timeInput : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-timeInput attr children =
-  input (attr ++ [ type_ "time", step "5"]) children
+zeroPad : String -> String
+zeroPad day =
+    case (String.toInt day) of
+        Ok num ->
+            if num < 10 then
+                "0" ++ day
+            else
+                day
 
+        _ ->
+            "00"
+
+dateStr : Date -> String
+dateStr date =
+    let
+        year =
+            Date.year date |> toString
+
+        month =
+            case Date.month date of
+                Date.Jan ->
+                    "01"
+
+                Date.Feb ->
+                    "02"
+
+                Date.Aug ->
+                    "08"
+
+                _ ->
+                    "12"
+
+        day =
+            Date.day date
+                |> toString
+                |> zeroPad
+    in
+        year ++ "-" ++ month ++ "-" ++ day
+
+
+timeStr : Date -> String
+timeStr date =
+    let
+        hour =
+            Date.hour date |> toString |> zeroPad
+
+        min =
+            Date.minute date |> toString |> zeroPad
+
+        sec =
+            Date.second date |> toString |> zeroPad
+    in
+        hour ++ ":" ++ min ++ ":" ++ sec
 
 editEvent event =
     let
@@ -23,8 +71,8 @@ editEvent event =
     in
         li []
             [ span [] [ text ((toString event.id) ++ ". " ++ event.status ++ " ") ]
---            , dateInput [] []
---            , timeInput [] []
+            , dateInput [ onInput (DateUpdated event), value (dateStr event.inserted_at) ] []
+            , timeInput [ onInput (TimeUpdated event), value (timeStr event.inserted_at) ] []
             , input
                 [ value (utcIsoString event.inserted_at)
                 , onInput (NewCheckInTime event)
