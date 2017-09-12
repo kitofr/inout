@@ -8,19 +8,8 @@ import Date.Extra.Format exposing (utcIsoString)
 import Msgs exposing (..)
 import Types exposing (DayItem, Event)
 import InputExtra exposing (dateInput, timeInput)
+import DateUtil exposing (zeroPad)
 
-
-zeroPad : String -> String
-zeroPad day =
-    case (String.toInt day) of
-        Ok num ->
-            if num < 10 then
-                "0" ++ day
-            else
-                day
-
-        _ ->
-            "00"
 
 dateStr : Date -> String
 dateStr date =
@@ -38,6 +27,9 @@ dateStr date =
 
                 Date.Aug ->
                     "08"
+
+                Date.Sep ->
+                    "09"
 
                 _ ->
                     "12"

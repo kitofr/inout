@@ -5,6 +5,18 @@ import Date exposing (..)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Date.Extra.Duration as Duration exposing (..)
 
+zeroPad : String -> String
+zeroPad str =
+    case (String.toInt str) of
+        Ok num ->
+            if num < 10 then
+                "0" ++ str
+            else
+                str
+
+        _ ->
+            "00"
+
 parseStringDate : String -> Date
 parseStringDate isoString =
   Date.fromString isoString |> Result.withDefault (Date.fromTime 0)
