@@ -6,6 +6,7 @@ import Date.Extra.Core exposing (monthToInt)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Date.Extra.Duration as Duration exposing (..)
 
+
 dateStr : Date -> String
 dateStr date =
     let
@@ -13,10 +14,10 @@ dateStr date =
             Date.year date |> toString
 
         month =
-             Date.month date 
-               |> monthToInt
-               |> toString 
-               |> zeroPad
+            Date.month date
+                |> monthToInt
+                |> toString
+                |> zeroPad
 
         day =
             Date.day date
@@ -40,6 +41,7 @@ timeStr date =
     in
         hour ++ ":" ++ min ++ ":" ++ sec
 
+
 zeroPad : String -> String
 zeroPad str =
     case (String.toInt str) of
@@ -52,9 +54,11 @@ zeroPad str =
         _ ->
             "00"
 
+
 parseStringDate : String -> Date
 parseStringDate isoString =
-  Date.fromString isoString |> Result.withDefault (Date.fromTime 0)
+    Date.fromString isoString |> Result.withDefault (Date.fromTime 0)
+
 
 sortDates : Compare2 -> Date -> Date -> Order
 sortDates order a b =
