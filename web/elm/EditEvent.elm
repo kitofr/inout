@@ -8,53 +8,9 @@ import Date.Extra.Format exposing (utcIsoString)
 import Msgs exposing (..)
 import Types exposing (DayItem, Event)
 import InputExtra exposing (dateInput, timeInput)
-import DateUtil exposing (zeroPad)
+import DateUtil exposing (..)
 
 
-dateStr : Date -> String
-dateStr date =
-    let
-        year =
-            Date.year date |> toString
-
-        month =
-            case Date.month date of
-                Date.Jan ->
-                    "01"
-
-                Date.Feb ->
-                    "02"
-
-                Date.Aug ->
-                    "08"
-
-                Date.Sep ->
-                    "09"
-
-                _ ->
-                    "12"
-
-        day =
-            Date.day date
-                |> toString
-                |> zeroPad
-    in
-        year ++ "-" ++ month ++ "-" ++ day
-
-
-timeStr : Date -> String
-timeStr date =
-    let
-        hour =
-            Date.hour date |> toString |> zeroPad
-
-        min =
-            Date.minute date |> toString |> zeroPad
-
-        sec =
-            Date.second date |> toString |> zeroPad
-    in
-        hour ++ ":" ++ min ++ ":" ++ sec
 
 editEvent event =
     let

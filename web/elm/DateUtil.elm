@@ -2,8 +2,43 @@ module DateUtil exposing (..)
 
 import Time exposing (..)
 import Date exposing (..)
+import Date.Extra.Core exposing (monthToInt)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Date.Extra.Duration as Duration exposing (..)
+
+dateStr : Date -> String
+dateStr date =
+    let
+        year =
+            Date.year date |> toString
+
+        month =
+             Date.month date 
+               |> monthToInt
+               |> toString 
+               |> zeroPad
+
+        day =
+            Date.day date
+                |> toString
+                |> zeroPad
+    in
+        year ++ "-" ++ month ++ "-" ++ day
+
+
+timeStr : Date -> String
+timeStr date =
+    let
+        hour =
+            Date.hour date |> toString |> zeroPad
+
+        min =
+            Date.minute date |> toString |> zeroPad
+
+        sec =
+            Date.second date |> toString |> zeroPad
+    in
+        hour ++ ":" ++ min ++ ":" ++ sec
 
 zeroPad : String -> String
 zeroPad str =
