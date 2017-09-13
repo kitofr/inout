@@ -156,9 +156,6 @@ eventsComponent events =
 view : Model -> Html Msg
 view model =
     let
-        time =
-            Debug.log "time" (timePeriods model.timeSinceLastCheckIn)
-
         shouldEdit =
             case model.edit of
                 Just dayItem ->

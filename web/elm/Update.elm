@@ -146,14 +146,10 @@ update msg model =
                 checkedIn =
                     case first of
                         Just e ->
-                            let
-                                _ =
-                                    Debug.log "e" e
-                            in
-                                if e.status == "check-in" then
-                                    Date.toTime e.inserted_at
-                                else
-                                    0
+                            if e.status == "check-in" then
+                                Date.toTime e.inserted_at
+                            else
+                                0
 
                         _ ->
                             0
@@ -164,4 +160,5 @@ update msg model =
             ( model, Cmd.none )
 
         Tick t ->
+          -- TODO handle timezoneoffset
             ( { model | timeSinceLastCheckIn = t - model.checkInAt }, Cmd.none )
