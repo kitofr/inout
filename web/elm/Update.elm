@@ -125,32 +125,6 @@ update msg model =
             in
                 ( { model | edit = edit }, Cmd.none )
 
-        NewCheckInTime event time ->
-            let
-                event_ =
-                    { event | inserted_at = parseStringDate time }
-                        |> Debug.log "new event"
-
-                changeEvent lst e =
-                    List.map
-                        (\event ->
-                            if event.id == e.id then
-                                e
-                            else
-                                event
-                        )
-                        lst
-
-                edit =
-                    case model.edit of
-                        Just dayitem ->
-                            Just { dayitem | events = (changeEvent dayitem.events event_) }
-
-                        _ ->
-                            Nothing
-            in
-                ( { model | edit = edit }, Cmd.none )
-
         DeleteEvent (Ok event) ->
             let
                 _ =

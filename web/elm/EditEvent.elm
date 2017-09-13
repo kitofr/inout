@@ -21,11 +21,6 @@ editEvent event =
             [ span [] [ text ((toString event.id) ++ ". " ++ event.status ++ " ") ]
             , dateInput [ onInput (DateUpdated event), value (dateStr event.inserted_at) ] []
             , timeInput [ onInput (TimeUpdated event), value (timeStr event.inserted_at) ] []
-            , input
-                [ value (utcIsoString event.inserted_at)
-                , onInput (NewCheckInTime event)
-                ]
-                []
             , button [ onClick (Update event) ] [ text "Update" ]
             , button [ onClick (Delete event) ] [ text "Delete" ]
             ]

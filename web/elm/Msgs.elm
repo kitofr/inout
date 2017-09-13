@@ -13,7 +13,6 @@ type Msg
     | EditItem DayItem
     | Load
     | LoadEvents (Result Http.Error (List Event))
-    | NewCheckInTime Event String
     | DateUpdated Event String
     | TimeUpdated Event String
     | Tick Time
