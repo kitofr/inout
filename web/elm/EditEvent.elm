@@ -11,7 +11,6 @@ import InputExtra exposing (dateInput, timeInput)
 import DateUtil exposing (..)
 
 
-
 editEvent event =
     let
         _ =

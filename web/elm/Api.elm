@@ -3,7 +3,7 @@ module Api exposing (..)
 import Json.Encode as Encode
 import Json.Decode as JD exposing (Decoder, succeed, field)
 import Json.Decode.Extra as Extra exposing ((|:))
-import Date.Extra.Format exposing (utcIsoString)
+import Date.Extra.Format exposing (utcIsoString, isoStringNoOffset)
 import Http
 import Task exposing (Task)
 import Msgs exposing (..)
@@ -40,8 +40,8 @@ encodeEvent { id, status, location, device, inserted_at, updated_at } =
                 [ ( "id", Encode.int <| id )
                 , ( "status", Encode.string <| status )
                 , ( "location", Encode.string <| location )
-                , ( "inserted_at", Encode.string <| (utcIsoString inserted_at) )
-                , ( "updated_at", Encode.string <| (utcIsoString updated_at) )
+                , ( "inserted_at", Encode.string <| (isoStringNoOffset inserted_at) )
+                , ( "updated_at", Encode.string <| (isoStringNoOffset updated_at) )
                 ]
           )
         ]

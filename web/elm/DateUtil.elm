@@ -3,7 +3,10 @@ module DateUtil exposing (..)
 import Time exposing (..)
 import Date exposing (..)
 import Date.Extra.Core exposing (monthToInt)
+import Date.Extra.Config.Config_en_us as English
+import Date.Extra.Create exposing (getTimezoneOffset)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
+import Date.Extra.Format exposing (..)
 import Date.Extra.Duration as Duration exposing (..)
 
 
@@ -25,6 +28,15 @@ dateStr date =
                 |> zeroPad
     in
         year ++ "-" ++ month ++ "-" ++ day
+
+
+formatDate d t =
+    let
+        date =
+            parseStringDate (d ++ " " ++ t)
+    in
+        format English.config "%H:%M:%S.%L%:z" date
+            |> Debug.log "offset>>>>> "
 
 
 timeStr : Date -> String
