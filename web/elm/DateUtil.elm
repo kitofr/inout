@@ -30,15 +30,6 @@ dateStr date =
         year ++ "-" ++ month ++ "-" ++ day
 
 
-formatDate d t =
-    let
-        date =
-            parseStringDate (d ++ " " ++ t)
-    in
-        format English.config "%H:%M:%S.%L%:z" date
-            |> Debug.log "offset>>>>> "
-
-
 timeStr : Date -> String
 timeStr date =
     let
