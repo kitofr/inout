@@ -7,7 +7,7 @@ defmodule Inout.User do
     field :crypted_password, :string
     field :password, :string, virtual: true
     has_many :events, Event
-    timestamps
+    timestamps()
   end
 
   @required_fields ~w(email password)

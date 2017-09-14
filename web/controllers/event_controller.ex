@@ -55,7 +55,7 @@ defmodule Inout.EventController do
       {:ok, event} ->
         conn
         |> put_flash(:info, "Event updated successfully.")
-        |> json event
+        |> json(event)
       {:error, changeset} ->
         render(conn, "edit.html", event: event, changeset: changeset)
     end
@@ -70,6 +70,6 @@ defmodule Inout.EventController do
 
     conn
     |> put_flash(:info, "Event deleted successfully.")
-    |> json nil
+    |> json(nil)
   end
 end

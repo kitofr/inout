@@ -9,7 +9,7 @@ defmodule Inout.Event do
     field :location, :string
 
     belongs_to :user, User
-    timestamps
+    timestamps()
   end
 
   @required_fields ~w(status device location user_id)

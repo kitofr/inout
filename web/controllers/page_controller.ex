@@ -1,6 +1,5 @@
 defmodule Inout.PageController do
   import GoodTimes
-  alias Inout.Session
   use Inout.Web, :controller
 
   def index(conn, _params) do
@@ -16,7 +15,7 @@ defmodule Inout.PageController do
 
   def check_in(conn, %{ "device" => device,  "location" => location }) do
     json conn, %{ status: "Checked in",
-                  date: now |> string_date,
+                  date: now() |> string_date,
                   device: device,
                   location: location }
   end
