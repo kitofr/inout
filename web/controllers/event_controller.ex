@@ -30,7 +30,7 @@ defmodule Inout.EventController do
 
     case Repo.insert(changeset) do
       {:ok, _event} ->
-        json conn, %{ event: changeset }
+        json conn, %{ event: _event }
       {:error, changeset} ->
         json conn, %{ error: changeset }
     end

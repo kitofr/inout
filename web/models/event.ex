@@ -2,7 +2,10 @@ defmodule Inout.Event do
   use Inout.Web, :model
   use Ecto.Schema
 
-  @derive {Poison.Encoder, only: [:id, :status, :device, :location, :inserted_at, :updated_at]}
+  @derive {
+    Poison.Encoder,
+    only: [:id, :status, :device, :location, :inserted_at, :updated_at]
+  }
   schema "events" do
     field :status, :string
     field :device, :string
