@@ -33,7 +33,9 @@ barChart : List { a | hour : Int } -> Html msg
 barChart dayCount =
     let
         barSize =
-            20
+            12
+        offSet =
+          3 * barSize
 
         viewSize = barSize * 26 
         viewSizeStr = viewSize |> toString
@@ -45,7 +47,7 @@ barChart dayCount =
                         [ stroke "#333"
                         , strokeWidth "1"
                         , fill (Seq.nth (day.hour % (List.length rainbowColors)) rainbowColors "#442299")
-                        , x (toString ((i * barSize) - (viewSize // 4)))
+                        , x (toString ((i * barSize) + offSet))
                         , y "5"
                         , width ((barSize - 2) |> toString)
                         , height ((toString (1 + day.hour)) ++ "0")
