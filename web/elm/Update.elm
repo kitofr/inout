@@ -6,6 +6,7 @@ import DateUtil exposing (sortDates, parseStringDate, zeroPad, dateStr)
 import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Date
 import Msgs exposing (..)
+import Date.Extra.Create exposing (getTimezoneOffset)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -160,5 +161,14 @@ update msg model =
             ( model, Cmd.none )
 
         Tick t ->
-          -- TODO handle timezoneoffset
-            ( { model | timeSinceLastCheckIn = t - model.checkInAt }, Cmd.none )
+            let
+                min2Millsec min =
+                    60 * 1000 * min
+                      |> toFloat
+
+                withTimeZone =
+                    getTimezoneOffset (Date.fromTime model.checkInAt)
+                        |> \x -> x * -1
+                        |> min2Millsec
+            in
+                ( { model | timeSinceLastCheckIn = t - model.checkInAt - withTimeZone }, Cmd.none )
