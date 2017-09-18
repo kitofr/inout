@@ -35,7 +35,7 @@ barChart dayCount =
         barSize =
             20
 
-        viewSize = barSize * 22 
+        viewSize = barSize * 26 
         viewSizeStr = viewSize |> toString
     in
         svg [ viewBox ( "0 0 " ++ viewSizeStr ++ " 110" ), width (viewSizeStr ++ "px") ]
@@ -45,7 +45,7 @@ barChart dayCount =
                         [ stroke "#333"
                         , strokeWidth "1"
                         , fill (Seq.nth (day.hour % (List.length rainbowColors)) rainbowColors "#442299")
-                        , x ((toString ( (i * barSize) - (viewSize // 2) )))
+                        , x (toString ((i * barSize) - (viewSize // 4)))
                         , y "5"
                         , width ((barSize - 2) |> toString)
                         , height ((toString (1 + day.hour)) ++ "0")
