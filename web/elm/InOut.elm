@@ -14,7 +14,7 @@ main =
     Html.programWithFlags
         { init = init
         , view = view
-        , update = update
+        , update = Update.update
         , subscriptions = subscriptions
         }
 

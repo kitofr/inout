@@ -4,16 +4,71 @@ import Json.Encode as Encode
 import Json.Decode as JD exposing (Decoder, succeed, field)
 import Json.Decode.Extra exposing ((|:))
 import Date exposing (..)
+import DateUtil exposing (sortDates)
 import Date.Extra.Format exposing (utcIsoString)
+import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Http
 import Task exposing (Task)
-import Msgs exposing (..)
 import Types exposing (..)
+import Msgs exposing (Msg(ApiEvent), ApiMsg(..))
+
+update : ApiMsg -> Model -> (Model, Cmd Msg)
+update msg model =
+  case msg of
+        CheckEvent (Ok event) ->
+            ( model, getEvents model.hostUrl )
+
+        CheckEvent (Err _) ->
+            ( model, Cmd.none )
+
+        UpdateEvent (Ok event) ->
+            let
+                _ =
+                    Debug.log "update event in update" event
+            in
+                ( { model | edit = Nothing }, getEvents model.hostUrl )
+
+        UpdateEvent (Err _) ->
+            ( model, Cmd.none )
+
+        DeleteEvent (Ok event) ->
+            let
+                _ =
+                    Debug.log "delete event in update" event
+            in
+                ( { model | edit = Nothing }, getEvents model.hostUrl )
+
+        DeleteEvent (Err _) ->
+            ( model, Cmd.none )
+
+        LoadEvents (Ok events) ->
+            let
+                ev =
+                    List.sortWith (\a b -> sortDates SameOrBefore a.inserted_at b.inserted_at) events
+
+                first =
+                    List.head ev
+
+                checkedIn =
+                    case first of
+                        Just e ->
+                            if e.status == "check-in" then
+                                Date.toTime e.inserted_at
+                            else
+                                0
+
+                        _ ->
+                            0
+            in
+                ( { model | events = ev, checkInAt = checkedIn }, Cmd.none )
+
+        LoadEvents (Err _) ->
+            ( model, Cmd.none )
 
 
 post : Decoder String -> String -> Encode.Value -> Cmd Msg
 post decoder url body =
-    Http.send CheckEvent <|
+    Http.send (ApiEvent << CheckEvent) <|
         Http.post url (Http.jsonBody body) decoder
 
 
@@ -28,7 +83,7 @@ check inOrOut hostUrl =
 
 getEvents : String -> Cmd Msg
 getEvents hostUrl =
-    Http.send LoadEvents <|
+    Http.send (ApiEvent << LoadEvents) <|
         Http.get (hostUrl ++ "/events.json") decodeEvents
 
 
@@ -61,7 +116,7 @@ updateRequest url event =
 
 updateEvent : Event -> String -> Cmd Msg
 updateEvent event hostUrl =
-    Http.send UpdateEvent <|
+    Http.send (ApiEvent << UpdateEvent) <|
         updateRequest (hostUrl ++ "/events/" ++ (toString event.id)) event
 
 
@@ -80,7 +135,7 @@ deleteRequest url =
 
 deleteEvent : Event -> String -> Cmd Msg
 deleteEvent event hostUrl =
-    Http.send DeleteEvent <|
+    Http.send (ApiEvent << DeleteEvent) <|
         deleteRequest (hostUrl ++ "/events/" ++ (toString event.id))
 
 

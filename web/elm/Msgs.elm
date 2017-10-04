@@ -6,15 +6,20 @@ import Types exposing (..)
 
 type Msg
     = CheckIn
-    | CheckEvent (Result Http.Error String)
     | CheckOut
-    | Delete Event
-    | DeleteEvent (Result Http.Error String)
     | EditItem DayItem
-    | Load
-    | LoadEvents (Result Http.Error (List Event))
     | DateUpdated Event String
     | TimeUpdated Event String
     | Tick Time
+    | Load
     | Update Event
-    | UpdateEvent (Result Http.Error String)
+    | Delete Event
+    | ApiEvent ApiMsg
+
+type alias HttpResult a = (Result Http.Error a)
+
+type ApiMsg 
+  = CheckEvent (HttpResult String)
+    | LoadEvents (HttpResult (List Event))
+    | UpdateEvent (HttpResult String)
+    | DeleteEvent (HttpResult String)

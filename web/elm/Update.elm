@@ -9,9 +9,12 @@ import Msgs exposing (..)
 import Date.Extra.Create exposing (getTimezoneOffset)
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
 update msg model =
     case msg of
+        ApiEvent apiMsg ->
+          Api.update apiMsg model
+
         Load ->
             ( model, getEvents model.hostUrl )
 
@@ -29,22 +32,6 @@ update msg model =
 
         CheckOut ->
             ( model, (check "out" model.hostUrl) )
-
-        CheckEvent (Ok event) ->
-            ( model, getEvents model.hostUrl )
-
-        CheckEvent (Err _) ->
-            ( model, Cmd.none )
-
-        UpdateEvent (Ok event) ->
-            let
-                _ =
-                    Debug.log "update event in update" event
-            in
-                ( { model | edit = Nothing }, getEvents model.hostUrl )
-
-        UpdateEvent (Err _) ->
-            ( model, Cmd.none )
 
         TimeUpdated event time ->
             let
@@ -125,40 +112,6 @@ update msg model =
                             Nothing
             in
                 ( { model | edit = edit }, Cmd.none )
-
-        DeleteEvent (Ok event) ->
-            let
-                _ =
-                    Debug.log "delete event in update" event
-            in
-                ( { model | edit = Nothing }, getEvents model.hostUrl )
-
-        DeleteEvent (Err _) ->
-            ( model, Cmd.none )
-
-        LoadEvents (Ok events) ->
-            let
-                ev =
-                    List.sortWith (\a b -> sortDates SameOrBefore a.inserted_at b.inserted_at) events
-
-                first =
-                    List.head ev
-
-                checkedIn =
-                    case first of
-                        Just e ->
-                            if e.status == "check-in" then
-                                Date.toTime e.inserted_at
-                            else
-                                0
-
-                        _ ->
-                            0
-            in
-                ( { model | events = ev, checkInAt = checkedIn }, Cmd.none )
-
-        LoadEvents (Err _) ->
-            ( model, Cmd.none )
 
         Tick t ->
             let
