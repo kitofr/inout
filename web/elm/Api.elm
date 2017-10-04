@@ -2,8 +2,9 @@ module Api exposing (..)
 
 import Json.Encode as Encode
 import Json.Decode as JD exposing (Decoder, succeed, field)
-import Json.Decode.Extra as Extra exposing ((|:))
-import Date.Extra.Format exposing (utcIsoString, isoStringNoOffset)
+import Json.Decode.Extra exposing ((|:))
+import Date exposing (..)
+import Date.Extra.Format exposing (utcIsoString)
 import Http
 import Task exposing (Task)
 import Msgs exposing (..)
@@ -21,7 +22,6 @@ check inOrOut hostUrl =
     let
         rec =
             createCheck { status = "check-" ++ inOrOut, location = "tv4play" }
-                |> Debug.log "encode"
     in
         (post (succeed "") (hostUrl ++ "/events") rec)
 
@@ -40,8 +40,8 @@ encodeEvent { id, status, location, device, inserted_at, updated_at } =
                 [ ( "id", Encode.int <| id )
                 , ( "status", Encode.string <| status )
                 , ( "location", Encode.string <| location )
-                , ( "inserted_at", Encode.string <| (isoStringNoOffset inserted_at) )
-                , ( "updated_at", Encode.string <| (isoStringNoOffset updated_at) )
+                , ( "inserted_at", Encode.string <| (utcIsoString inserted_at) )
+                , ( "updated_at", Encode.string <| (utcIsoString updated_at) )
                 ]
           )
         ]
@@ -90,6 +90,19 @@ decodeEvents =
         |: (field "events" (JD.list decodeEvent))
 
 
+cetTime : String -> Decoder Date
+cetTime str =
+    let
+        withTimeZone = str ++ "+02:00"
+    in
+        case Date.fromString withTimeZone of
+            Ok d ->
+                JD.succeed d
+
+            Err e ->
+                JD.fail e
+
+
 decodeEvent : JD.Decoder Event
 decodeEvent =
     JD.map Event
@@ -97,8 +110,8 @@ decodeEvent =
         |: (field "status" JD.string)
         |: (field "location" JD.string)
         |: (field "device" JD.string)
-        |: (field "inserted_at" Extra.date)
-        |: (field "updated_at" Extra.date)
+        |: (field "inserted_at" JD.string |> JD.andThen cetTime)
+        |: (field "updated_at" JD.string |> JD.andThen cetTime)
 
 
 createCheck : { status : String, location : String } -> Encode.Value
