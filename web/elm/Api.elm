@@ -3,20 +3,20 @@ module Api exposing (..)
 import Json.Encode as Encode
 import Json.Decode as JD exposing (Decoder, succeed, field)
 import Json.Decode.Extra exposing ((|:))
-import Date exposing (..)
+import Date exposing (Date)
 import DateUtil exposing (sortDates)
 import Date.Extra.Format exposing (utcIsoString)
-import Date.Extra.Compare exposing (Compare2(..))
+import Date.Extra.Compare exposing (Compare2(SameOrBefore))
 import Http
-import Types exposing (..)
+import Types exposing (Model, Event)
 import Msgs exposing (Msg(ApiEvent))
-import ApiMsgs exposing (..)
+import ApiMsgs exposing (ApiMsg(CheckEvent, UpdateEvent, DeleteEvent, LoadEvents))
 
 
 update : ApiMsg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        CheckEvent (Ok event) ->
+        CheckEvent (Ok _) ->
             ( model, getEvents model.hostUrl )
 
         CheckEvent (Err _) ->
@@ -89,20 +89,21 @@ getEvents hostUrl =
 
 
 encodeEvent : Event -> Encode.Value
-encodeEvent { id, status, location, device, inserted_at, updated_at } =
+encodeEvent { id, status, location, inserted_at, updated_at } =
     Encode.object
         [ ( "event"
           , Encode.object
                 [ ( "id", Encode.int <| id )
                 , ( "status", Encode.string <| status )
                 , ( "location", Encode.string <| location )
-                , ( "inserted_at", Encode.string <| (utcIsoString inserted_at) )
-                , ( "updated_at", Encode.string <| (utcIsoString updated_at) )
+                , ( "inserted_at", Encode.string <| utcIsoString inserted_at )
+                , ( "updated_at", Encode.string <| utcIsoString updated_at )
                 ]
           )
         ]
 
 
+updateRequest : String -> Event -> Http.Request String
 updateRequest url event =
     Http.request
         { method = "PUT"
@@ -118,7 +119,7 @@ updateRequest url event =
 updateEvent : Event -> String -> Cmd Msg
 updateEvent event hostUrl =
     Http.send (ApiEvent << UpdateEvent) <|
-        updateRequest (hostUrl ++ "/events/" ++ (toString event.id)) event
+        updateRequest (hostUrl ++ "/events/" ++ toString event.id) event
 
 
 deleteRequest : String -> Http.Request String
@@ -137,13 +138,13 @@ deleteRequest url =
 deleteEvent : Event -> String -> Cmd Msg
 deleteEvent event hostUrl =
     Http.send (ApiEvent << DeleteEvent) <|
-        deleteRequest (hostUrl ++ "/events/" ++ (toString event.id))
+        deleteRequest (hostUrl ++ "/events/" ++ toString event.id)
 
 
 decodeEvents : JD.Decoder (List Event)
 decodeEvents =
     JD.succeed identity
-        |: (field "events" (JD.list decodeEvent))
+        |: field "events" (JD.list decodeEvent)
 
 
 cetTime : String -> Decoder Date
@@ -164,9 +165,9 @@ decodeEvent : JD.Decoder Event
 decodeEvent =
     JD.map Event
         (field "id" JD.int)
-        |: (field "status" JD.string)
-        |: (field "location" JD.string)
-        |: (field "device" JD.string)
+        |: field "status" JD.string
+        |: field "location" JD.string
+        |: field "device" JD.string
         |: (field "inserted_at" JD.string |> JD.andThen cetTime)
         |: (field "updated_at" JD.string |> JD.andThen cetTime)
 
