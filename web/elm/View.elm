@@ -18,23 +18,6 @@ import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
 import ViewMsgs exposing (ViewMsg(Load, CheckIn, CheckOut))
 
 
--- eventItem : Event -> Html Msg
--- eventItem event =
---     let
---         color =
---             if event.status == "check-in" then
---                 "success"
---             else
---                 "info"
---     in
---         li [ class ("list-group-item list-group-item-" ++ color) ]
---             [ h5 [ class "list-group-item-heading" ] [ text event.status ]
---             , p [ class "list-group-item-text" ] [ text <| dateToMonthStr event.inserted_at ]
---             , p [ class "list-group-item-text" ] [ text event.device ]
---             , p [ class "list-group-item-text" ] [ text event.location ]
---             ]
-
-
 monthItem : { count : Int, year : Int, month : String, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
 monthItem month =
     li [ class "list-group-item list-group-item-success row" ]

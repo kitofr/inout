@@ -1,13 +1,10 @@
 module DateUtil exposing (..)
 
-import Time exposing (..)
-import Date exposing (..)
+import Time exposing (Time)
+import Date exposing (Date, Month(..), Day(..))
 import Date.Extra.Core exposing (monthToInt)
-import Date.Extra.Config.Config_en_us as English
-import Date.Extra.Create exposing (getTimezoneOffset)
-import Date.Extra.Compare as Compare exposing (is, Compare2(..))
-import Date.Extra.Format exposing (..)
-import Date.Extra.Duration as Duration exposing (..)
+import Date.Extra.Compare exposing (is, Compare2)
+import Date.Extra.Duration exposing (DeltaRecord)
 
 
 dateStr : Date -> String
@@ -47,7 +44,7 @@ timeStr date =
 
 zeroPad : String -> String
 zeroPad str =
-    case (String.toInt str) of
+    case String.toInt str of
         Ok num ->
             if num < 10 then
                 "0" ++ str
@@ -165,7 +162,7 @@ dateToMonthStr : Date -> String
 dateToMonthStr date =
     let
         day =
-            case (Date.dayOfWeek date) of
+            case Date.dayOfWeek date of
                 Mon ->
                     "Mon"
 
@@ -229,7 +226,11 @@ dateToMonthStr date =
 
 
 type alias TimeDuration =
-    { hour : Int, minute : Int, second : Int, millisecond : Int }
+    { hour : Int
+    , minute : Int
+    , second : Int
+    , millisecond : Int
+    }
 
 
 toTimeDuration : DeltaRecord -> TimeDuration
@@ -258,13 +259,13 @@ addTimeDurations a b =
             addTime (a.millisecond + b.millisecond)
 
         sec =
-            addTime (a.second + b.second + (Tuple.second mil))
+            addTime (a.second + b.second + Tuple.second mil)
 
         min =
-            addTime (a.minute + b.minute + (Tuple.second sec))
+            addTime (a.minute + b.minute + Tuple.second sec)
 
         hour =
-            a.hour + b.hour + (Tuple.second min)
+            a.hour + b.hour + Tuple.second min
     in
         { millisecond = Tuple.first mil
         , second = Tuple.first sec
@@ -275,7 +276,8 @@ addTimeDurations a b =
 
 periodToStr : TimeDuration -> String
 periodToStr period =
-    (toString period.hour) ++ "h " ++ (toString period.minute) ++ "min " ++ (toString period.second) ++ "sec"
+    -- List map toString |> String.join ?
+    toString period.hour ++ "h " ++ toString period.minute ++ "min " ++ toString period.second ++ "sec"
 
 
 
