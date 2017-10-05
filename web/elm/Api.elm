@@ -6,15 +6,16 @@ import Json.Decode.Extra exposing ((|:))
 import Date exposing (..)
 import DateUtil exposing (sortDates)
 import Date.Extra.Format exposing (utcIsoString)
-import Date.Extra.Compare as Compare exposing (is, Compare2(..))
+import Date.Extra.Compare exposing (Compare2(..))
 import Http
-import Task exposing (Task)
 import Types exposing (..)
-import Msgs exposing (Msg(ApiEvent), ApiMsg(..))
+import Msgs exposing (Msg(ApiEvent))
+import ApiMsgs exposing (..)
 
-update : ApiMsg -> Model -> (Model, Cmd Msg)
+
+update : ApiMsg -> Model -> ( Model, Cmd Msg )
 update msg model =
-  case msg of
+    case msg of
         CheckEvent (Ok event) ->
             ( model, getEvents model.hostUrl )
 
@@ -148,7 +149,8 @@ decodeEvents =
 cetTime : String -> Decoder Date
 cetTime str =
     let
-        withTimeZone = str ++ "+02:00"
+        withTimeZone =
+            str ++ "+02:00"
     in
         case Date.fromString withTimeZone of
             Ok d ->

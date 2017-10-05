@@ -1,8 +1,8 @@
 module Msgs exposing (..)
 
-import Http
 import Time exposing (Time, second)
 import Types exposing (..)
+import ApiMsgs exposing (ApiMsg)
 
 type Msg
     = CheckIn
@@ -16,10 +16,3 @@ type Msg
     | Delete Event
     | ApiEvent ApiMsg
 
-type alias HttpResult a = (Result Http.Error a)
-
-type ApiMsg 
-  = CheckEvent (HttpResult String)
-    | LoadEvents (HttpResult (List Event))
-    | UpdateEvent (HttpResult String)
-    | DeleteEvent (HttpResult String)
