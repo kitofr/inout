@@ -1,11 +1,10 @@
 module Types exposing (..)
 
 import Date exposing (Date)
-import Date.Extra.Duration as Duration exposing (..)
-import Date.Extra.Compare as Compare exposing (is, Compare2(..))
-import DateUtil exposing (..)
-import Time exposing (Time, second)
-import Http
+import Date.Extra.Duration exposing (DeltaRecord, diff)
+import Date.Extra.Compare exposing (Compare2(SameOrBefore))
+import DateUtil exposing (sortDates)
+import Time exposing (Time)
 
 
 type alias Flags =
@@ -26,7 +25,7 @@ type alias Model =
     { events : List Event
     , hostUrl : String
     , checkInAt : Time
-    , edit: Maybe DayItem
+    , edit : Maybe DayItem
     , timeSinceLastCheckIn : Time
     }
 
@@ -35,9 +34,10 @@ type alias DayItem =
     { date : Date
     , dateStr : String
     , diff : DeltaRecord
-    , dayNumber : Int 
+    , dayNumber : Int
     , events : List Event
     }
+
 
 
 -- Util Functions
@@ -58,11 +58,11 @@ emptyEvent : Event
 emptyEvent =
     let
         date =
-            case Date.fromString ("2000-01-01") of
+            case Date.fromString "2000-01-01" of
                 Ok val ->
                     val
 
-                Err err ->
+                Err _ ->
                     Debug.crash "Can't create date"
     in
         { id = 0
@@ -86,4 +86,4 @@ timeDifference coll =
         last =
             List.reverse sorted |> List.head |> Maybe.withDefault emptyEvent
     in
-        Duration.diff first.inserted_at last.inserted_at
+        diff first.inserted_at last.inserted_at
