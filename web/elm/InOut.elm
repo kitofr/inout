@@ -1,13 +1,12 @@
 module InOut exposing (main)
 
-import Platform.Cmd as Cmd exposing (Cmd)
-import Time exposing (Time, second)
-import Html exposing (..)
-import Types exposing (..)
-import Msgs exposing (..)
-import Api exposing (..)
-import View exposing (..)
-import Update exposing (update)
+import Time exposing (second)
+import Html
+import Types exposing (Flags, Model)
+import Msgs exposing (Msg(Tick))
+import Api exposing (getEvents)
+import View exposing (view)
+import Update
 
 
 main : Program Flags Model Msg
