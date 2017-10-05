@@ -1,10 +1,10 @@
 module Update exposing (update)
 
 import Types exposing (..)
-import Api exposing (..)
+import Api exposing (getEvents, updateEvent, deleteEvent, check)
 import DateUtil exposing (sortDates, parseStringDate, zeroPad, dateStr)
 import Date
-import Msgs exposing (..)
+import Msgs exposing (Msg(ApiEvent, ViewEvent, Tick))
 import ViewMsgs exposing (..)
 import Date.Extra.Create exposing (getTimezoneOffset)
 
@@ -13,7 +13,7 @@ update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
 update msg model =
     case msg of
         ApiEvent apiMsg ->
-          Api.update apiMsg model
+            Api.update apiMsg model
 
         ViewEvent Load ->
             ( model, getEvents model.hostUrl )
@@ -24,7 +24,7 @@ update msg model =
         ViewEvent (Delete event) ->
             ( model, deleteEvent event model.hostUrl )
 
-        ViewEvent (EditItem dayItem)->
+        ViewEvent (EditItem dayItem) ->
             ( { model | edit = Just dayItem }, Cmd.none )
 
         ViewEvent CheckIn ->
@@ -116,12 +116,16 @@ update msg model =
         Tick t ->
             let
                 min2Millsec min =
-                    60 * 1000 * min
-                      |> toFloat
+                    60
+                        * 1000
+                        * min
+                        |> toFloat
 
                 withTimeZone =
                     getTimezoneOffset (Date.fromTime model.checkInAt)
-                        |> \x -> x * -1
-                        |> min2Millsec
+                        |> \x ->
+                            x
+                                * -1
+                                |> min2Millsec
             in
                 ( { model | timeSinceLastCheckIn = t - model.checkInAt - withTimeZone }, Cmd.none )

@@ -9,6 +9,7 @@ import Api exposing (..)
 import View exposing (..)
 import Update exposing (update)
 
+
 main : Program Flags Model Msg
 main =
     Html.programWithFlags
@@ -31,11 +32,11 @@ subscriptions model =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( 
-      { events = []
+    ( { events = []
       , hostUrl = flags.hostUrl
       , checkInAt = 0
-      , timeSinceLastCheckIn = 0 
+      , timeSinceLastCheckIn = 0
       , edit = Nothing
-      }, getEvents flags.hostUrl )
-
+      }
+    , getEvents flags.hostUrl
+    )

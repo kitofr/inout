@@ -2,8 +2,8 @@ module Charts exposing (..)
 
 import List
 import Html exposing (Html)
-import Svg exposing (..)
-import Svg.Attributes exposing (..)
+import Svg exposing (svg, rect)
+import Svg.Attributes exposing (viewBox, width, stroke, strokeWidth, fill, x, y, width, height, transform)
 import Seq
 
 
@@ -34,13 +34,17 @@ barChart dayCount =
     let
         barSize =
             12
-        offSet =
-          3 * barSize
 
-        viewSize = barSize * 26 
-        viewSizeStr = viewSize |> toString
+        offSet =
+            3 * barSize
+
+        viewSize =
+            barSize * 26
+
+        viewSizeStr =
+            viewSize |> toString
     in
-        svg [ viewBox ( "0 0 " ++ viewSizeStr ++ " 110" ), width (viewSizeStr ++ "px") ]
+        svg [ viewBox ("0 0 " ++ viewSizeStr ++ " 110"), width (viewSizeStr ++ "px") ]
             (List.indexedMap
                 (\i day ->
                     rect
