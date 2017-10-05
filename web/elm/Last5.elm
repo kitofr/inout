@@ -8,11 +8,12 @@ import Time exposing (..)
 import DateUtil exposing (periodToStr, toTimeDuration)
 import Types exposing (..)
 import Msgs exposing (..)
+import ViewMsgs exposing (ViewMsg(EditItem))
 
 
 dayItem : DayItem -> Html Msg
 dayItem day =
-    li [ class ("list-group-item list-group-item-warning"), onClick (EditItem day) ]
+    li [ class ("list-group-item list-group-item-warning"), onClick (ViewEvent (EditItem day)) ]
         [ h5 [ class "list-group-item-heading" ] [ text day.dateStr ]
         , p [ class "list-group-item-text" ] [ text (periodToStr (toTimeDuration day.diff)) ]
         ]

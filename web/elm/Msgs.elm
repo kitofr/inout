@@ -3,16 +3,10 @@ module Msgs exposing (..)
 import Time exposing (Time, second)
 import Types exposing (..)
 import ApiMsgs exposing (ApiMsg)
+import ViewMsgs exposing (ViewMsg)
 
 type Msg
-    = CheckIn
-    | CheckOut
-    | EditItem DayItem
-    | DateUpdated Event String
-    | TimeUpdated Event String
+    = ApiEvent ApiMsg
     | Tick Time
-    | Load
-    | Update Event
-    | Delete Event
-    | ApiEvent ApiMsg
+    | ViewEvent ViewMsg
 

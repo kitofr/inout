@@ -15,6 +15,7 @@ import Seq exposing (..)
 import Last5 exposing (last5)
 import EditEvent exposing (edit)
 import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
+import ViewMsgs exposing (ViewMsg(..))
 
 
 eventItem : Event -> Html Msg
@@ -139,7 +140,7 @@ eventsComponent events =
     let
         groupedByYear =
             -- Debug.log "grouped by year"
-                (groupBy (\x -> Date.year x.inserted_at) events)
+            (groupBy (\x -> Date.year x.inserted_at) events)
                 |> Dict.toList
                 |> List.sortWith (\( a, _ ) ( b, _ ) -> desc a b)
 
@@ -167,9 +168,9 @@ view model =
         div []
             [ div [ class ("container") ]
                 [ div [ class ("row") ]
-                    [ button [ class ("btn"), onClick Load ] [ text "refresh" ]
-                    , button [ class ("btn btn-success"), onClick CheckIn ] [ text "check in" ]
-                    , button [ class ("btn btn-primary"), onClick CheckOut ] [ text "check out" ]
+                    [ button [ class ("btn"), onClick (ViewEvent Load) ] [ text "refresh" ]
+                    , button [ class ("btn btn-success"), onClick (ViewEvent CheckIn) ] [ text "check in" ]
+                    , button [ class ("btn btn-primary"), onClick (ViewEvent CheckOut) ] [ text "check out" ]
                     ]
                 , div [ class ("row check-timer") ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
                 , shouldEdit

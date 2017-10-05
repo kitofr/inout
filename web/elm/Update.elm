@@ -3,9 +3,9 @@ module Update exposing (update)
 import Types exposing (..)
 import Api exposing (..)
 import DateUtil exposing (sortDates, parseStringDate, zeroPad, dateStr)
-import Date.Extra.Compare as Compare exposing (is, Compare2(..))
 import Date
 import Msgs exposing (..)
+import ViewMsgs exposing (..)
 import Date.Extra.Create exposing (getTimezoneOffset)
 
 
@@ -15,25 +15,25 @@ update msg model =
         ApiEvent apiMsg ->
           Api.update apiMsg model
 
-        Load ->
+        ViewEvent Load ->
             ( model, getEvents model.hostUrl )
 
-        Update event ->
+        ViewEvent (Update event) ->
             ( model, updateEvent event model.hostUrl )
 
-        Delete event ->
+        ViewEvent (Delete event) ->
             ( model, deleteEvent event model.hostUrl )
 
-        EditItem dayItem ->
+        ViewEvent (EditItem dayItem)->
             ( { model | edit = Just dayItem }, Cmd.none )
 
-        CheckIn ->
+        ViewEvent CheckIn ->
             ( model, (check "in" model.hostUrl) )
 
-        CheckOut ->
+        ViewEvent CheckOut ->
             ( model, (check "out" model.hostUrl) )
 
-        TimeUpdated event time ->
+        ViewEvent (TimeUpdated event time) ->
             let
                 createDateFrom d str =
                     let
@@ -70,7 +70,7 @@ update msg model =
             in
                 ( { model | edit = edit }, Cmd.none )
 
-        DateUpdated event date ->
+        ViewEvent (DateUpdated event date) ->
             let
                 createDateFrom d str =
                     let
