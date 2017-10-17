@@ -1,0 +1,40 @@
+<h2>Listing Contracts</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Client</th>
+      <th>Reference</th>
+      <th>Address</th>
+      <th>Postal Code</th>
+      <th>Country</th>
+      <th>Description</th>
+      <th>Hourly rate</th>
+      <th>User</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for contract <- @contracts do %>
+    <tr>
+      <td><%= contract.client %></td>
+      <td><%= contract.reference %></td>
+      <td><%= contract.address %></td>
+      <td><%= contract.postalcode %></td>
+      <td><%= contract.country %></td>
+      <td><%= contract.description %></td>
+      <td><%= contract.hourly_rate %></td>
+      <td><%= contract.user_id %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: contract_path(@conn, :show, contract), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: contract_path(@conn, :edit, contract), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: contract_path(@conn, :delete, contract), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New contract", to: contract_path(@conn, :new) %>

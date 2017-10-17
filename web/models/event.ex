@@ -12,10 +12,11 @@ defmodule Inout.Event do
     field :location, :string
 
     belongs_to :user, User
+    belongs_to :contract, Contract
     timestamps()
   end
 
-  @required_fields ~w(status device location user_id)
+  @required_fields ~w(status device location user_id contract_id)
   @optional_fields ~w(inserted_at)
 
   @doc """

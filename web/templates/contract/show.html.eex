@@ -1,0 +1,52 @@
+<h2>Show contract</h2>
+
+<ul>
+
+  <li>
+    <strong>Client:</strong>
+    <%= @contract.client %>
+  </li>
+
+  <li>
+    <strong>Reference:</strong>
+    <%= @contract.reference %>
+  </li>
+
+  <li>
+    <strong>Address:</strong>
+    <%= @contract.address %>
+  </li>
+
+  <li>
+    <strong>Postal code:</strong>
+    <%= @contract.postalcode %>
+  </li>
+
+  <li>
+    <strong>Country: </strong>
+    <%= @contract.country %>
+  </li>
+
+  <li>
+    <strong>Description: </strong>
+    <%= @contract.description %>
+  </li>
+
+  <li>
+    <strong>Email: </strong>
+    <%= @contract.email %>
+  </li>
+
+  <li>
+    <strong>Hourly rate: </strong>
+    <%= @contract.hourly_rate %>
+  </li>
+
+  <li>
+    <strong>Created: </strong>
+    <%= @contract.inserted_at %>
+  </li>
+</ul>
+
+<%= link "Edit", to: contract_path(@conn, :edit, @contract) %>
+<%= link "Back", to: contract_path(@conn, :index) %>

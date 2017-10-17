@@ -7,6 +7,7 @@ defmodule Inout.User do
     field :crypted_password, :string
     field :password, :string, virtual: true
     has_many :events, Event
+    has_many :contracts, Contract
     timestamps()
   end
 

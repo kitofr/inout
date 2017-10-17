@@ -2,6 +2,10 @@ defmodule Inout.Contract do
   use Inout.Web, :model
   use Ecto.Schema
 
+  @derive {
+    Poison.Encoder,
+    only: [:id, :client, :reference, :address, :postalcode, :country, :description, :email, :hourly_rate]
+  }
   schema "contracts" do
     field :client, :string
     field :reference, :string
@@ -17,7 +21,7 @@ defmodule Inout.Contract do
   end
 
   @required_fields ~w(client hourly_rate user_id)
-  @optional_fields ~w(reference addresss postalcode country description email inserted_at)
+  @optional_fields ~w(reference address postalcode country description email inserted_at)
 
   def changeset(model, params \\ :empty) do
     model

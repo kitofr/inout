@@ -26,7 +26,11 @@ defmodule Inout.EventController do
 
   def create(conn, %{"event" => event_params}) do
     user_id = Inout.Session.current_user(conn).id
-    changeset = Event.changeset(%Event{}, Map.merge(event_params, %{ "user_id" => "#{user_id}" } ))
+    last_contract = Inout.Contract |> Ecto.Query.first |> Inout.Repo.one
+
+    changeset = Event.changeset(
+        %Event{},
+        Map.merge(event_params, %{ "user_id" => "#{user_id}", "contract_id" => "#{last_contract.id}" } ))
 
     case Repo.insert(changeset) do
       {:ok, _event} ->
@@ -48,6 +52,7 @@ defmodule Inout.EventController do
   end
 
   def update(conn, %{"id" => id, "event" => event_params}) do
+    #TODO Make sure you only update your own events
     event = Repo.get!(Event, id)
     changeset = Event.changeset(event, event_params)
 
@@ -62,6 +67,7 @@ defmodule Inout.EventController do
   end
 
   def delete(conn, %{"id" => id}) do
+    #TODO Make sure you only delete your own events
     event = Repo.get!(Event, id)
 
     # Here we use delete! (with a bang) because we expect
