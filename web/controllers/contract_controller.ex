@@ -40,4 +40,10 @@ defmodule Inout.ContractController do
     contract = Repo.get!(Contract, id)
     render(conn, "show.html", contract: contract)
   end
+
+  def edit(conn, %{"id" => id}) do
+    contract = Repo.get!(Contract, id)
+    changeset = Contract.changeset(contract)
+    render(conn, "edit.html", contract: contract, changeset: changeset)
+  end
 end
