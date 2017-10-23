@@ -3,7 +3,7 @@ defmodule Inout.ContractController do
 
   alias Inout.Contract
 
-  plug :scrub_params, "event" when action in [:create, :update]
+  plug :scrub_params, "contract" when action in [:create, :update]
 
   def index(conn, _params) do
     user_id = Inout.Session.current_user(conn).id
