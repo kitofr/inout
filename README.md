@@ -1,5 +1,7 @@
 # Inout
 
+[![Build Status](https://travis-ci.org/kitofr/inout.svg?branch=master)](https://travis-ci.org/kitofr/inout)
+
 To start your Phoenix app:
 
   * Install dependencies with `mix deps.get`
