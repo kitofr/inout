@@ -59,9 +59,17 @@ defmodule Inout.EventController do
   end
 
   def edit(conn, %{"id" => id}) do
-    event = Repo.get!(Event, id)
+    user_id = Inout.Session.current_user(conn).id
+    query = from e in Inout.Event,
+              join: c in Inout.Contract, on: e.contract_id == c.id,
+              where: e.user_id == ^user_id,
+              where: e.id == ^id,
+              preload: [contract: c]
+
+    contracts = Repo.all(from(c in Inout.Contract, select: { c.client, c.id }))
+    event = Repo.one(query)
     changeset = Event.changeset(event)
-    render(conn, "edit.html", event: event, changeset: changeset)
+    render(conn, "edit.html", event: event, contracts: contracts, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "event" => event_params}) do

@@ -1,4 +1,4 @@
-<%= form_for @changeset, @action, fn f -> %>
+<%= form_for @changeset, @action, @contracts, fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -21,6 +21,12 @@
     <%= label f, :location, class: "control-label" %>
     <%= text_input f, :location, class: "form-control" %>
     <%= error_tag f, :location %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :contract, class: "control-label" %>
+    <%= select f, :contract_id, @contracts, class: "form-control" %>
+    <%= error_tag f, :contract %>
   </div>
 
   <div class="form-group">
