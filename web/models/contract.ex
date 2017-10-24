@@ -17,7 +17,6 @@ defmodule Inout.Contract do
     field :hourly_rate, :integer
 
     belongs_to :user, User
-    has_many :events, Event
     timestamps()
   end
 
