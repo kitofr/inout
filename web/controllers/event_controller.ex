@@ -39,7 +39,7 @@ defmodule Inout.EventController do
 
   def create(conn, %{"event" => event_params}) do
     user_id = Inout.Session.current_user(conn).id
-    last_contract = Inout.Contract |> Ecto.Query.first |> Inout.Repo.one
+    last_contract = Inout.Contract |> Ecto.Query.last |> Inout.Repo.one
 
     changeset = Event.changeset(
         %Event{},
