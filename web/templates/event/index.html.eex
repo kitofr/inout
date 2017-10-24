@@ -7,6 +7,8 @@
       <th>Device</th>
       <th>Location</th>
       <th>Time</th>
+      <th>User</th>
+      <th>Contract</th>
 
       <th></th>
     </tr>
@@ -18,6 +20,8 @@
       <td><%= event.device %></td>
       <td><%= event.location %></td>
       <td><%= event.inserted_at %></td>
+      <td><%= event.user.email %></td>
+      <td><%= event.contract.client %></td>
 
       <td class="text-right">
         <%= link "Show", to: event_path(@conn, :show, event), class: "btn btn-default btn-xs" %>

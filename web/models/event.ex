@@ -4,7 +4,7 @@ defmodule Inout.Event do
 
   @derive {
     Poison.Encoder,
-    only: [:id, :status, :device, :location, :inserted_at, :updated_at]
+    only: [:id, :status, :device, :location, :user, :contract, :inserted_at, :updated_at]
   }
   schema "events" do
     field :status, :string
@@ -12,7 +12,7 @@ defmodule Inout.Event do
     field :location, :string
 
     belongs_to :user, User
-    belongs_to :contract, Contract
+    has_one :contract, Contract
     timestamps()
   end
 

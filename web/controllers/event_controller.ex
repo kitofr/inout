@@ -7,7 +7,15 @@ defmodule Inout.EventController do
 
   def index(conn, _params) do
     user_id = Inout.Session.current_user(conn).id
-    events = Repo.all(from e in Inout.Event, where: e.user_id == ^user_id, order_by: [desc: e.inserted_at])
+    query = from e in Inout.Event,
+              join: c in Inout.Contract, on: e.contract_id == c.id,
+              join: u in Inout.User, on: e.user_id == u.id,
+              where: e.user_id == ^user_id,
+              order_by: [desc: e.inserted_at],
+              preload: [contract: c, user: u]
+
+    events = Repo.all(query)
+
     render(conn, "index.html", events: events)
   end
 
