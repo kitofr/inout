@@ -41,8 +41,8 @@ defmodule Inout.EventController do
         Map.merge(event_params, %{ "user_id" => "#{user_id}", "contract_id" => "#{last_contract.id}" } ))
 
     case Repo.insert(changeset) do
-      {:ok, _event} ->
-        json conn, %{ event: _event }
+      {:ok, event} ->
+        json conn, %{ event: event }
       {:error, changeset} ->
         json conn, %{ error: changeset }
     end
