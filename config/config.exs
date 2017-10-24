@@ -14,6 +14,16 @@ config :inout, Inout.Endpoint,
   pubsub: [name: Inout.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+config :inout, ecto_repos: [Inout.Repo]
+
+# config :inout, Inout.Repo,
+#   adapter: Ecto.Adapters.Postgres,
+#   username: System.get_env("POSTGRES_USER") || "postgres",
+#   password: System.get_env("POSTGRES_PASSWORD") || "postgres",
+#   database: System.get_env("POSTGRES_DB") || "inout_dev",
+#   hostname: System.get_env("POSTGRES_HOST") || "localhost",
+#   pool: Ecto.Adapters.SQL.Sandbox
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
