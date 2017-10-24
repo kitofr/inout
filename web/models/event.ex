@@ -12,7 +12,7 @@ defmodule Inout.Event do
     field :location, :string
 
     belongs_to :user, User
-    has_one :contract, Contract
+    belongs_to :contract, Contract
     timestamps()
   end
 
