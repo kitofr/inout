@@ -16,7 +16,7 @@ before_script:
   - mix do ecto.create, ecto.migrate
 
 script:
-  - mix test
+  - mix compile
 
 deploy:
   provider: heroku
