@@ -15,7 +15,7 @@ defmodule Inout.Repo.Migrations.CreateContracts do
 
       add :user_id, references(:users)
 
-      timestamps
+      timestamps()
     end
     alter table(:events) do
       add :contract_id, references(:contracts) 

@@ -7,7 +7,7 @@ defmodule Inout.Repo.Migrations.CreateEvent do
       add :device, :string
       add :location, :string
 
-      timestamps
+      timestamps()
     end
 
   end
