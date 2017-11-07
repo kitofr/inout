@@ -1,7 +1,7 @@
 module View exposing (view)
 
-import Html exposing (text, p, h5, li, Html, div, ul, span, h3, button)
-import Html.Attributes exposing (class)
+import Html exposing (text, a, p, h5, li, Html, div, ul, span, h3, button)
+import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 import Date
 import Date.Extra.Compare exposing (Compare2(SameOrBefore))
@@ -15,7 +15,7 @@ import Seq exposing (groupBy, desc)
 import Last5 exposing (last5)
 import EditEvent exposing (edit)
 import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
-import ViewMsgs exposing (ViewMsg(Load, CheckIn, CheckOut))
+import ViewMsgs exposing (ViewMsg(Load, CheckIn, CheckOut, TabClicked))
 
 
 monthItem : { count : Int, year : Int, month : String, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
@@ -58,7 +58,8 @@ totalsRect rec =
 
 
 monthlyTotals :
-    List
+    Bool
+    -> List
         { a
             | diff :
                 { day : Int
@@ -72,18 +73,20 @@ monthlyTotals :
             , date : Date.Date
         }
     -> Html Msg
-monthlyTotals sorted =
+monthlyTotals active sorted =
     let
+        paneClass =
+            if active then
+                "tab-pane active"
+            else
+                "tab-pane"
+
         perMonth =
             groupBy (\x -> monthOrder x.date) sorted
-
-        monthTotals =
-            List.map
-                totalsRect
-                (Dict.toList perMonth)
+                |> Dict.toList
 
         sortedMonthTotals =
-            monthTotals
+            List.map totalsRect perMonth
                 |> List.sortWith
                     (\a b ->
                         case a.year > b.year of
@@ -94,7 +97,7 @@ monthlyTotals sorted =
                                 GT
                     )
     in
-        div []
+        div [ class paneClass ]
             [ List.map monthItem sortedMonthTotals
                 |> ul [ class "list-group" ]
             ]
@@ -125,12 +128,18 @@ sortedDayItems events =
         dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
 
 
-yearTab : ( Int, List Event ) -> Html Msg
-yearTab ( year, list ) =
-    span [ class "tab" ]
-        [ h3 [] [ text ("Montly totals for " ++ toString year) ]
-        , monthlyTotals (sortedDayItems list)
-        ]
+yearTab : Int -> ( Int, List Event ) -> Html Msg
+yearTab currentTab ( year, _ ) =
+    let
+        active =
+            if currentTab == year then
+                " active"
+            else
+                ""
+    in
+        li [ "nav-item" ++ active |> class ]
+            [ a [ class "nav-link", onClick (ViewEvent (TabClicked year)) ] [ text (toString year) ]
+            ]
 
 
 groupedByYear : List Event -> List ( Int, List Event )
@@ -140,21 +149,38 @@ groupedByYear events =
         |> List.sortWith (\( a, _ ) ( b, _ ) -> desc a b)
 
 
-yearTabs : List Event -> Html Msg
-yearTabs events =
-    div [ class "tabs" ]
-        (List.map yearTab (groupedByYear events))
+yearTabs : Int -> List Event -> Html Msg
+yearTabs currentTab events =
+    let
+        list =
+            groupedByYear events
+    in
+        div []
+            [ ul [ class "nav nav-pills" ]
+                (List.map (yearTab currentTab) list)
+            , div [ class "tab-content" ]
+                (List.map
+                    (\( y, es ) ->
+                        let
+                            sorted =
+                                sortedDayItems es
+                        in
+                            monthlyTotals (y == currentTab) sorted
+                    )
+                    list
+                )
+            ]
 
 
-eventsComponent : List Event -> Html Msg
-eventsComponent events =
+eventsComponent : Int -> List Event -> Html Msg
+eventsComponent currentTab events =
     let
         monthlySorted =
             sortedDayItems events
     in
         div [ class "container-fluid" ]
-            [ --last5 monthlySorted
-              yearTabs events
+            [ last5 monthlySorted
+            , yearTabs currentTab events
             ]
 
 
@@ -178,6 +204,6 @@ view model =
                     ]
                 , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
                 , shouldEdit
-                , eventsComponent model.events
+                , eventsComponent model.currentTab model.events
                 ]
             ]

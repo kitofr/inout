@@ -15,6 +15,9 @@ update msg model =
         ApiEvent apiMsg ->
             Api.update apiMsg model
 
+        ViewEvent (TabClicked year) ->
+            ( { model | currentTab = year }, Cmd.none )
+
         ViewEvent Load ->
             ( model, getEvents model.hostUrl )
 
