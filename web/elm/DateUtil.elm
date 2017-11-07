@@ -17,7 +17,12 @@ module DateUtil
         )
 
 import Time exposing (Time)
-import Date exposing (Date, Month(..), Day(..))
+import Date
+    exposing
+        ( Date
+        , Month(Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec)
+        , Day(Mon, Tue, Wed, Thu, Fri, Sat, Sun)
+        )
 import Date.Extra.Core exposing (monthToInt)
 import Date.Extra.Compare exposing (is, Compare2)
 import Date.Extra.Duration exposing (DeltaRecord)
