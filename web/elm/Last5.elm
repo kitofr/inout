@@ -1,4 +1,4 @@
-module Last5 exposing (..)
+module Last5 exposing (last5)
 
 import Html exposing (li, h5, text, p, Html, div, h3, ul)
 import Html.Attributes exposing (class)

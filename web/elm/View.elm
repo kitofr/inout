@@ -1,7 +1,7 @@
 module View exposing (view)
 
-import Html exposing (text, a, p, h5, li, Html, div, ul, span, h3, button)
-import Html.Attributes exposing (class, id)
+import Html exposing (text, a, p, h5, li, Html, div, ul, button)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Date
 import Date.Extra.Compare exposing (Compare2(SameOrBefore))
@@ -21,7 +21,7 @@ import ViewMsgs exposing (ViewMsg(Load, CheckIn, CheckOut, TabClicked))
 monthItem : { count : Int, year : Int, month : Int, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
 monthItem month =
     li [ class "list-group-item list-group-item-success row" ]
-        [ h5 [ class "list-group-item-heading" ] [ text ((toMonthStr month.month) ++ " " ++ toString month.year) ]
+        [ h5 [ class "list-group-item-heading" ] [ text (toMonthStr month.month ++ " " ++ toString month.year) ]
         , p [ class "list-group-item-text monthly-hours col-md-6" ] [ text (periodToStr month.total) ]
         , p [ class "list-group-item-text monthly-count col-md-2" ] [ text (toString month.count) ]
         , p [ class "list-group-item-text monthly-chart col-md-6" ] [ barChart month.monthlyDayCount ]
@@ -87,15 +87,7 @@ monthlyTotals active sorted =
 
         sortedMonthTotals =
             List.map totalsRect perMonth
-                |> List.sortWith
-                    (\a b ->
-                        case a.month > b.month of
-                            True ->
-                                LT
-
-                            _ ->
-                                GT
-                    )
+                |> List.sortWith (\x y -> desc x.month y.month)
     in
         div [ class paneClass ]
             [ List.map monthItem sortedMonthTotals
@@ -125,7 +117,7 @@ sortedDayItems events =
                 )
                 (Dict.toList grouped)
     in
-        dayItems |> List.sortWith (\a b -> sortDates SameOrBefore a.date b.date)
+        dayItems |> List.sortWith (\x y -> sortDates SameOrBefore x.date y.date)
 
 
 yearTab : Int -> ( Int, List Event ) -> Html Msg
@@ -146,7 +138,7 @@ groupedByYear : List Event -> List ( Int, List Event )
 groupedByYear events =
     groupBy (\x -> Date.year x.inserted_at) events
         |> Dict.toList
-        |> List.sortWith (\( a, _ ) ( b, _ ) -> desc a b)
+        |> List.sortWith (\( x, _ ) ( y, _ ) -> desc x y)
 
 
 yearTabs : Int -> List Event -> Html Msg

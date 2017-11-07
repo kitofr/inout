@@ -1,7 +1,7 @@
 module InputExtra exposing (dateInput, timeInput)
 
-import Html exposing (..)
-import Html.Attributes as Attr exposing (..)
+import Html exposing (Html, input)
+import Html.Attributes as Attr exposing (type_, step)
 
 
 dateInput : List (Html.Attribute msg) -> List (Html msg) -> Html msg

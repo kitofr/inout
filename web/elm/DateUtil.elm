@@ -1,4 +1,20 @@
-module DateUtil exposing (..)
+module DateUtil
+    exposing
+        ( TimeDuration
+        , addTimeDurations
+        , dateStr
+        , dateToMonthStr
+        , emptyTimeDuration
+        , monthOrder
+        , parseStringDate
+        , periodToStr
+        , sortDates
+        , timePeriods
+        , timeStr
+        , toMonthStr
+        , toTimeDuration
+        , zeroPad
+        )
 
 import Time exposing (Time)
 import Date exposing (Date, Month(..), Day(..))
@@ -111,7 +127,6 @@ toMonthStr num =
 
         _ ->
             "WFT month: " ++ toString num
-
 
 
 monthOrder : Date -> Int

@@ -1,4 +1,4 @@
-module Charts exposing (..)
+module Charts exposing (barChart)
 
 import List
 import Html exposing (Html)
@@ -7,6 +7,7 @@ import Svg.Attributes exposing (viewBox, width, stroke, strokeWidth, fill, x, y,
 import Seq
 
 
+rainbowColors : List String
 rainbowColors =
     [ "#f80c12"
     , "#ee1100"
@@ -49,7 +50,7 @@ barChart dayCount =
                 (\i day ->
                     let
                         color =
-                            Seq.nth (day.hour % (List.length rainbowColors)) rainbowColors "#442299"
+                            Seq.nth (day.hour % List.length rainbowColors) rainbowColors "#442299"
                     in
                         rect
                             [ stroke "#333"
@@ -57,8 +58,8 @@ barChart dayCount =
                             , fill color
                             , x (toString ((i * barSize) + offSet))
                             , y "5"
-                            , width ((barSize - 2) |> toString)
-                            , height ((toString (1 + day.hour)) ++ "0")
+                            , width (barSize - 2 |> toString)
+                            , height (toString (1 + day.hour) ++ "0")
                             , transform "rotate(180) translate(-300 -100)"
                             ]
                             []
