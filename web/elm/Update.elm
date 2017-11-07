@@ -30,6 +30,9 @@ update msg model =
         ViewEvent (TabClicked year) ->
             ( { model | currentTab = year }, Cmd.none )
 
+        ViewEvent CloseEdit ->
+            ( { model | edit = Nothing }, Cmd.none )
+
         ViewEvent Load ->
             ( model, getEvents model.hostUrl )
 

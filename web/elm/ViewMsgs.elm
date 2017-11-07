@@ -13,3 +13,4 @@ type ViewMsg
     | TimeUpdated Event String
     | Update Event
     | TabClicked Int
+    | CloseEdit
