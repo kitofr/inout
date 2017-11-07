@@ -31,16 +31,19 @@ editEvent event =
 
 edit : DayItem -> Html Msg
 edit dayItem =
-  div []
-  [ h3 [ style ["display" => "inline-block"]] [text ("Edit: " ++ dayItem.dateStr)]
-  , button [
-    style ["display" => "inline-block"
-          ,"margin-left" => "20px"]
-    , type_ "button"
-    , class "btn btn-warning"
-    , onClick (ViewEvent CloseEdit)] [
-    span [] [text "close" ]
-    ]
-  , ul [ class "list-group" ]
-        (List.map editEvent dayItem.events)
-  ]
+    div []
+        [ h3 [ style [ "display" => "inline-block" ] ] [ text ("Edit: " ++ dayItem.dateStr) ]
+        , button
+            [ style
+                [ "display" => "inline-block"
+                , "margin-left" => "20px"
+                ]
+            , type_ "button"
+            , class "btn btn-warning"
+            , onClick (ViewEvent CloseEdit)
+            ]
+            [ span [] [ text "close" ]
+            ]
+        , ul [ class "list-group" ]
+            (List.map editEvent dayItem.events)
+        ]

@@ -3,7 +3,7 @@ module Update exposing (update)
 import Types exposing (Model, Event)
 import Api exposing (getEvents, updateEvent, deleteEvent, check)
 import DateUtil exposing (parseStringDate, zeroPad, dateStr)
-import Date
+import Date exposing (Date)
 import Msgs exposing (Msg(ApiEvent, ViewEvent, Tick))
 import ViewMsgs exposing (..)
 import Date.Extra.Create exposing (getTimezoneOffset)
@@ -11,24 +11,48 @@ import Date.Extra.Create exposing (getTimezoneOffset)
 
 changeEvent : List Event -> Event -> List Event
 changeEvent lst e =
-  List.map
-    (\ev ->
-      if ev.id == e.id then
-        e
-      else
-        ev
+    List.map
+        (\ev ->
+            if ev.id == e.id then
+                e
+            else
+                ev
         )
         lst
 
 
+createDateFromTime : Date -> String -> String
+createDateFromTime d str =
+    let
+        date_ =
+            d |> dateStr
+    in
+        date_ ++ " " ++ str
+
+
+createDateFromDate : Date -> String -> String
+createDateFromDate d str =
+    let
+        h =
+            Date.hour d |> toString |> zeroPad
+
+        m =
+            Date.minute d |> toString |> zeroPad
+
+        s =
+            Date.second d |> toString |> zeroPad
+    in
+        str ++ " " ++ h ++ ":" ++ m ++ ":" ++ s
+
+
 update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
 update msg model =
-  case msg of
-    ApiEvent apiMsg ->
-      Api.update apiMsg model
+    case msg of
+        ApiEvent apiMsg ->
+            Api.update apiMsg model
 
-    ViewEvent (TabClicked year) ->
-      ( { model | currentTab = year }, Cmd.none )
+        ViewEvent (TabClicked year) ->
+            ( { model | currentTab = year }, Cmd.none )
 
         ViewEvent CloseEdit ->
             ( { model | edit = Nothing }, Cmd.none )
@@ -53,16 +77,9 @@ update msg model =
 
         ViewEvent (TimeUpdated event time) ->
             let
-                createDateFrom d str =
-                    let
-                        date_ =
-                            d |> dateStr
-                    in
-                        date_ ++ " " ++ str
-
                 time_ =
                     time
-                        |> createDateFrom event.inserted_at
+                        |> createDateFromTime event.inserted_at
                         |> parseStringDate
 
                 event_ =
@@ -80,22 +97,9 @@ update msg model =
 
         ViewEvent (DateUpdated event date) ->
             let
-                createDateFrom d str =
-                    let
-                        h =
-                            Date.hour d |> toString |> zeroPad
-
-                        m =
-                            Date.minute d |> toString |> zeroPad
-
-                        s =
-                            Date.second d |> toString |> zeroPad
-                    in
-                        str ++ " " ++ h ++ ":" ++ m ++ ":" ++ s
-
                 date_ =
                     date
-                        |> createDateFrom event.inserted_at
+                        |> createDateFromDate event.inserted_at
                         |> parseStringDate
 
                 event_ =
