@@ -1,0 +1,13 @@
+version: '2'
+services:
+
+  db: 
+    image: postgres:9.3
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
