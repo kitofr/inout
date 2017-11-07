@@ -18,10 +18,10 @@ import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
 import ViewMsgs exposing (ViewMsg(Load, CheckIn, CheckOut, TabClicked))
 
 
-monthItem : { count : Int, year : Int, month : String, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
+monthItem : { count : Int, year : Int, month : Int, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
 monthItem month =
     li [ class "list-group-item list-group-item-success row" ]
-        [ h5 [ class "list-group-item-heading" ] [ text (month.month ++ " " ++ toString month.year) ]
+        [ h5 [ class "list-group-item-heading" ] [ text ((toMonthStr month.month) ++ " " ++ toString month.year) ]
         , p [ class "list-group-item-text monthly-hours col-md-6" ] [ text (periodToStr month.total) ]
         , p [ class "list-group-item-text monthly-count col-md-2" ] [ text (toString month.count) ]
         , p [ class "list-group-item-text monthly-chart col-md-6" ] [ barChart month.monthlyDayCount ]
@@ -33,7 +33,7 @@ monthlySum month =
     List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
 
 
-totalsRect : ( Int, List { a | date : Date.Date, diff : { day : Int, millisecond : Int, month : Int, second : Int, year : Int, hour : Int, minute : Int } } ) -> { count : Int, month : String, monthlyDayCount : List { hour : Int, minute : Int }, total : TimeDuration, year : Int }
+totalsRect : ( Int, List { a | date : Date.Date, diff : { day : Int, millisecond : Int, month : Int, second : Int, year : Int, hour : Int, minute : Int } } ) -> { count : Int, month : Int, monthlyDayCount : List { hour : Int, minute : Int }, total : TimeDuration, year : Int }
 totalsRect rec =
     let
         data =
@@ -48,7 +48,7 @@ totalsRect rec =
                     0
     in
         { year = year
-        , month = toMonthStr (Tuple.first rec)
+        , month = Tuple.first rec
         , total = monthlySum data
         , count =
             List.length data
@@ -89,7 +89,7 @@ monthlyTotals active sorted =
             List.map totalsRect perMonth
                 |> List.sortWith
                     (\a b ->
-                        case a.year > b.year of
+                        case a.month > b.month of
                             True ->
                                 LT
 

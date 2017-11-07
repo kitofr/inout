@@ -114,10 +114,6 @@ toMonthStr num =
 
 
 
--- TODO this also need to take year in consideration
--- or I have to group on year first and make a monthType
-
-
 monthOrder : Date -> Int
 monthOrder date =
     case Date.month date of
