@@ -1,12 +1,13 @@
 module Update exposing (update)
 
-import Types exposing (..)
+import Types exposing (Model, Event)
 import Api exposing (getEvents, updateEvent, deleteEvent, check)
 import DateUtil exposing (parseStringDate, zeroPad, dateStr)
 import Date
 import Msgs exposing (Msg(ApiEvent, ViewEvent, Tick))
 import ViewMsgs exposing (..)
 import Date.Extra.Create exposing (getTimezoneOffset)
+
 
 changeEvent : List Event -> Event -> List Event
 changeEvent lst e =

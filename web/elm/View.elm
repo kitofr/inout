@@ -33,7 +33,32 @@ monthlySum month =
     List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
 
 
-totalsRect : ( Int, List { a | date : Date.Date, diff : { day : Int, millisecond : Int, month : Int, second : Int, year : Int, hour : Int, minute : Int } } ) -> { count : Int, month : Int, monthlyDayCount : List { hour : Int, minute : Int }, total : TimeDuration, year : Int }
+totalsRect :
+    ( Int
+    , List
+        { a
+            | date : Date.Date
+            , diff :
+                { day : Int
+                , millisecond : Int
+                , month : Int
+                , second : Int
+                , year : Int
+                , hour : Int
+                , minute : Int
+                }
+        }
+    )
+    -> { count : Int
+       , month : Int
+       , monthlyDayCount :
+            List
+                { hour : Int
+                , minute : Int
+                }
+       , total : TimeDuration
+       , year : Int
+       }
 totalsRect rec =
     let
         data =
