@@ -1,11 +1,11 @@
 module EditEvent exposing (edit)
 
-import Html exposing (li, div, span, text, button, ul, Html)
-import Html.Attributes exposing (class, style, value)
+import Html exposing (li, div, span, text, button, ul, Html, h3)
+import Html.Attributes exposing (type_, class, style, value)
 import Html.Events exposing (onClick, onInput)
 import Date exposing (Date)
 import Msgs exposing (Msg(ViewEvent))
-import ViewMsgs exposing (ViewMsg(DateUpdated, TimeUpdated, Update, Delete))
+import ViewMsgs exposing (ViewMsg(DateUpdated, TimeUpdated, Update, Delete, CloseEdit))
 import Types exposing (DayItem)
 import InputExtra exposing (dateInput, timeInput)
 import DateUtil exposing (dateStr, timeStr)
@@ -31,5 +31,16 @@ editEvent event =
 
 edit : DayItem -> Html Msg
 edit dayItem =
-    ul [ class "list-group" ]
+  div []
+  [ h3 [ style ["display" => "inline-block"]] [text ("Edit: " ++ dayItem.dateStr)]
+  , button [
+    style ["display" => "inline-block"
+          ,"margin-left" => "20px"]
+    , type_ "button"
+    , class "btn btn-warning"
+    , onClick (ViewEvent CloseEdit)] [
+    span [] [text "close" ]
+    ]
+  , ul [ class "list-group" ]
         (List.map editEvent dayItem.events)
+  ]

@@ -1,22 +1,37 @@
 module Update exposing (update)
 
-import Types exposing (..)
+import Types exposing (Model, Event)
 import Api exposing (getEvents, updateEvent, deleteEvent, check)
-import DateUtil exposing (sortDates, parseStringDate, zeroPad, dateStr)
+import DateUtil exposing (parseStringDate, zeroPad, dateStr)
 import Date
 import Msgs exposing (Msg(ApiEvent, ViewEvent, Tick))
 import ViewMsgs exposing (..)
 import Date.Extra.Create exposing (getTimezoneOffset)
 
 
+changeEvent : List Event -> Event -> List Event
+changeEvent lst e =
+  List.map
+    (\ev ->
+      if ev.id == e.id then
+        e
+      else
+        ev
+        )
+        lst
+
+
 update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
 update msg model =
-    case msg of
-        ApiEvent apiMsg ->
-            Api.update apiMsg model
+  case msg of
+    ApiEvent apiMsg ->
+      Api.update apiMsg model
 
-        ViewEvent (TabClicked year) ->
-            ( { model | currentTab = year }, Cmd.none )
+    ViewEvent (TabClicked year) ->
+      ( { model | currentTab = year }, Cmd.none )
+
+        ViewEvent CloseEdit ->
+            ( { model | edit = Nothing }, Cmd.none )
 
         ViewEvent Load ->
             ( model, getEvents model.hostUrl )
@@ -31,10 +46,10 @@ update msg model =
             ( { model | edit = Just dayItem }, Cmd.none )
 
         ViewEvent CheckIn ->
-            ( model, (check "in" model.hostUrl) )
+            ( model, check "in" model.hostUrl )
 
         ViewEvent CheckOut ->
-            ( model, (check "out" model.hostUrl) )
+            ( model, check "out" model.hostUrl )
 
         ViewEvent (TimeUpdated event time) ->
             let
@@ -53,20 +68,10 @@ update msg model =
                 event_ =
                     { event | inserted_at = time_ }
 
-                changeEvent lst e =
-                    List.map
-                        (\event ->
-                            if event.id == e.id then
-                                e
-                            else
-                                event
-                        )
-                        lst
-
                 edit =
                     case model.edit of
                         Just dayitem ->
-                            Just { dayitem | events = (changeEvent dayitem.events event_) }
+                            Just { dayitem | events = changeEvent dayitem.events event_ }
 
                         _ ->
                             Nothing
@@ -96,20 +101,10 @@ update msg model =
                 event_ =
                     { event | inserted_at = date_ }
 
-                changeEvent lst e =
-                    List.map
-                        (\event ->
-                            if event.id == e.id then
-                                e
-                            else
-                                event
-                        )
-                        lst
-
                 edit =
                     case model.edit of
                         Just dayitem ->
-                            Just { dayitem | events = (changeEvent dayitem.events event_) }
+                            Just { dayitem | events = changeEvent dayitem.events event_ }
 
                         _ ->
                             Nothing

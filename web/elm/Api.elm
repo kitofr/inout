@@ -1,4 +1,4 @@
-module Api exposing (..)
+module Api exposing (update, check, deleteEvent, updateEvent, getEvents)
 
 import Json.Encode as Encode
 import Json.Decode as JD exposing (Decoder, succeed, field)
@@ -22,22 +22,14 @@ update msg model =
         CheckEvent (Err _) ->
             ( model, Cmd.none )
 
-        UpdateEvent (Ok event) ->
-            let
-                _ =
-                    Debug.log "update event in update" event
-            in
-                ( { model | edit = Nothing }, getEvents model.hostUrl )
+        UpdateEvent (Ok _) ->
+            ( { model | edit = Nothing }, getEvents model.hostUrl )
 
         UpdateEvent (Err _) ->
             ( model, Cmd.none )
 
-        DeleteEvent (Ok event) ->
-            let
-                _ =
-                    Debug.log "delete event in update" event
-            in
-                ( { model | edit = Nothing }, getEvents model.hostUrl )
+        DeleteEvent (Ok _) ->
+            ( { model | edit = Nothing }, getEvents model.hostUrl )
 
         DeleteEvent (Err _) ->
             ( model, Cmd.none )

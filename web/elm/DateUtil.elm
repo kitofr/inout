@@ -1,7 +1,28 @@
-module DateUtil exposing (..)
+module DateUtil
+    exposing
+        ( TimeDuration
+        , addTimeDurations
+        , dateStr
+        , dateToMonthStr
+        , emptyTimeDuration
+        , monthOrder
+        , parseStringDate
+        , periodToStr
+        , sortDates
+        , timePeriods
+        , timeStr
+        , toMonthStr
+        , toTimeDuration
+        , zeroPad
+        )
 
 import Time exposing (Time)
-import Date exposing (Date, Month(..), Day(..))
+import Date
+    exposing
+        ( Date
+        , Month(Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec)
+        , Day(Mon, Tue, Wed, Thu, Fri, Sat, Sun)
+        )
 import Date.Extra.Core exposing (monthToInt)
 import Date.Extra.Compare exposing (is, Compare2)
 import Date.Extra.Duration exposing (DeltaRecord)
@@ -111,7 +132,6 @@ toMonthStr num =
 
         _ ->
             "WFT month: " ++ toString num
-
 
 
 monthOrder : Date -> Int

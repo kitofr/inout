@@ -1,4 +1,12 @@
-module Types exposing (..)
+module Types
+    exposing
+        ( Model
+        , Event
+        , DayItem
+        , Flags
+        , timeDifference
+        , emptyEvent
+        )
 
 import Date exposing (Date)
 import Date.Extra.Duration exposing (DeltaRecord, diff)
@@ -48,11 +56,6 @@ sortEvents : List Event -> Compare2 -> List Event
 sortEvents events order =
     events
         |> List.sortWith (\a b -> sortDates order a.inserted_at b.inserted_at)
-
-
-sortEventsDesc : List Event -> List Event
-sortEventsDesc events =
-    sortEvents events SameOrBefore
 
 
 emptyEvent : Event
