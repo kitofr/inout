@@ -27,6 +27,7 @@ type alias Model =
     , checkInAt : Time
     , edit : Maybe DayItem
     , timeSinceLastCheckIn : Time
+    , currentTab : Int
     }
 
 

@@ -12,3 +12,4 @@ type ViewMsg
     | Load
     | TimeUpdated Event String
     | Update Event
+    | TabClicked Int

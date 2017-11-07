@@ -36,6 +36,7 @@ init flags =
       , checkInAt = 0
       , timeSinceLastCheckIn = 0
       , edit = Nothing
+      , currentTab = 2017 -- TODO this year
       }
     , getEvents flags.hostUrl
     )
