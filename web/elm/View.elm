@@ -133,21 +133,28 @@ yearTab ( year, list ) =
         ]
 
 
+groupedByYear : List Event -> List ( Int, List Event )
+groupedByYear events =
+    groupBy (\x -> Date.year x.inserted_at) events
+        |> Dict.toList
+        |> List.sortWith (\( a, _ ) ( b, _ ) -> desc a b)
+
+
+yearTabs : List Event -> Html Msg
+yearTabs events =
+    div [ class "tabs" ]
+        (List.map yearTab (groupedByYear events))
+
+
 eventsComponent : List Event -> Html Msg
 eventsComponent events =
     let
-        groupedByYear =
-            groupBy (\x -> Date.year x.inserted_at) events
-                |> Dict.toList
-                |> List.sortWith (\( a, _ ) ( b, _ ) -> desc a b)
-
         monthlySorted =
             sortedDayItems events
     in
         div [ class "container-fluid" ]
-            [ last5 monthlySorted
-            , div [ class "tabs" ]
-                (List.map yearTab groupedByYear)
+            [ --last5 monthlySorted
+              yearTabs events
             ]
 
 
