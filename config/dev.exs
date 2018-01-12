@@ -38,5 +38,5 @@ config :inout, Inout.Repo,
   username: "postgres",
   password: "postgres",
   database: "inout_dev",
-  hostname: "localhost",
+  hostname: "db",
   pool_size: 10

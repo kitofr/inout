@@ -1,25 +1,24 @@
 FROM elixir:latest
 
-ENV PORT ${PORT:-4000}
+MAINTAINER Kristoffer Roupé <kitofr@gmail.com>
 
-EXPOSE $PORT
+# ENV PORT ${PORT:-4000}
+# EXPOSE $PORT
 
-WORKDIR /opt/your_application_name
-
-ENV MIX_ENV prod
-
+# Install hex
 RUN mix local.hex --force
 
+# Install rebar
 RUN mix local.rebar --force
 
-COPY mix.* ./
+# Install the Phoenix framework itself
+RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez --force
 
-RUN mix deps.get --only prod
+# Install NodeJS 6.x and the NPM
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN apt-get install -y -q nodejs
 
-RUN mix deps.compile
-
-COPY . .
-
-RUN mix compile
-
-CMD ./scripts/docker.sh
+# Set /app as workdir
+RUN mkdir /app
+ADD . /app
+WORKDIR /app
