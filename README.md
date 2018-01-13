@@ -20,3 +20,11 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Docs: http://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
+
+
+## Docker
+```
+psql -h db -U postgres -d inout_dev
+
+pg_restore --verbose --clean --no-acl --no-owner -h db -U postgres -d inout_dev latest.dump
+```
