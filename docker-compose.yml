@@ -3,6 +3,8 @@ services:
   web:
     build: .
     command: mix phoenix.server
+    environment:
+      - HOST_URL=http://localhost:4000 
     ports:
       - "4000:4000"
     volumes:
@@ -11,9 +13,11 @@ services:
       - db
 
   db: 
-    image: postgres:9.3
+    image: postgres:9.5
     ports:
       - "5432:5432"
+    volumes:
+      - .:/app
 
   adminer:
     image: adminer
