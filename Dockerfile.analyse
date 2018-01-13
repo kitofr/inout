@@ -1,0 +1,10 @@
+FROM node:latest
+
+MAINTAINER Kristoffer Roupé <kitofr@gmail.com>
+
+RUN npm install -g elm-analyse
+
+# Set /app as workdir
+RUN mkdir /app
+ADD . /app
+WORKDIR /app
