@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   web:
     build: .
@@ -11,6 +11,16 @@ services:
       - .:/app
     depends_on:
       - db
+
+  analyse:
+    build: 
+      context: .
+      dockerfile: Dockerfile.analyse
+    volumes:
+      - ./web/elm:/app
+    command: elm-analyse -s
+    ports:
+      - "3000:3000"
 
   db: 
     image: postgres:9.5
