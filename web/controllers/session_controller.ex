@@ -5,8 +5,8 @@ defmodule Inout.SessionController do
     render conn, "new.html"
   end
 
-  def create(conn, %{"session" => session_params}) do
-    case Inout.Session.login(session_params, Inout.Repo) do
+  def create(conn, %{"email" => email, "password" => password}) do
+    case Inout.Session.login(%{"email" => email, "password" => password}, Inout.Repo) do
       {:ok, user} ->
         conn
         |> put_session(:current_user, user.id)
