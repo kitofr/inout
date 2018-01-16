@@ -15,5 +15,5 @@ config :inout, Inout.Repo,
   username: "postgres",
   password: "postgres",
   database: "inout_test",
-  hostname: "localhost",
+  hostname: "db",
   pool: Ecto.Adapters.SQL.Sandbox
