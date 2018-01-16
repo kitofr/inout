@@ -34,9 +34,11 @@ defmodule Inout.ConnCase do
 
   setup tags do
     unless tags[:async] do
-      Ecto.Adapters.SQL.restart_test_transaction(Inout.Repo, [])
+      Ecto.Adapters.SQL.Sandbox.mode(Inout.Repo, {:shared, self()})
     end
 
-    {:ok, conn: Phoenix.ConnTest.conn()}
+    { :ok = Ecto.Adapters.SQL.Sandbox.checkout(Inout.Repo),
+      conn: Phoenix.ConnTest.conn()
+    }
   end
 end
