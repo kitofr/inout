@@ -3,7 +3,17 @@ defmodule Inout.ContractTest do
 
   alias Inout.Contract
 
-  @valid_attrs %{address: "some content", client: "some content", country: "some content", description: "some content", email: "some content", hourly_rate: 42, postalcode: "some content", reference: "some content"}
+  @valid_attrs %{
+    address: "some content", 
+    client: "some content", 
+    country: "some content", 
+    description: "some content", 
+    email: "some content", 
+    hourly_rate: 42, 
+    postalcode: "some content", 
+    reference: "some content",
+    user_id: 1
+  }
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
