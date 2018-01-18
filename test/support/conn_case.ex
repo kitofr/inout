@@ -38,7 +38,7 @@ defmodule Inout.ConnCase do
     end
 
     { :ok = Ecto.Adapters.SQL.Sandbox.checkout(Inout.Repo),
-      conn: Phoenix.ConnTest.conn()
+      conn: Phoenix.ConnTest.build_conn()
     }
   end
 end
