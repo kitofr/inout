@@ -13,12 +13,13 @@ defmodule Inout.User do
     timestamps()
   end
 
-  @required_fields ~w(email password)
+  @required_fields ~w(email password)a
 
   @doc false
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields)
+    |> validate_required(@required_fields)
     |> unique_constraint(:email)
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 8)
