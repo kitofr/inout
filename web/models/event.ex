@@ -1,11 +1,14 @@
 defmodule Inout.Event do
   use Inout.Web, :model
   use Ecto.Schema
+  alias Inout.User
+  alias Inout.Contract
 
   @derive {
     Poison.Encoder,
     only: [:id, :status, :device, :location, :inserted_at, :updated_at]
   }
+
   schema "events" do
     field :status, :string
     field :device, :string
@@ -16,17 +19,12 @@ defmodule Inout.Event do
     timestamps()
   end
 
-  @required_fields ~w(status device location user_id contract_id)
-  @optional_fields ~w(inserted_at)
+  @required_fields ~w(status device location user_id contract_id)a
 
-  @doc """
-  Creates a changeset based on the `model` and `params`.
-
-  If no params are provided, an invalid changeset is returned
-  with no validation performed.
-  """
-  def changeset(model, params \\ :empty) do
+  @doc false
+  def changeset(%Inout.Event{} = model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, @required_fields)
+    |> validate_required(@required_fields)
   end
 end

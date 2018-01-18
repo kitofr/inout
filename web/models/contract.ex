@@ -1,6 +1,7 @@
 defmodule Inout.Contract do
   use Inout.Web, :model
   use Ecto.Schema
+  alias Inout.User
 
   @derive {
     Poison.Encoder,
@@ -20,11 +21,11 @@ defmodule Inout.Contract do
     timestamps()
   end
 
-  @required_fields ~w(client hourly_rate user_id)
-  @optional_fields ~w(reference address postalcode country description email inserted_at)
+  @required_fields ~w(client hourly_rate user_id)a
 
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, @required_fields)
+    |> validate_required(@required_fields)
   end
 end
