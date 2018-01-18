@@ -1,0 +1,26 @@
+{
+  "web/models/*.ex": {
+    "type": "model",
+    "alternate": "test/models/{}_test.exs"
+  },
+  "test/models/*_test.exs": {
+    "type": "modelTest",
+    "alternate": "web/models/{}.ex"
+  },
+  "web/controllers/*.ex": {
+    "type": "controller",
+    "alternate": "test/controllers/{}_test.exs"
+  },
+  "test/controllers/*_test.exs": {
+    "type": "ctrlTest",
+    "alternate": "web/controllers/{}.ex"
+  },
+  "web/views/*.ex": {
+    "type": "view",
+    "alternate": "test/views/{}_test.exs"
+  },
+  "test/views/*_test.exs": {
+    "type": "viewTest",
+    "alternate": "web/views/{}.ex"
+  }
+}
