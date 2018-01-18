@@ -3,6 +3,6 @@ defmodule Inout.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"
-    assert html_response(conn, 200) =~ "<div id=\"elm-main\"></div>"
+    assert html_response(conn, 200) =~ "<a href=\"/login\">Login</a>"
   end
 end
