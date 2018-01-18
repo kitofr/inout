@@ -30,19 +30,19 @@ defmodule Inout.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.2.0"},
+    [{:phoenix, "~> 1.3.0"},
      {:phoenix_pubsub, "~> 1.0"},
      {:postgrex, ">= 0.13.3"},
      {:phoenix_ecto, "~> 3.3.0"},
-     {:phoenix_html, "~> 2.4"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
+     {:phoenix_html, "~> 2.10"},
+     {:phoenix_live_reload, "~> 1.1", only: :dev},
      {:comeonin, "~> 1.0"},
-     {:poison, "~> 2.0"},
-     {:gettext, "~> 0.9"},
+     {:poison, "~> 3.1"},
+     {:gettext, "~> 0.14"},
      {:good_times, "~> 1.1"},
      {:httpotion, "~> 3.0.0"},
-     {:plug, "~> 1.0"},
-     {:corsica, "~> 0.4"},
+     {:plug, "~> 1.3.5", override: true},
+     {:corsica, "~> 1.1"},
      {:cowboy, "~> 1.0"}]
   end
 
