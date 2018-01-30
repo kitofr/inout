@@ -2,7 +2,7 @@ version: '3'
 services:
   web:
     build: .
-    command: mix phoenix.server
+    command: mix phx.server
     environment:
       - HOST_URL=http://localhost:4000 
     ports:
