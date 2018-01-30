@@ -18,6 +18,9 @@ RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y -q nodejs
 
+# Install tools for live-reload
+RUN apt-get install -y -q inotify-tools
+
 # Set /app as workdir
 RUN mkdir /app
 ADD . /app
