@@ -26,3 +26,4 @@ erl_crash.dump
 pg/
 web/elm/elm-stuff
 web/static/vendor/inout.js
+latest.dump
