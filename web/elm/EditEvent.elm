@@ -17,13 +17,23 @@ editEvent event =
     let
         marginLeft px =
             style [ "margin-left" => (toString px ++ "px") ]
+
+        shortText text =
+            case text of
+                "check-in" ->
+                    "glyphicon glyphicon-log-in"
+
+                _ ->
+                    "glyphicon glyphicon-log-out"
     in
         li [ class "list-group-item" ]
             [ div []
-                [ span [ style [ "width" => "100px", "display" => "inline-block" ] ] [ text (toString event.id ++ ". " ++ event.status ++ " ") ]
-                , dateInput [ marginLeft 20, onInput (ViewEvent << DateUpdated event), value (dateStr event.inserted_at) ] []
-                , timeInput [ marginLeft 20, onInput (ViewEvent << TimeUpdated event), value (timeStr event.inserted_at) ] []
-                , button [ marginLeft 20, class "btn btn-success", onClick (ViewEvent (Update event)) ] [ text "Update" ]
+                [ span
+                    [ style [ "width" => "30px", "display" => "inline-block" ], class (shortText event.status) ]
+                    []
+                , dateInput [ marginLeft 10, onInput (ViewEvent << DateUpdated event), value (dateStr event.inserted_at) ] []
+                , timeInput [ marginLeft 10, onInput (ViewEvent << TimeUpdated event), value (timeStr event.inserted_at) ] []
+                , button [ marginLeft 10, class "btn btn-success", onClick (ViewEvent (Update event)) ] [ text "Update" ]
                 , button [ class "btn btn-danger", onClick (ViewEvent (Delete event)) ] [ text "Delete" ]
                 ]
             ]
