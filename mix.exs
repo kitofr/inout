@@ -19,7 +19,7 @@ defmodule Inout.Mixfile do
   def application do
     [mod: {Inout, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :httpotion]]
+                    :phoenix_ecto, :postgrex, :httpotion, :comeonin]]
   end
 
   # Specifies which paths to compile per environment.
@@ -30,20 +30,22 @@ defmodule Inout.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.3.0"},
-     {:phoenix_pubsub, "~> 1.0"},
-     {:postgrex, ">= 0.13.3"},
-     {:phoenix_ecto, "~> 3.3.0"},
-     {:phoenix_html, "~> 2.10"},
-     {:phoenix_live_reload, "~> 1.1", only: :dev},
-     {:comeonin, "~> 1.0"},
-     {:poison, "~> 3.1"},
+    [
+     {:comeonin, "~> 4.0"},
+     {:corsica, "~> 1.1"},
+     {:cowboy, "~> 1.0"},
      {:gettext, "~> 0.14"},
      {:good_times, "~> 1.1"},
      {:httpotion, "~> 3.0.0"},
+     {:phoenix, "~> 1.3.0"},
+     {:phoenix_ecto, "~> 3.3.0"},
+     {:phoenix_html, "~> 2.10"},
+     {:phoenix_live_reload, "~> 1.1", only: :dev},
+     {:phoenix_pubsub, "~> 1.0"},
      {:plug, "~> 1.3.5", override: true},
-     {:corsica, "~> 1.1"},
-     {:cowboy, "~> 1.0"}]
+     {:poison, "~> 3.1"},
+     {:postgrex, ">= 0.13.3"}
+    ]
   end
 
   # Aliases are shortcut or tasks specific to the current project.
