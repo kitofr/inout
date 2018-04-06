@@ -19,12 +19,12 @@ import ViewMsgs exposing (ViewMsg(Load, CheckIn, CheckOut, TabClicked))
 
 
 monthItem : { count : Int, year : Int, month : Int, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
-monthItem month =
+monthItem { count, year, month, total, monthlyDayCount } =
     li [ class "list-group-item list-group-item-success row" ]
-        [ h5 [ class "list-group-item-heading" ] [ text (toMonthStr month.month ++ " " ++ toString month.year) ]
-        , p [ class "list-group-item-text monthly-hours col-md-6" ] [ text (periodToStr month.total) ]
-        , p [ class "list-group-item-text monthly-count col-md-2" ] [ text (toString month.count) ]
-        , p [ class "list-group-item-text monthly-chart col-md-6" ] [ barChart month.monthlyDayCount ]
+        [ h5 [ class "list-group-item-heading" ] [ text (toMonthStr month ++ " " ++ toString year) ]
+        , p [ class "list-group-item-text monthly-hours col-md-6" ] [ text (periodToStr total) ]
+        , p [ class "list-group-item-text monthly-count col-md-2" ] [ text (toString count) ]
+        , p [ class "list-group-item-text monthly-chart col-md-6" ] [ barChart monthlyDayCount ]
         ]
 
 

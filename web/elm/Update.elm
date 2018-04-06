@@ -54,7 +54,6 @@ setRoute location model =
         route =
             UrlParser.parsePath Route.route location
                 |> Maybe.withDefault Route.Home
-                |> Debug.log "route"
     in
         case route of
             Route.Home ->
