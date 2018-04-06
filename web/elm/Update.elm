@@ -1,12 +1,15 @@
-module Update exposing (update)
+module Update exposing (update, setRoute)
 
-import Types exposing (Model, Event)
 import Api exposing (getEvents, updateEvent, deleteEvent, check)
-import DateUtil exposing (parseStringDate, zeroPad, dateStr)
 import Date exposing (Date)
-import Msgs exposing (Msg(ApiEvent, ViewEvent, Tick))
-import ViewMsgs exposing (..)
 import Date.Extra.Create exposing (getTimezoneOffset)
+import DateUtil exposing (parseStringDate, zeroPad, dateStr)
+import Msgs exposing (Msg(ApiEvent, ViewEvent, Tick, SetRoute))
+import Navigation exposing (Location)
+import Route exposing (route)
+import Types exposing (Model, Event, Page(..))
+import UrlParser exposing (parsePath)
+import ViewMsgs exposing (..)
 
 
 changeEvent : List Event -> Event -> List Event
@@ -43,6 +46,22 @@ createDateFromDate d str =
             Date.second d |> toString |> zeroPad
     in
         str ++ " " ++ h ++ ":" ++ m ++ ":" ++ s
+
+
+setRoute : Location -> Types.Model -> Types.Model
+setRoute location model =
+    let
+        route =
+            UrlParser.parsePath Route.route location
+                |> Maybe.withDefault Route.Home
+                |> Debug.log "route"
+    in
+        case route of
+            Route.Home ->
+                { model | page = Home }
+
+            Route.Invoice ->
+                { model | page = Invoice }
 
 
 update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
@@ -114,6 +133,9 @@ update msg model =
                             Nothing
             in
                 ( { model | edit = edit }, Cmd.none )
+
+        SetRoute location ->
+            ( setRoute location model, Cmd.none )
 
         Tick t ->
             let

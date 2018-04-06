@@ -3,6 +3,7 @@ module Types
         ( Model
         , Event
         , DayItem
+        , Page(..)
         , Flags
         , timeDifference
         , emptyEvent
@@ -29,10 +30,20 @@ type alias Event =
     }
 
 
+type alias Month =
+    String
+
+
+type Page
+    = Home
+    | Invoice
+
+
 type alias Model =
     { events : List Event
     , hostUrl : String
     , checkInAt : Time
+    , page : Page
     , edit : Maybe DayItem
     , timeSinceLastCheckIn : Time
     , currentTab : Int

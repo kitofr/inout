@@ -16,6 +16,7 @@ defmodule Inout.Router do
   scope "/", Inout do
     pipe_through :browser # Use the default browser stack
 
+    get "/invoice", PageController, :index
     get "/", PageController, :index
     post "/in", PageController, :check_in
 
