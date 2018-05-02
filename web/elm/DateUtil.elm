@@ -78,7 +78,8 @@ zeroPad str =
 
 parseStringDate : String -> Date
 parseStringDate isoString =
-    Date.fromString isoString |> Result.withDefault (Date.fromTime 0)
+    Date.fromString isoString
+        |> Result.withDefault (Date.fromTime 0)
 
 
 sortDates : Compare2 -> Date -> Date -> Order

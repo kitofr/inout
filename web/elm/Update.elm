@@ -30,7 +30,7 @@ createDateFromTime d str =
         date_ =
             d |> dateStr
     in
-        date_ ++ " " ++ str
+        date_ ++ "T" ++ str
 
 
 createDateFromDate : Date -> String -> String
@@ -45,7 +45,14 @@ createDateFromDate d str =
         s =
             Date.second d |> toString |> zeroPad
     in
-        str ++ " " ++ h ++ ":" ++ m ++ ":" ++ s
+        str
+            ++ "T"
+            ++ h
+            ++ ":"
+            ++ m
+            ++ ":"
+            ++ s
+            ++ "+0000"
 
 
 setRoute : Location -> Types.Model -> Types.Model
@@ -92,6 +99,20 @@ update msg model =
 
         ViewEvent CheckOut ->
             ( model, check "out" model.hostUrl )
+
+        ViewEvent (MinuteSelected st) ->
+            let
+                _ =
+                    Debug.log "minute" st
+            in
+                ( model, Cmd.none )
+
+        ViewEvent (HourSelected st) ->
+            let
+                _ =
+                    Debug.log "hour" st
+            in
+                ( model, Cmd.none )
 
         ViewEvent (TimeUpdated event time) ->
             let
