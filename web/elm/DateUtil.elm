@@ -11,6 +11,7 @@ module DateUtil
         , sortDates
         , timePeriods
         , timeStr
+        , timeTuple
         , toMonthStr
         , toTimeDuration
         , zeroPad
@@ -48,8 +49,8 @@ dateStr date =
         year ++ "-" ++ month ++ "-" ++ day
 
 
-timeStr : Date -> String
-timeStr date =
+timeTuple : Date -> ( String, String, String )
+timeTuple date =
     let
         hour =
             Date.hour date |> toString |> zeroPad
@@ -59,6 +60,15 @@ timeStr date =
 
         sec =
             Date.second date |> toString |> zeroPad
+    in
+        ( hour, min, sec )
+
+
+timeStr : Date -> String
+timeStr date =
+    let
+        ( hour, min, sec ) =
+            timeTuple date
     in
         hour ++ ":" ++ min ++ ":" ++ sec
 

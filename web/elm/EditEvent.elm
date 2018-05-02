@@ -8,7 +8,7 @@ import Msgs exposing (Msg(ViewEvent))
 import ViewMsgs exposing (ViewMsg(DateUpdated, TimeUpdated, Update, Delete, CloseEdit, HourSelected, MinuteSelected))
 import Types exposing (DayItem)
 import InputExtra exposing (dateInput, timeInput)
-import DateUtil exposing (dateStr, timeStr)
+import DateUtil exposing (dateStr, timeStr, timeTuple)
 import HtmlExtra exposing ((=>))
 import Json.Decode exposing (map)
 
@@ -31,6 +31,10 @@ editEvent event =
 
                 _ ->
                     "glyphicon glyphicon-log-out"
+
+        ( hourPart, minutePart, _ ) =
+            event.inserted_at
+                |> timeTuple
     in
         li [ class "list-group-item" ]
             [ div []
@@ -41,13 +45,13 @@ editEvent event =
                 , timeInput
                     [ marginLeft 10
                     , onChange (ViewEvent << HourSelected)
-                    , value "10"
+                    , value hourPart
                     ]
                     (List.range 1 24)
                 , timeInput
                     [ marginLeft 10
                     , onChange (ViewEvent << MinuteSelected)
-                    , value "10"
+                    , value minutePart
                     ]
                     (List.range 1 59)
                 , button [ marginLeft 10, class "btn btn-success", onClick (ViewEvent (Update event)) ] [ text "Update" ]
