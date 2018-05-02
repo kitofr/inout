@@ -47,12 +47,14 @@ editEvent event =
                     , onChange (ViewEvent << HourSelected)
                     , value hourPart
                     ]
+                    hourPart
                     (List.range 1 24)
                 , timeInput
                     [ marginLeft 10
                     , onChange (ViewEvent << MinuteSelected)
                     , value minutePart
                     ]
+                    minutePart
                     (List.range 1 59)
                 , button [ marginLeft 10, class "btn btn-success", onClick (ViewEvent (Update event)) ] [ text "Update" ]
                 , button [ class "btn btn-danger", onClick (ViewEvent (Delete event)) ] [ text "Delete" ]
