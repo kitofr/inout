@@ -21,10 +21,13 @@ timeOption selectedValue time =
                 True
             else
                 False
+
+        _ =
+            Debug.log "val, selected, time, current" ( val, selectedValue, time, current )
     in
         option [ value val, selected current ] [ text val ]
 
 
 timeInput : List (Html.Attribute msg) -> String -> List Int -> Html msg
 timeInput attr val range =
-    select attr (List.map (timeOption (zeroPad val)) range)
+    select attr (List.map (timeOption val) range)

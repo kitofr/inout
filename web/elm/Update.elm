@@ -3,13 +3,39 @@ module Update exposing (update, setRoute)
 import Api exposing (getEvents, updateEvent, deleteEvent, check)
 import Date exposing (Date)
 import Date.Extra.Create exposing (getTimezoneOffset)
-import DateUtil exposing (parseStringDate, zeroPad, dateStr)
+import DateUtil exposing (parseStringDate, zeroPad, dateStr, dateTuple, timeTuple)
 import Msgs exposing (Msg(ApiEvent, ViewEvent, Tick, SetRoute))
 import Navigation exposing (Location)
 import Route exposing (route)
 import Types exposing (Model, Event, Page(..))
 import UrlParser exposing (parsePath)
 import ViewMsgs exposing (..)
+
+
+updateMinute : Date -> String -> Date
+updateMinute date min =
+    let
+        ( year, month, day ) =
+            dateTuple date
+
+        ( hour, _, sec ) =
+            timeTuple date
+    in
+        (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec ++ "+02:00")
+            |> parseStringDate
+
+
+updateHour : Date -> String -> Date
+updateHour date hour =
+    let
+        ( year, month, day ) =
+            dateTuple date
+
+        ( _, min, sec ) =
+            timeTuple date
+    in
+        (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec ++ "+02:00")
+            |> parseStringDate
 
 
 changeEvent : List Event -> Event -> List Event
@@ -100,19 +126,43 @@ update msg model =
         ViewEvent CheckOut ->
             ( model, check "out" model.hostUrl )
 
-        ViewEvent (MinuteSelected st) ->
+        ViewEvent (MinuteSelected event min) ->
             let
-                _ =
-                    Debug.log "minute" st
-            in
-                ( model, Cmd.none )
+                dt =
+                    updateMinute event.inserted_at min
+                        |> Debug.log "selected minute"
 
-        ViewEvent (HourSelected st) ->
-            let
-                _ =
-                    Debug.log "hour" st
+                event_ =
+                    { event | inserted_at = dt }
+
+                edit =
+                    case model.edit of
+                        Just dayitem ->
+                            Just { dayitem | events = changeEvent dayitem.events event_ }
+
+                        _ ->
+                            Nothing
             in
-                ( model, Cmd.none )
+                ( { model | edit = edit }, Cmd.none )
+
+        ViewEvent (HourSelected event hour) ->
+            let
+                dt =
+                    updateHour event.inserted_at hour
+                        |> Debug.log "selected hour"
+
+                event_ =
+                    { event | inserted_at = dt }
+
+                edit =
+                    case model.edit of
+                        Just dayitem ->
+                            Just { dayitem | events = changeEvent dayitem.events event_ }
+
+                        _ ->
+                            Nothing
+            in
+                ( { model | edit = edit }, Cmd.none )
 
         ViewEvent (TimeUpdated event time) ->
             let

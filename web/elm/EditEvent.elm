@@ -44,14 +44,14 @@ editEvent event =
                 , dateInput [ marginLeft 10, onInput (ViewEvent << DateUpdated event), value (dateStr event.inserted_at) ] []
                 , timeInput
                     [ marginLeft 10
-                    , onChange (ViewEvent << HourSelected)
+                    , onChange (ViewEvent << HourSelected event)
                     , value hourPart
                     ]
                     hourPart
-                    (List.range 1 24)
+                    (List.range 0 23)
                 , timeInput
                     [ marginLeft 10
-                    , onChange (ViewEvent << MinuteSelected)
+                    , onChange (ViewEvent << MinuteSelected event)
                     , value minutePart
                     ]
                     minutePart

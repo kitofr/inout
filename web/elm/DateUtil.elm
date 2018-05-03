@@ -12,6 +12,7 @@ module DateUtil
         , timePeriods
         , timeStr
         , timeTuple
+        , dateTuple
         , toMonthStr
         , toTimeDuration
         , zeroPad
@@ -29,8 +30,8 @@ import Date.Extra.Compare exposing (is, Compare2)
 import Date.Extra.Duration exposing (DeltaRecord)
 
 
-dateStr : Date -> String
-dateStr date =
+dateTuple : Date -> ( String, String, String )
+dateTuple date =
     let
         year =
             Date.year date |> toString
@@ -45,6 +46,15 @@ dateStr date =
             Date.day date
                 |> toString
                 |> zeroPad
+    in
+        ( year, month, day )
+
+
+dateStr : Date -> String
+dateStr date =
+    let
+        ( year, month, day ) =
+            dateTuple date
     in
         year ++ "-" ++ month ++ "-" ++ day
 
