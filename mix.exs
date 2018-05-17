@@ -32,7 +32,7 @@ defmodule Inout.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.2.0"},
      {:phoenix_pubsub, "~> 1.0"},
-     {:postgrex, ">= 0.0.0"},
+     {:postgrex, ">= 0.12.2"},
      {:phoenix_ecto, "~> 3.0-rc"},
      {:phoenix_html, "~> 2.4"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
