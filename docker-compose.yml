@@ -2,9 +2,11 @@ version: '2'
 services:
 
   db: 
-    image: postgres:9.5
+    image: postgres:9.5.12
     ports:
       - "5432:5432"
+    volumes:
+      - .:/tmp/
 
   adminer:
     image: adminer

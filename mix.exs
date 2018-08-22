@@ -4,7 +4,7 @@ defmodule Inout.Mixfile do
   def project do
     [app: :inout,
      version: "0.0.2",
-     elixir: "~> 1.4",
+     elixir: "~> 1.4.5",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
@@ -32,7 +32,7 @@ defmodule Inout.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.2.0"},
      {:phoenix_pubsub, "~> 1.0"},
-     {:postgrex, ">= 0.12.2"},
+     {:postgrex, ">= 0.0.0"},
      {:phoenix_ecto, "~> 3.0-rc"},
      {:phoenix_html, "~> 2.4"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
