@@ -27,7 +27,7 @@ monthItem { count, year, month, total, monthlyDayCount } =
         ]
 
 
-monthlySum : List { a | diff : DeltaRecord } -> TimeDuration
+monthlySum : List { a | diff : DateRecord } -> TimeDuration
 monthlySum month =
     List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
 
