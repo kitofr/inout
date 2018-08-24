@@ -173,7 +173,7 @@ decodeEvents =
 fromString : String -> DateRecord
 fromString d =
     let
-        tings =
+        date =
             List.filterMap identity
                 (nth
                     0
@@ -182,15 +182,16 @@ fromString d =
                     )
                     []
                 )
-                |> Debug.log "things"
+                |> List.map (\a -> String.toInt a |> Result.withDefault 0)
     in
-    { year = 0
-    , month = 0
-    , day = 0
-    , hour = 0
-    , minute = 0
-    , second = 0
+    { year = nth 0 date 0
+    , month = nth 1 date 0
+    , day = nth 2 date 0
+    , hour = nth 3 date 0
+    , minute = nth 4 date 0
+    , second = nth 5 date 0
     }
+        |> Debug.log "fromstring parsed"
 
 
 cetTime : String -> Decoder DateRecord
