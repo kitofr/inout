@@ -1,13 +1,12 @@
 module InOut exposing (main)
 
+import Api exposing (getEvents)
+import Msgs exposing (Msg(SetRoute, Tick))
 import Navigation exposing (Location)
 import Time exposing (second)
-import Html
 import Types exposing (Flags, Model, Page(..))
-import Msgs exposing (Msg(Tick, SetRoute))
-import Api exposing (getEvents)
-import View exposing (view)
 import Update exposing (setRoute)
+import View exposing (view)
 
 
 main : Program Flags Model Msg
