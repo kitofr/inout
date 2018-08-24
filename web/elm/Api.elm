@@ -9,6 +9,7 @@ import Json.Decode.Extra exposing ((|:))
 import Json.Encode as Encode
 import Msgs exposing (Msg(ApiEvent))
 import Regex exposing (HowMany(All), find, regex)
+import Seq exposing (nth)
 import Types exposing (Event, Model)
 
 
@@ -50,7 +51,8 @@ update msg model =
         LoadEvents (Ok events) ->
             let
                 ev =
-                    List.sortWith (\a b -> sortDates a.inserted_at b.inserted_at) events
+                    events
+                        |> List.sortWith (\a b -> sortDates a.inserted_at b.inserted_at)
 
                 first =
                     List.head ev
@@ -172,7 +174,15 @@ fromString : String -> DateRecord
 fromString d =
     let
         tings =
-            find All (regex "\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d:[0-5]\\d|Z)") d
+            List.filterMap identity
+                (nth
+                    0
+                    (find All (regex "(\\d{4})-([01]\\d)-([0-3]\\d)T([0-2]\\d):([0-5]\\d):([0-5]\\d)") (Debug.log "date" d)
+                        |> List.map .submatches
+                    )
+                    []
+                )
+                |> Debug.log "things"
     in
     { year = 0
     , month = 0

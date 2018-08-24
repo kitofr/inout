@@ -194,7 +194,8 @@ eventsComponent : Int -> List Event -> Html Msg
 eventsComponent currentTab events =
     let
         monthlySorted =
-            sortedDayItems events
+            events
+                |> sortedDayItems
     in
     div [ class "container-fluid" ]
         [ last5 monthlySorted
@@ -222,6 +223,7 @@ view model =
                 ]
             , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
             , shouldEdit
-            , eventsComponent model.currentTab model.events
+            , model.events
+                |> eventsComponent model.currentTab
             ]
         ]
