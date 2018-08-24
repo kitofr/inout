@@ -1,86 +1,71 @@
-module DateUtil
-    exposing
-        ( TimeDuration
-        , addTimeDurations
-        , dateStr
-        , dateToMonthStr
-        , emptyTimeDuration
-        , monthOrder
-        , parseStringDate
-        , periodToStr
-        , sortDates
-        , timePeriods
-        , timeStr
-        , timeTuple
-        , dateTuple
-        , toMonthStr
-        , toTimeDuration
-        , zeroPad
-        )
+module DateUtil exposing
+    ( DateRecord
+    , TimeDuration
+    , addTimeDurations
+    , dateStr
+    , dateToMonthStr
+    , dateTuple
+    , emptyTimeDuration
+    ,  monthOrder
+       --    , parseStringDate
 
-import Time exposing (Time)
+    , periodToStr
+    , sortDates
+    , timePeriods
+    , timeStr
+    , timeTuple
+    , toMonthStr
+    , toTimeDuration
+    , zeroPad
+    )
+
 import Date
     exposing
-        ( Date
-        , Month(Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec)
-        , Day(Mon, Tue, Wed, Thu, Fri, Sat, Sun)
+        ( Day(Fri, Mon, Sat, Sun, Thu, Tue, Wed)
+        , Month(Apr, Aug, Dec, Feb, Jan, Jul, Jun, Mar, May, Nov, Oct, Sep)
         )
+import Date.Extra.Compare exposing (Compare2, is)
 import Date.Extra.Core exposing (monthToInt)
-import Date.Extra.Compare exposing (is, Compare2)
 import Date.Extra.Duration exposing (DeltaRecord)
+import Time exposing (Time)
 
 
-dateTuple : Date -> ( String, String, String )
+type alias DateRecord =
+    { year : Int
+    , month : Int
+    , day : Int
+    , hour : Int
+    , minute : Int
+    , second : Int
+    }
+
+
+dateTuple : DateRecord -> ( Int, Int, Int )
 dateTuple date =
-    let
-        year =
-            Date.year date |> toString
-
-        month =
-            Date.month date
-                |> monthToInt
-                |> toString
-                |> zeroPad
-
-        day =
-            Date.day date
-                |> toString
-                |> zeroPad
-    in
-        ( year, month, day )
+    ( date.year, date.month, date.day )
 
 
-dateStr : Date -> String
+dateStr : DateRecord -> String
 dateStr date =
-    let
-        ( year, month, day ) =
-            dateTuple date
-    in
-        year ++ "-" ++ month ++ "-" ++ day
+    toString date.year
+        ++ "-"
+        ++ toString date.month
+        ++ "-"
+        ++ toString date.day
 
 
-timeTuple : Date -> ( String, String, String )
+timeTuple : DateRecord -> ( Int, Int, Int )
 timeTuple date =
-    let
-        hour =
-            Date.hour date |> toString |> zeroPad
-
-        min =
-            Date.minute date |> toString |> zeroPad
-
-        sec =
-            Date.second date |> toString |> zeroPad
-    in
-        ( hour, min, sec )
+    ( date.hour, date.minute, date.second )
 
 
-timeStr : Date -> String
+timeStr : DateRecord -> String
 timeStr date =
-    let
-        ( hour, min, sec ) =
-            timeTuple date
-    in
-        hour ++ ":" ++ min ++ ":" ++ sec
+    toString date.hour
+        ++ ":"
+        ++ toString date.minute
+        ++ ":"
+        ++ toString date.second
 
 
 zeroPad : String -> String
@@ -89,6 +74,7 @@ zeroPad str =
         Ok num ->
             if num < 10 then
                 "0" ++ str
+
             else
                 str
 
@@ -96,20 +82,37 @@ zeroPad str =
             "00"
 
 
-parseStringDate : String -> Date
-parseStringDate isoString =
-    Date.fromString isoString
-        |> Result.withDefault (Date.fromTime 0)
+emptyDateRecord =
+    { year = 1970
+    , month = 1
+    , day = 1
+    , hour = 12
+    , minute = 0
+    , second = 0
+    }
 
 
-sortDates : Compare2 -> Date -> Date -> Order
-sortDates order a b =
-    case is order a b of
-        True ->
-            GT
 
-        _ ->
-            LT
+--parseStringDate : String -> DateRecord
+--parseStringDate isoString =
+--    Date.fromString isoString
+--        |> Result.withDefault emptyDateRecord
+
+
+sortDates : DateRecord -> DateRecord -> Order
+sortDates a b =
+    if
+        (a.year > b.year)
+            && (a.month > b.month)
+            && (a.day > b.month)
+            && (a.hour > b.hour)
+            && (a.minute > b.minute)
+            && (a.second > b.second)
+    then
+        GT
+
+    else
+        LT
 
 
 toMonthStr : Int -> String
@@ -155,133 +158,34 @@ toMonthStr num =
             "WFT month: " ++ toString num
 
 
-monthOrder : Date -> Int
+monthOrder : DateRecord -> Int
 monthOrder date =
-    case Date.month date of
-        Jan ->
-            1
-
-        Feb ->
-            2
-
-        Mar ->
-            3
-
-        Apr ->
-            4
-
-        May ->
-            5
-
-        Jun ->
-            6
-
-        Jul ->
-            7
-
-        Aug ->
-            8
-
-        Sep ->
-            9
-
-        Oct ->
-            10
-
-        Nov ->
-            11
-
-        Dec ->
-            12
+    date.month
 
 
-dateToMonthStr : Date -> String
+dateToMonthStr : DateRecord -> String
 dateToMonthStr date =
-    let
-        day =
-            case Date.dayOfWeek date of
-                Mon ->
-                    "Mon"
-
-                Tue ->
-                    "Tue"
-
-                Wed ->
-                    "Wed"
-
-                Thu ->
-                    "Thu"
-
-                Fri ->
-                    "Fri"
-
-                Sat ->
-                    "Sat"
-
-                Sun ->
-                    "Sun"
-
-        month =
-            case Date.month date of
-                Jan ->
-                    "Jan"
-
-                Feb ->
-                    "Feb"
-
-                Mar ->
-                    "Mar"
-
-                Apr ->
-                    "Apr"
-
-                May ->
-                    "May"
-
-                Jun ->
-                    "Jun"
-
-                Jul ->
-                    "Jul"
-
-                Aug ->
-                    "Aug"
-
-                Sep ->
-                    "Sep"
-
-                Oct ->
-                    "Oct"
-
-                Nov ->
-                    "Nov"
-
-                Dec ->
-                    "Dec"
-    in
-        day ++ " " ++ (toString <| Date.day date) ++ " " ++ month
+    toString date.day ++ "/" ++ toString date.month
 
 
 type alias TimeDuration =
     { hour : Int
     , minute : Int
     , second : Int
-    , millisecond : Int
     }
 
 
-toTimeDuration : DeltaRecord -> TimeDuration
+toTimeDuration : DateRecord -> TimeDuration
 toTimeDuration duration =
     { hour = duration.hour
     , minute = duration.minute
     , second = duration.second
-    , millisecond = duration.millisecond
     }
 
 
 emptyTimeDuration : TimeDuration
 emptyTimeDuration =
-    { hour = 0, minute = 0, second = 0, millisecond = 0 }
+    { hour = 0, minute = 0, second = 0 }
 
 
 addTime : Int -> ( Int, Int )
@@ -292,11 +196,8 @@ addTime t =
 addTimeDurations : TimeDuration -> TimeDuration -> TimeDuration
 addTimeDurations a b =
     let
-        mil =
-            addTime (a.millisecond + b.millisecond)
-
         sec =
-            addTime (a.second + b.second + Tuple.second mil)
+            addTime (a.second + b.second)
 
         min =
             addTime (a.minute + b.minute + Tuple.second sec)
@@ -304,11 +205,10 @@ addTimeDurations a b =
         hour =
             a.hour + b.hour + Tuple.second min
     in
-        { millisecond = Tuple.first mil
-        , second = Tuple.first sec
-        , minute = Tuple.first min
-        , hour = hour
-        }
+    { second = Tuple.first sec
+    , minute = Tuple.first min
+    , hour = hour
+    }
 
 
 periodToStr : TimeDuration -> String
@@ -342,6 +242,6 @@ timePeriods t =
         addLeadingZeros n =
             String.padLeft 2 '0' (toString n)
     in
-        [ days, hours, minutes, seconds ]
-            |> List.map addLeadingZeros
-            |> List.map2 (,) [ "days", "hours", "minutes", "seconds" ]
+    [ days, hours, minutes, seconds ]
+        |> List.map addLeadingZeros
+        |> List.map2 (,) [ "days", "hours", "minutes", "seconds" ]

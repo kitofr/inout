@@ -1,18 +1,15 @@
-module Types
-    exposing
-        ( Model
-        , Event
-        , DayItem
-        , Page(..)
-        , Flags
-        , timeDifference
-        , emptyEvent
-        )
+module Types exposing
+    ( DayItem
+    , Event
+    , Flags
+    , Model
+    , Page(..)
+    , emptyEvent
+    , timeDifference
+    )
 
-import Date exposing (Date)
-import Date.Extra.Duration exposing (DeltaRecord, diff)
 import Date.Extra.Compare exposing (Compare2(SameOrBefore))
-import DateUtil exposing (sortDates)
+import DateUtil exposing (DateRecord, sortDates)
 import Time exposing (Time)
 
 
@@ -25,8 +22,8 @@ type alias Event =
     , status : String
     , location : String
     , device : String
-    , inserted_at : Date
-    , updated_at : Date
+    , inserted_at : DateRecord
+    , updated_at : DateRecord
     }
 
 
@@ -51,9 +48,9 @@ type alias Model =
 
 
 type alias DayItem =
-    { date : Date
+    { date : DateRecord
     , dateStr : String
-    , diff : DeltaRecord
+    , diff : DateRecord
     , dayNumber : Int
     , events : List Event
     }
@@ -63,37 +60,49 @@ type alias DayItem =
 -- Util Functions
 
 
-sortEvents : List Event -> Compare2 -> List Event
-sortEvents events order =
+sortEvents : List Event -> List Event
+sortEvents events =
     events
-        |> List.sortWith (\a b -> sortDates order a.inserted_at b.inserted_at)
+        |> List.sortWith (\a b -> sortDates a.inserted_at b.inserted_at)
 
 
 emptyEvent : Event
 emptyEvent =
     let
         date =
-            case Date.fromString "2000-01-01" of
-                Ok val ->
-                    val
-
-                Err _ ->
-                    Debug.crash "Can't create date"
+            { year = 2015
+            , month = 1
+            , day = 1
+            , hour = 12
+            , minute = 0
+            , second = 0
+            }
     in
-        { id = 0
-        , status = "empty"
-        , location = "elm"
-        , device = "none"
-        , inserted_at = date
-        , updated_at = date
-        }
+    { id = 0
+    , status = "empty"
+    , location = "elm"
+    , device = "none"
+    , inserted_at = date
+    , updated_at = date
+    }
 
 
-timeDifference : List Event -> DeltaRecord
+diff : DateRecord -> DateRecord -> DateRecord
+diff a b =
+    { year = b.year - a.year
+    , month = b.month - a.month
+    , day = b.day - a.day
+    , hour = b.hour - a.hour
+    , minute = b.minute - a.minute
+    , second = b.second - a.second
+    }
+
+
+timeDifference : List Event -> DateRecord
 timeDifference coll =
     let
         sorted =
-            sortEvents coll SameOrBefore
+            sortEvents coll
 
         first =
             List.head sorted |> Maybe.withDefault emptyEvent
@@ -101,4 +110,4 @@ timeDifference coll =
         last =
             List.reverse sorted |> List.head |> Maybe.withDefault emptyEvent
     in
-        diff first.inserted_at last.inserted_at
+    diff first.inserted_at last.inserted_at
