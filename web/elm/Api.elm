@@ -196,11 +196,7 @@ fromString d =
 
 cetTime : String -> Decoder DateRecord
 cetTime str =
-    let
-        withTimeZone =
-            str ++ "+02:00"
-    in
-    JD.succeed (fromString withTimeZone)
+    JD.succeed (fromString str)
 
 
 decodeEvent : JD.Decoder Event
