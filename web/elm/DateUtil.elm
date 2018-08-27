@@ -6,9 +6,7 @@ module DateUtil exposing
     , dateToMonthStr
     , dateTuple
     , emptyTimeDuration
-    ,  monthOrder
-       --    , parseStringDate
-
+    , monthOrder
     , periodToStr
     , sortDates
     , timePeriods
@@ -165,7 +163,7 @@ monthOrder date =
 
 dateToMonthStr : DateRecord -> String
 dateToMonthStr date =
-    toString date.day ++ "/" ++ toString date.month
+    toMonthStr date.month ++ " " ++ toString date.day
 
 
 type alias TimeDuration =
