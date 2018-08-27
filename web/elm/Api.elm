@@ -177,7 +177,7 @@ fromString d =
             List.filterMap identity
                 (nth
                     0
-                    (find All (regex "(\\d{4})-([01]\\d)-([0-3]\\d)T([0-2]\\d):([0-5]\\d):([0-5]\\d)") (Debug.log "date" d)
+                    (find All (regex "(\\d{4})-([01]\\d)-([0-3]\\d)T([0-2]\\d):([0-5]\\d):([0-5]\\d)") d
                         |> List.map .submatches
                     )
                     []
@@ -191,7 +191,6 @@ fromString d =
     , minute = nth 4 date 0
     , second = nth 5 date 0
     }
-        |> Debug.log "fromstring parsed"
 
 
 cetTime : String -> Decoder DateRecord
