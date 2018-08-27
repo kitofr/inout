@@ -1,14 +1,21 @@
 module TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
 
-import Html exposing (div, span, Html, text)
+import DateUtil exposing (timePeriods)
+import Html exposing (Html, div, span, text)
 import Html.Attributes exposing (class)
 import Time exposing (Time)
-import DateUtil exposing (timePeriods)
 
 
 viewTimeSinceLastCheckIn : Time -> List (Html msg)
 viewTimeSinceLastCheckIn t =
-    List.map viewTimePeriod (timePeriods t)
+    let
+        _ =
+            Debug.log "time" t
+
+        periods =
+            timePeriods t
+    in
+    List.map viewTimePeriod periods
 
 
 viewTimePeriod : ( String, String ) -> Html msg

@@ -185,18 +185,20 @@ update msg model =
 
         Tick t ->
             let
-                min2Millsec min =
-                    60
-                        * 1000
-                        * min
-                        |> toFloat
+                posix0 =
+                    toPosix
+                        { year = 1970
+                        , month = 1
+                        , day = 1
+                        , hour = 0
+                        , minute = 0
+                        , second = 0
+                        }
 
-                withTimeZone =
-                    getTimezoneOffset (Date.fromTime model.checkInAt)
-                        |> (\x ->
-                                x
-                                    * -1
-                                    |> min2Millsec
-                           )
+                foo =
+                    Debug.log "checkInAt" model.checkInAt
+
+                diff =
+                    (t - posix0) - foo
             in
-            ( { model | timeSinceLastCheckIn = t - model.checkInAt - withTimeZone }, Cmd.none )
+            ( { model | timeSinceLastCheckIn = diff }, Cmd.none )
