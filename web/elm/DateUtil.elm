@@ -25,6 +25,7 @@ import Date
 import Date.Extra.Compare exposing (Compare2, is)
 import Date.Extra.Core exposing (monthToInt)
 import Date.Extra.Duration exposing (DeltaRecord)
+import Posix exposing (getTimeStamp)
 import Time exposing (Time)
 
 
@@ -99,18 +100,28 @@ emptyDateRecord =
 
 sortDates : DateRecord -> DateRecord -> Order
 sortDates a b =
-    if
-        (a.year > b.year)
-            && (a.month > b.month)
-            && (a.day > b.month)
-            && (a.hour > b.hour)
-            && (a.minute > b.minute)
-            && (a.second > b.second)
-    then
-        GT
+    let
+        posixA =
+            getTimeStamp a.year a.month a.day a.hour a.minute a.second 0
 
-    else
-        LT
+        posixB =
+            getTimeStamp b.year b.month b.day b.hour b.minute b.second 0
+    in
+    case ( posixA, posixB ) of
+        ( Ok aValue, Ok bValue ) ->
+            if aValue > bValue then
+                GT
+
+            else
+                LT
+
+        ( _, _ ) ->
+            --TODO we encountered an error...
+            let
+                _ =
+                    Debug.log "posixA or posixB is errornus" ( posixA, posixB )
+            in
+            GT
 
 
 toMonthStr : Int -> String
