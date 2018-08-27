@@ -4,6 +4,7 @@ module Types exposing
     , Flags
     , Model
     , Page(..)
+    , diff
     , emptyEvent
     , timeDifference
     )
@@ -88,13 +89,37 @@ emptyEvent =
 
 
 diff : DateRecord -> DateRecord -> DateRecord
-diff a b =
-    { year = b.year - a.year
-    , month = b.month - a.month
-    , day = b.day - a.day
-    , hour = b.hour - a.hour
-    , minute = b.minute - a.minute
-    , second = b.second - a.second
+diff start end =
+    let
+        removeOne rem e s =
+            if rem < 0 then
+                (e - 1) - s
+
+            else
+                e - s
+
+        handle60 t =
+            if t < 0 then
+                60 + t
+
+            else
+                t
+
+        seconds =
+            end.second - start.second
+
+        minutes =
+            removeOne seconds end.minute start.minute
+
+        hours =
+            removeOne minutes end.hour start.hour
+    in
+    { year = end.year - start.year
+    , month = end.month - start.month
+    , day = end.day - start.day
+    , hour = hours
+    , minute = handle60 minutes
+    , second = handle60 seconds
     }
 
 

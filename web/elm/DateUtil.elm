@@ -112,6 +112,9 @@ sortDates a b =
             if aValue > bValue then
                 GT
 
+            else if aValue == bValue then
+                EQ
+
             else
                 LT
 

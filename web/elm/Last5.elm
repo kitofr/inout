@@ -23,5 +23,6 @@ last5 sorted =
     div []
         [ h3 [] [ text "Last 5: " ]
         , List.map dayItem (List.take 5 sorted)
+            |> List.reverse
             |> ul [ class "list-group" ]
         ]
