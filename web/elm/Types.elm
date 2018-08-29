@@ -4,13 +4,12 @@ module Types exposing
     , Flags
     , Model
     , Page(..)
-    , diff
     , emptyEvent
     , timeDifference
     )
 
 import Date.Extra.Compare exposing (Compare2(SameOrBefore))
-import DateUtil exposing (DateRecord, sortDates)
+import DateRecord exposing (DateRecord, diff, sortDates)
 import Time exposing (Time)
 
 
@@ -85,41 +84,6 @@ emptyEvent =
     , device = "none"
     , inserted_at = date
     , updated_at = date
-    }
-
-
-diff : DateRecord -> DateRecord -> DateRecord
-diff start end =
-    let
-        removeOne rem e s =
-            if rem < 0 then
-                (e - 1) - s
-
-            else
-                e - s
-
-        handle60 t =
-            if t < 0 then
-                60 + t
-
-            else
-                t
-
-        seconds =
-            end.second - start.second
-
-        minutes =
-            removeOne seconds end.minute start.minute
-
-        hours =
-            removeOne minutes end.hour start.hour
-    in
-    { year = end.year - start.year
-    , month = end.month - start.month
-    , day = end.day - start.day
-    , hour = hours
-    , minute = handle60 minutes
-    , second = handle60 seconds
     }
 
 

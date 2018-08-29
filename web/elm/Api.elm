@@ -2,7 +2,7 @@ module Api exposing (check, deleteEvent, getEvents, update, updateEvent)
 
 import ApiMsgs exposing (ApiMsg(CheckEvent, DeleteEvent, LoadEvents, UpdateEvent))
 import Date.Extra.Compare exposing (Compare2(SameOrBefore))
-import DateUtil exposing (DateRecord, sortDates)
+import DateRecord exposing (DateRecord, sortDates)
 import Http
 import Json.Decode as JD exposing (Decoder, field, succeed)
 import Json.Decode.Extra exposing ((|:))

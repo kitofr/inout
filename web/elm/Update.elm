@@ -3,11 +3,13 @@ module Update exposing (setRoute, update)
 import Api exposing (check, deleteEvent, getEvents, updateEvent)
 import Date exposing (Date)
 import Date.Extra.Create exposing (getTimezoneOffset)
-import DateUtil exposing (DateRecord, dateStr, dateTuple, timeTuple, zeroPad)
+import DateRecord exposing (DateRecord)
 import Msgs exposing (Msg(ApiEvent, SetRoute, Tick, ViewEvent))
 import Navigation exposing (Location)
+import Posix exposing (getTimeStamp)
 import Result exposing (withDefault)
 import Route exposing (route)
+import Time exposing (second)
 import Types exposing (Event, Model, Page(..))
 import UrlParser exposing (parsePath)
 import ViewMsgs exposing (..)
@@ -185,20 +187,10 @@ update msg model =
 
         Tick t ->
             let
-                posix0 =
-                    toPosix
-                        { year = 1970
-                        , month = 1
-                        , day = 1
-                        , hour = 0
-                        , minute = 0
-                        , second = 0
-                        }
-
                 foo =
                     Debug.log "checkInAt" model.checkInAt
 
                 diff =
-                    (t - posix0) - foo
+                    t - foo
             in
             ( { model | timeSinceLastCheckIn = diff }, Cmd.none )
