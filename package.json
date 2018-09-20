@@ -5,6 +5,7 @@
     "brunch": "^2.10.17",
     "clean-css-brunch": "~1.8.0",
     "css-brunch": "~1.7.0",
+    "elm-version-manager": "^1.0.4",
     "javascript-brunch": "~1.8.0",
     "phoenix": "file:deps/phoenix",
     "phoenix_html": "file:deps/phoenix_html",
