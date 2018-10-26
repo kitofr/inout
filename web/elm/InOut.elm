@@ -1,13 +1,13 @@
 module InOut exposing (main)
 
+import Api exposing (getEvents, loadContract)
+import Html
+import Msgs exposing (Msg(SetRoute, Tick))
 import Navigation exposing (Location)
 import Time exposing (second)
-import Html
-import Types exposing (Flags, Model, Page(..))
-import Msgs exposing (Msg(Tick, SetRoute))
-import Api exposing (getEvents)
-import View exposing (view)
+import Types exposing (Contract, Flags, Model, Page(..))
 import Update exposing (setRoute)
+import View exposing (view)
 
 
 main : Program Flags Model Msg
@@ -40,6 +40,10 @@ init flags location =
         , edit = Nothing
         , page = Home
         , currentTab = 2018
+        , contract = Contract "None"
         }
-    , getEvents flags.hostUrl
+    , Cmd.batch
+        [ getEvents flags.hostUrl
+        , loadContract flags.hostUrl
+        ]
     )

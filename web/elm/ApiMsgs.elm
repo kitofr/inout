@@ -1,15 +1,15 @@
-module ApiMsgs
-    exposing
-        ( ApiMsg
-            ( CheckEvent
-            , LoadEvents
-            , UpdateEvent
-            , DeleteEvent
-            )
+module ApiMsgs exposing
+    ( ApiMsg
+        ( CheckEvent
+        , DeleteEvent
+        , LoadContract
+        , LoadEvents
+        , UpdateEvent
         )
+    )
 
 import Http
-import Types exposing (Event)
+import Types exposing (Contract, Event)
 
 
 type alias HttpResult a =
@@ -21,3 +21,4 @@ type ApiMsg
     | LoadEvents (HttpResult (List Event))
     | UpdateEvent (HttpResult String)
     | DeleteEvent (HttpResult String)
+    | LoadContract (HttpResult (List Contract))

@@ -26,6 +26,7 @@ defmodule Inout.Router do
 
     get "/events.json", EventController, :as_json
     resources "/events", EventController
+    get "/contracts.json", ContractController, :as_json
     resources "/contracts", ContractController
     resources "/registrations", RegistrationController, only: [:new, :create]
   end

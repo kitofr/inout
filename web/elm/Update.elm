@@ -1,13 +1,13 @@
-module Update exposing (update, setRoute)
+module Update exposing (setRoute, update)
 
-import Api exposing (getEvents, updateEvent, deleteEvent, check)
+import Api exposing (check, deleteEvent, getEvents, updateEvent)
 import Date exposing (Date)
 import Date.Extra.Create exposing (getTimezoneOffset)
-import DateUtil exposing (parseStringDate, zeroPad, dateStr, dateTuple, timeTuple)
-import Msgs exposing (Msg(ApiEvent, ViewEvent, Tick, SetRoute))
+import DateUtil exposing (dateStr, dateTuple, parseStringDate, timeTuple, zeroPad)
+import Msgs exposing (Msg(ApiEvent, SetRoute, Tick, ViewEvent))
 import Navigation exposing (Location)
 import Route exposing (route)
-import Types exposing (Model, Event, Page(..))
+import Types exposing (Event, Model, Page(..))
 import UrlParser exposing (parsePath)
 import ViewMsgs exposing (..)
 
@@ -21,8 +21,8 @@ updateMinute date min =
         ( hour, _, sec ) =
             timeTuple date
     in
-        (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec ++ "+02:00")
-            |> parseStringDate
+    (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec ++ "+02:00")
+        |> parseStringDate
 
 
 updateHour : Date -> String -> Date
@@ -34,8 +34,8 @@ updateHour date hour =
         ( _, min, sec ) =
             timeTuple date
     in
-        (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec ++ "+02:00")
-            |> parseStringDate
+    (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec ++ "+02:00")
+        |> parseStringDate
 
 
 changeEvent : List Event -> Event -> List Event
@@ -44,6 +44,7 @@ changeEvent lst e =
         (\ev ->
             if ev.id == e.id then
                 e
+
             else
                 ev
         )
@@ -56,7 +57,7 @@ createDateFromTime d str =
         date_ =
             d |> dateStr
     in
-        date_ ++ "T" ++ str
+    date_ ++ "T" ++ str
 
 
 createDateFromDate : Date -> String -> String
@@ -71,14 +72,14 @@ createDateFromDate d str =
         s =
             Date.second d |> toString |> zeroPad
     in
-        str
-            ++ "T"
-            ++ h
-            ++ ":"
-            ++ m
-            ++ ":"
-            ++ s
-            ++ "+0000"
+    str
+        ++ "T"
+        ++ h
+        ++ ":"
+        ++ m
+        ++ ":"
+        ++ s
+        ++ "+0000"
 
 
 setRoute : Location -> Types.Model -> Types.Model
@@ -88,12 +89,12 @@ setRoute location model =
             UrlParser.parsePath Route.route location
                 |> Maybe.withDefault Route.Home
     in
-        case route of
-            Route.Home ->
-                { model | page = Home }
+    case route of
+        Route.Home ->
+            { model | page = Home }
 
-            Route.Invoice ->
-                { model | page = Invoice }
+        Route.Invoice ->
+            { model | page = Invoice }
 
 
 update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
@@ -121,10 +122,10 @@ update msg model =
             ( { model | edit = Just dayItem }, Cmd.none )
 
         ViewEvent CheckIn ->
-            ( model, check "in" model.hostUrl )
+            ( model, check "in" model.contract.name model.hostUrl )
 
         ViewEvent CheckOut ->
-            ( model, check "out" model.hostUrl )
+            ( model, check "out" model.contract.name model.hostUrl )
 
         ViewEvent (MinuteSelected event min) ->
             let
@@ -143,7 +144,7 @@ update msg model =
                         _ ->
                             Nothing
             in
-                ( { model | edit = edit }, Cmd.none )
+            ( { model | edit = edit }, Cmd.none )
 
         ViewEvent (HourSelected event hour) ->
             let
@@ -162,7 +163,7 @@ update msg model =
                         _ ->
                             Nothing
             in
-                ( { model | edit = edit }, Cmd.none )
+            ( { model | edit = edit }, Cmd.none )
 
         ViewEvent (TimeUpdated event time) ->
             let
@@ -182,7 +183,7 @@ update msg model =
                         _ ->
                             Nothing
             in
-                ( { model | edit = edit }, Cmd.none )
+            ( { model | edit = edit }, Cmd.none )
 
         ViewEvent (DateUpdated event date) ->
             let
@@ -202,7 +203,7 @@ update msg model =
                         _ ->
                             Nothing
             in
-                ( { model | edit = edit }, Cmd.none )
+            ( { model | edit = edit }, Cmd.none )
 
         SetRoute location ->
             ( setRoute location model, Cmd.none )
@@ -217,9 +218,10 @@ update msg model =
 
                 withTimeZone =
                     getTimezoneOffset (Date.fromTime model.checkInAt)
-                        |> \x ->
-                            x
-                                * -1
-                                |> min2Millsec
+                        |> (\x ->
+                                x
+                                    * -1
+                                    |> min2Millsec
+                           )
             in
-                ( { model | timeSinceLastCheckIn = t - model.checkInAt - withTimeZone }, Cmd.none )
+            ( { model | timeSinceLastCheckIn = t - model.checkInAt - withTimeZone }, Cmd.none )

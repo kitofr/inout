@@ -1,16 +1,25 @@
-module Api exposing (update, check, deleteEvent, updateEvent, getEvents)
+module Api exposing (check, deleteEvent, getEvents, loadContract, update, updateEvent)
 
-import Json.Encode as Encode
-import Json.Decode as JD exposing (Decoder, succeed, field)
-import Json.Decode.Extra exposing ((|:))
+import ApiMsgs
+    exposing
+        ( ApiMsg
+            ( CheckEvent
+            , DeleteEvent
+            , LoadContract
+            , LoadEvents
+            , UpdateEvent
+            )
+        )
 import Date exposing (Date)
-import DateUtil exposing (sortDates)
-import Date.Extra.Format exposing (utcIsoString)
 import Date.Extra.Compare exposing (Compare2(SameOrBefore))
+import Date.Extra.Format exposing (utcIsoString)
+import DateUtil exposing (sortDates)
 import Http
-import Types exposing (Model, Event)
+import Json.Decode as JD exposing (Decoder, field, succeed)
+import Json.Decode.Extra exposing ((|:))
+import Json.Encode as Encode
 import Msgs exposing (Msg(ApiEvent))
-import ApiMsgs exposing (ApiMsg(CheckEvent, UpdateEvent, DeleteEvent, LoadEvents))
+import Types exposing (Contract, Event, Model)
 
 
 update : ApiMsg -> Model -> ( Model, Cmd Msg )
@@ -34,6 +43,25 @@ update msg model =
         DeleteEvent (Err _) ->
             ( model, Cmd.none )
 
+        LoadContract (Ok contracts) ->
+            let
+                contract =
+                    case contracts of
+                        h :: _ ->
+                            h
+
+                        _ ->
+                            Contract "None"
+            in
+            ( { model | contract = contract }, Cmd.none )
+
+        LoadContract (Err err) ->
+            let
+                _ =
+                    Debug.log "Could not load contract: " err
+            in
+            ( model, Cmd.none )
+
         LoadEvents (Ok events) ->
             let
                 ev =
@@ -47,13 +75,14 @@ update msg model =
                         Just e ->
                             if e.status == "check-in" then
                                 Date.toTime e.inserted_at
+
                             else
                                 0
 
                         _ ->
                             0
             in
-                ( { model | events = ev, checkInAt = checkedIn }, Cmd.none )
+            ( { model | events = ev, checkInAt = checkedIn }, Cmd.none )
 
         LoadEvents (Err _) ->
             ( model, Cmd.none )
@@ -65,13 +94,23 @@ post decoder url body =
         Http.post url (Http.jsonBody body) decoder
 
 
-check : String -> String -> Cmd Msg
-check inOrOut hostUrl =
+check : String -> String -> String -> Cmd Msg
+check inOrOut contract hostUrl =
     let
         rec =
-            createCheck { status = "check-" ++ inOrOut, location = "tv4play" }
+            createCheck { status = "check-" ++ inOrOut, location = contract }
     in
-        (post (succeed "") (hostUrl ++ "/events") rec)
+    post (succeed "") (hostUrl ++ "/events") rec
+
+
+loadContract : String -> Cmd Msg
+loadContract hostUrl =
+    let
+        _ =
+            Debug.log "loading contracts like a boss... "
+    in
+    Http.send (ApiEvent << LoadContract) <|
+        Http.get (hostUrl ++ "/contracts.json") decodeContracts
 
 
 getEvents : String -> Cmd Msg
@@ -133,6 +172,18 @@ deleteEvent event hostUrl =
         deleteRequest (hostUrl ++ "/events/" ++ toString event.id)
 
 
+decodeContracts : JD.Decoder (List Contract)
+decodeContracts =
+    JD.succeed identity
+        |: field "contracts" (JD.list decodeContract)
+
+
+decodeContract : JD.Decoder Contract
+decodeContract =
+    JD.map Contract
+        (field "client" JD.string)
+
+
 decodeEvents : JD.Decoder (List Event)
 decodeEvents =
     JD.succeed identity
@@ -145,12 +196,12 @@ cetTime str =
         withTimeZone =
             str ++ "+02:00"
     in
-        case Date.fromString withTimeZone of
-            Ok d ->
-                JD.succeed d
+    case Date.fromString withTimeZone of
+        Ok d ->
+            JD.succeed d
 
-            Err e ->
-                JD.fail e
+        Err e ->
+            JD.fail e
 
 
 decodeEvent : JD.Decoder Event

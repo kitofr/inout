@@ -1,17 +1,17 @@
-module Types
-    exposing
-        ( Model
-        , Event
-        , DayItem
-        , Page(..)
-        , Flags
-        , timeDifference
-        , emptyEvent
-        )
+module Types exposing
+    ( Contract
+    , DayItem
+    , Event
+    , Flags
+    , Model
+    , Page(..)
+    , emptyEvent
+    , timeDifference
+    )
 
 import Date exposing (Date)
-import Date.Extra.Duration exposing (DeltaRecord, diff)
 import Date.Extra.Compare exposing (Compare2(SameOrBefore))
+import Date.Extra.Duration exposing (DeltaRecord, diff)
 import DateUtil exposing (sortDates)
 import Time exposing (Time)
 
@@ -39,6 +39,10 @@ type Page
     | Invoice
 
 
+type alias Contract =
+    { name : String }
+
+
 type alias Model =
     { events : List Event
     , hostUrl : String
@@ -47,6 +51,7 @@ type alias Model =
     , edit : Maybe DayItem
     , timeSinceLastCheckIn : Time
     , currentTab : Int
+    , contract : Contract
     }
 
 
@@ -80,13 +85,13 @@ emptyEvent =
                 Err _ ->
                     Debug.crash "Can't create date"
     in
-        { id = 0
-        , status = "empty"
-        , location = "elm"
-        , device = "none"
-        , inserted_at = date
-        , updated_at = date
-        }
+    { id = 0
+    , status = "empty"
+    , location = "elm"
+    , device = "none"
+    , inserted_at = date
+    , updated_at = date
+    }
 
 
 timeDifference : List Event -> DeltaRecord
@@ -101,4 +106,4 @@ timeDifference coll =
         last =
             List.reverse sorted |> List.head |> Maybe.withDefault emptyEvent
     in
-        diff first.inserted_at last.inserted_at
+    diff first.inserted_at last.inserted_at
