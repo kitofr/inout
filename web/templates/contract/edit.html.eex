@@ -1,6 +1,6 @@
 <h2>Edit contract</h2>
 
 <%= render "form.html", changeset: @changeset,
-                        action: event_path(@conn, :update, @contract) %>
+                        action: contract_path(@conn, :update, @contract) %>
 
 <%= link "Back", to: event_path(@conn, :index) %>

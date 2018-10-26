@@ -36,6 +36,21 @@ defmodule Inout.ContractController do
     end
   end
 
+  def update(conn, %{"id" => id, "contract" => contract_params}) do
+    #TODO Make sure you only update your own contracts
+    contract = Repo.get!(Contract, id)
+    changeset = Contract.changeset(contract, contract_params)
+
+    case Repo.update(changeset) do
+      {:ok, contract} ->
+        conn
+        |> put_flash(:info, "Contract updated successfully.")
+        |> fn (conn) -> render(conn, "edit.html", contract: contract, changeset: changeset) end.()
+      {:error, changeset} ->
+        render(conn, "edit.html", contract: contract, changeset: changeset)
+    end
+  end
+
   def show(conn, %{"id" => id}) do
     contract = Repo.get!(Contract, id)
     render(conn, "show.html", contract: contract)
