@@ -12,7 +12,7 @@ module Types exposing
 import Date exposing (Date)
 import Date.Extra.Compare exposing (Compare2(SameOrBefore))
 import Date.Extra.Duration exposing (DeltaRecord, diff)
-import DateUtil exposing (sortDates)
+import DateUtil exposing (TimeDuration, sortDates)
 import Time exposing (Time)
 
 
@@ -36,7 +36,7 @@ type alias Month =
 
 type Page
     = Home
-    | Invoice
+    | Invoice ( Int, Int ) TimeDuration Int
 
 
 type alias Contract =

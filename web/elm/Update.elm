@@ -94,7 +94,7 @@ setRoute location model =
             { model | page = Home }
 
         Route.Invoice ->
-            { model | page = Invoice }
+            { model | page = Home }
 
 
 update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
@@ -126,6 +126,16 @@ update msg model =
 
         ViewEvent CheckOut ->
             ( model, check "out" model.contract.name model.hostUrl )
+
+        ViewEvent GoHome ->
+            ( { model | page = Home }, Cmd.none )
+
+        ViewEvent (CreateInvoice ( year, month ) total dayCount) ->
+            let
+                _ =
+                    Debug.log "INVOICE" ( year, month, total, dayCount )
+            in
+            ( { model | page = Invoice ( year, month ) total dayCount }, Cmd.none )
 
         ViewEvent (MinuteSelected event min) ->
             let

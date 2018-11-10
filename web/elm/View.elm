@@ -7,27 +7,38 @@ import Date.Extra.Duration exposing (DeltaRecord)
 import DateUtil exposing (TimeDuration, addTimeDurations, dateToMonthStr, emptyTimeDuration, monthOrder, periodToStr, sortDates, toMonthStr, toTimeDuration)
 import Dict
 import EditEvent exposing (edit)
-import Html exposing (Html, a, button, div, h5, li, p, text, ul)
+import Html exposing (Html, a, button, div, h3, h5, li, p, text, ul)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Last5 exposing (last5)
 import Msgs exposing (Msg(ViewEvent))
 import Seq exposing (desc, groupBy)
 import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
-import Types exposing (DayItem, Event, Model, emptyEvent, timeDifference)
-import ViewMsgs exposing (ViewMsg(CheckIn, CheckOut, Load, TabClicked))
+import Types exposing (DayItem, Event, Model, Page(Home, Invoice), emptyEvent, timeDifference)
+import ViewMsgs exposing (ViewMsg(CheckIn, CheckOut, CreateInvoice, GoHome, Load, TabClicked))
 
 
 monthItem : { count : Int, year : Int, month : Int, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
 monthItem { count, year, month, total, monthlyDayCount } =
+    let
+        totalStr =
+            periodToStr total
+
+        dayCount =
+            toString count
+
+        dates =
+            ( year, month )
+    in
     li [ class "list-group-item list-group-item-success row" ]
         [ h5 [ class "list-group-item-heading" ]
             [ text (toMonthStr month ++ " " ++ toString year) ]
         , div
             [ class "row" ]
-            [ p [ class "list-group-item-text monthly-hours col-md-6 col-xs-6" ] [ text (periodToStr total) ]
-            , p [ class "list-group-item-text monthly-count col-md-1 col-xs-2" ] [ text (toString count) ]
-            , p [ class "list-group-item-text col-md-1 col-xs-3" ] [ text "Fakturera" ]
+            [ p [ class "list-group-item-text monthly-hours col-md-6 col-xs-6" ] [ text totalStr ]
+            , p [ class "list-group-item-text monthly-count col-md-1 col-xs-2" ] [ text dayCount ]
+            , p [ class "list-group-item-text col-md-1 col-xs-3" ]
+                [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent (CreateInvoice dates total count)) ] [ text "Invoice" ] ]
             ]
         , div [ class "row" ]
             [ p [ class "list-group-item-text monthly-chart col-md-8" ] [ barChart monthlyDayCount ]
@@ -207,8 +218,9 @@ eventsComponent currentTab events =
             sortedDayItems events
     in
     div [ class "container-fluid" ]
-        [ last5 monthlySorted
-        , yearTabs currentTab events
+        [ --last5 monthlySorted
+          --,
+          yearTabs currentTab events
         ]
 
 
@@ -223,17 +235,28 @@ view model =
                 _ ->
                     div [] []
     in
-    div []
-        [ div [ class "container" ]
-            [ div [ class "row" ]
-                [ h5 [] [ text ("Current contract: " ++ model.contract.name) ] ]
-            , div [ class "row" ]
-                [ button [ class "btn", onClick (ViewEvent Load) ] [ text "refresh" ]
-                , button [ class "btn btn-success", onClick (ViewEvent CheckIn) ] [ text "check in" ]
-                , button [ class "btn btn-primary", onClick (ViewEvent CheckOut) ] [ text "check out" ]
+    case model.page of
+        Home ->
+            div []
+                [ div [ class "container" ]
+                    [ div [ class "row" ]
+                        [ h5 [] [ text ("Current contract: " ++ model.contract.name) ] ]
+                    , div [ class "row" ]
+                        [ button [ class "btn btn-success", onClick (ViewEvent CheckIn) ] [ text "check in" ]
+                        , button [ class "btn btn-primary", onClick (ViewEvent CheckOut) ] [ text "check out" ]
+                        ]
+                    , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
+                    , shouldEdit
+                    , eventsComponent model.currentTab model.events
+                    ]
                 ]
-            , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
-            , shouldEdit
-            , eventsComponent model.currentTab model.events
-            ]
-        ]
+
+        Invoice ( year, month ) duration count ->
+            div []
+                [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent GoHome) ] [ text "Back" ]
+                , h3 [] [ text "INVOICE" ]
+                , p [] [ text (toString year) ]
+                , p [] [ text (toString month) ]
+                , p [] [ text (toString duration) ]
+                , p [] [ text (toString count) ]
+                ]
