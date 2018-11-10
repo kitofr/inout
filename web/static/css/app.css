@@ -77,17 +77,12 @@ form.link, form.button {
   }
 }
 
-.monthly-hours {
-  display: inline-block;
-  margin-right: 40px;
-}
-
 .monthly-count {
   display: inline-block;
-  font-size: 18px;
-  padding: 0.2em 0.5em;
+  width: 3em;
+  text-align: center;
   border: 1px solid gray;
-  border-radius: 15px;
+  border-radius: 10px;
   background-color: gray;
   color: white;
 }

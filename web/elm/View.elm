@@ -21,10 +21,17 @@ import ViewMsgs exposing (ViewMsg(CheckIn, CheckOut, Load, TabClicked))
 monthItem : { count : Int, year : Int, month : Int, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
 monthItem { count, year, month, total, monthlyDayCount } =
     li [ class "list-group-item list-group-item-success row" ]
-        [ h5 [ class "list-group-item-heading" ] [ text (toMonthStr month ++ " " ++ toString year) ]
-        , p [ class "list-group-item-text monthly-hours col-md-6" ] [ text (periodToStr total) ]
-        , p [ class "list-group-item-text monthly-count col-md-2" ] [ text (toString count) ]
-        , p [ class "list-group-item-text monthly-chart col-md-6" ] [ barChart monthlyDayCount ]
+        [ h5 [ class "list-group-item-heading" ]
+            [ text (toMonthStr month ++ " " ++ toString year) ]
+        , div
+            [ class "row" ]
+            [ p [ class "list-group-item-text monthly-hours col-md-6 col-xs-6" ] [ text (periodToStr total) ]
+            , p [ class "list-group-item-text monthly-count col-md-1 col-xs-2" ] [ text (toString count) ]
+            , p [ class "list-group-item-text col-md-1 col-xs-3" ] [ text "Fakturera" ]
+            ]
+        , div [ class "row" ]
+            [ p [ class "list-group-item-text monthly-chart col-md-8" ] [ barChart monthlyDayCount ]
+            ]
         ]
 
 
