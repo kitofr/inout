@@ -9,6 +9,9 @@ To start your Phoenix app:
   * Install Node.js dependencies with `npm install`
   * Start Phoenix endpoint with `mix phoenix.server`
   * Import database with `pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d inout_dev latest.dump`
+    ```sh
+    ./restore.sh
+    ```
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
