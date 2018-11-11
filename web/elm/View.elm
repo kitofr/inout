@@ -10,6 +10,7 @@ import EditEvent exposing (edit)
 import Html exposing (Html, a, button, div, h3, h5, li, p, text, ul)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
+import Invoice exposing (invoiceView)
 import Last5 exposing (last5)
 import Msgs exposing (Msg(ViewEvent))
 import Seq exposing (desc, groupBy)
@@ -251,12 +252,5 @@ view model =
                     ]
                 ]
 
-        Invoice ( year, month ) duration count ->
-            div []
-                [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent GoHome) ] [ text "Back" ]
-                , h3 [] [ text "INVOICE" ]
-                , p [] [ text (toString year) ]
-                , p [] [ text (toString month) ]
-                , p [] [ text (toString duration) ]
-                , p [] [ text (toString count) ]
-                ]
+        Invoice when duration count ->
+            invoiceView when duration count
