@@ -219,9 +219,8 @@ eventsComponent currentTab events =
             sortedDayItems events
     in
     div [ class "container-fluid" ]
-        [ --last5 monthlySorted
-          --,
-          yearTabs currentTab events
+        [ last5 monthlySorted
+        , yearTabs currentTab events
         ]
 
 
