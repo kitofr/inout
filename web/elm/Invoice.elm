@@ -26,6 +26,37 @@ paymentInfo =
         ]
 
 
+invoiceContractDetails :
+    { number : Int, date : String, paymentDue : String, reference : String }
+    -> { customer : String, reference : String, adress : String, postNumber : String, county : String }
+    -> Html Msg
+invoiceContractDetails invoice contract =
+    div [ id "invoice" ]
+        [ div []
+            [ div [ class "info-header" ]
+                [ div [ class "invoice-info" ]
+                    [ label [] [ text ("Fakturanummer" ++ toString invoice.number) ]
+                    , label [] [ text ("Fakturadatum" ++ invoice.date) ]
+                    , label [] [ text ("Bet.Villkor" ++ invoice.paymentDue ++ " dagar netto") ]
+                    , label [] [ text ("Referens Agical" ++ invoice.reference) ]
+                    ]
+                , div []
+                    [ label [] [ text ("Kund" ++ contract.customer) ]
+                    , label [] [ text ("Referens" ++ contract.reference) ]
+                    , p []
+                        [ b [ class ".label" ] [ text "Adress: " ]
+                        , div [ class "adress.tab" ]
+                            [ p [] [ text contract.adress ]
+                            , br [] []
+                            , p [] [ text (contract.postNumber ++ " " ++ contract.county) ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+
+
 footer =
     div [ class "footer" ]
         [ div [ class "contact" ]
@@ -44,13 +75,23 @@ footer =
 
 
 invoiceView ( year, month ) duration count =
+    let
+        invoice =
+            { number = 2008, date = "2018-11-12", paymentDue = "35 dagar", reference = "Kristoffer Roupé" }
+
+        contract =
+            { customer = "Tingent", reference = "Teodor Överli", adress = "Regeringsgatan 74", postNumber = "111 39", county = "Stockholm" }
+    in
     div []
         [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent GoHome) ] [ text "Back" ]
-        , invoiceHeader 1989
+        , invoiceHeader invoice.number
         , p [] [ text (toString year) ]
         , p [] [ text (toString month) ]
         , p [] [ text (toString duration) ]
         , p [] [ text (toString count) ]
+        , invoiceContractDetails invoice contract
+        , paymentInfo
+        , footer
         ]
 
 
