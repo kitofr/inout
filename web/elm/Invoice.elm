@@ -122,7 +122,17 @@ invoiceHourRow ( description, price, amount, fromMonths, addedSum ) =
 
 sumInvoice : Invoice -> Float
 sumInvoice invoice =
-    1000
+    List.foldl
+        (\row total ->
+            case row of
+                HourlyReporting ( _, price, amount, _, addedSum ) ->
+                    total + price * toFloat amount + addedSum
+
+                DailyReporting ( _, price, amount, _, addedSum ) ->
+                    total + price * toFloat amount + addedSum
+        )
+        0
+        invoice.rows
 
 
 paymentInfoSection : Invoice -> Html msg
