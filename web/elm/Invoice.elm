@@ -7,6 +7,33 @@ import Msgs exposing (Msg(ViewEvent))
 import ViewMsgs exposing (ViewMsg(GoHome))
 
 
+ph : String -> Html Msg
+ph txt =
+    p [] [ text txt ]
+
+
+pb : String -> Html Msg
+pb txt =
+    p []
+        [ b [ class "lbl" ] [ text txt ] ]
+
+
+pbsv : String -> String -> Html Msg
+pbsv txt value =
+    p []
+        [ b [ class "lbl" ] [ text (txt ++ ": ") ]
+        , text value
+        ]
+
+
+pbv : String -> a -> Html Msg
+pbv txt value =
+    p []
+        [ b [ class "lbl" ] [ text (txt ++ ": ") ]
+        , text (toString value)
+        ]
+
+
 invoiceHeader invoiceNumber =
     div [ id "faktura" ]
         [ div [ class "header" ]
@@ -18,10 +45,10 @@ invoiceHeader invoiceNumber =
 
 paymentInfo =
     div [ class "payment-info" ]
-        [ p [] [ b [] [ text "Betalningsinformation" ] ]
-        , label [] [ text "Bankgiro 5345-5226" ]
-        , label [] [ text "Organisationsnummer 556667-2597" ]
-        , p [] [ text "Ange fakturanummer vid betalning." ]
+        [ pb "Betalningsinformation"
+        , pb "Bankgiro 5345-5226"
+        , pb "Organisationsnummer 556667-2597"
+        , pb "Ange fakturanummer vid betalning."
         , p [] [ i [] [ text "Vid försenad betalning debiteras dröjsmålsränta med 15%" ] ]
         ]
 
@@ -35,21 +62,19 @@ invoiceContractDetails invoice contract =
         [ div []
             [ div [ class "info-header" ]
                 [ div [ class "invoice-info" ]
-                    [ label [] [ text ("Fakturanummer" ++ toString invoice.number) ]
-                    , label [] [ text ("Fakturadatum" ++ invoice.date) ]
-                    , label [] [ text ("Bet.Villkor" ++ invoice.paymentDue ++ " dagar netto") ]
-                    , label [] [ text ("Referens Agical" ++ invoice.reference) ]
+                    [ pbv "Fakturanummer" invoice.number
+                    , pbsv "Fakturadatum" invoice.date
+                    , pb ("Bet.Villkor " ++ invoice.paymentDue ++ " dagar netto")
+                    , pbsv "Referens Agical" invoice.reference
                     ]
                 , div []
-                    [ label [] [ text ("Kund" ++ contract.customer) ]
-                    , label [] [ text ("Referens" ++ contract.reference) ]
-                    , p []
-                        [ b [ class ".label" ] [ text "Adress: " ]
-                        , div [ class "adress.tab" ]
-                            [ p [] [ text contract.adress ]
-                            , br [] []
-                            , p [] [ text (contract.postNumber ++ " " ++ contract.county) ]
-                            ]
+                    [ pbsv "Kund" contract.customer
+                    , pbsv "Referens" contract.reference
+                    , pb "Adress: "
+                    , div [ class "adress.tab" ]
+                        [ p [] [ text contract.adress ]
+                        , br [] []
+                        , p [] [ text (contract.postNumber ++ " " ++ contract.county) ]
                         ]
                     ]
                 ]
@@ -60,16 +85,16 @@ invoiceContractDetails invoice contract =
 footer =
     div [ class "footer" ]
         [ div [ class "contact" ]
-            [ p [] [ b [] [ text "Kontakt" ] ]
-            , p [] [ text "faktura@agical.se" ]
-            , p [] [ text "https://www.agical.se" ]
-            , p [] [ text "08-221580" ]
+            [ pb "Kontakt"
+            , ph "faktura@agical.se"
+            , ph "https://www.agical.se"
+            , ph "08-221580"
             ]
         , div [ class "agical" ]
-            [ p [] [ b [] [ text "Agical AB" ] ]
-            , p [] [ text "Västerlånggatan 79A" ]
-            , p [] [ text "111 29 Stockholm" ]
-            , p [] [ text "Innehar F-skattesedel" ]
+            [ pb "Agical AB"
+            , ph "Västerlånggatan 79A"
+            , ph "111 29 Stockholm"
+            , ph "Innehar F-skattesedel"
             ]
         ]
 
@@ -101,22 +126,22 @@ invoiceRows invoice =
 invoiceDayRow : ( String, Float, Int, String, Float ) -> Html Msg
 invoiceDayRow ( description, price, amount, fromMonths, addedSum ) =
     div [ class "row" ]
-        [ label [] [ text ("Beskrivning " ++ description) ]
-        , label [] [ text ("Dagspris " ++ toString price) ]
-        , label [] [ text ("Antal dagar " ++ toString amount) ]
-        , label [] [ text ("Dagarna avser: " ++ fromMonths) ]
-        , label [] [ text ("Övrig summa " ++ toString addedSum) ]
+        [ pbsv "Beskrivning " description
+        , pbv "Dagspris " price
+        , pbv "Antal dagar " amount
+        , pbsv "Dagarna avser: " fromMonths
+        , pbv "Övrig summa " addedSum
         ]
 
 
 invoiceHourRow : ( String, Float, Int, String, Float ) -> Html Msg
 invoiceHourRow ( description, price, amount, fromMonths, addedSum ) =
     div [ class "row" ]
-        [ label [] [ text ("Beskrivning " ++ description) ]
-        , label [] [ text ("Timpris " ++ toString price) ]
-        , label [] [ text ("Antal timmar " ++ toString amount) ]
-        , label [] [ text ("Timmarna avser: " ++ fromMonths) ]
-        , label [] [ text ("Övrig summa " ++ toString addedSum) ]
+        [ pbsv "Beskrivning " description
+        , pbv "Timpris " price
+        , pbv "Antal timmar " amount
+        , pbsv "Timmarna avser: " fromMonths
+        , pbv "Övrig summa " addedSum
         ]
 
 
@@ -135,7 +160,7 @@ sumInvoice invoice =
         invoice.rows
 
 
-paymentInfoSection : Invoice -> Html msg
+paymentInfoSection : Invoice -> Html Msg
 paymentInfoSection invoice =
     let
         total =
@@ -143,9 +168,9 @@ paymentInfoSection invoice =
     in
     div [ class "payment-info-section" ]
         [ div [ class "total" ]
-            [ label [] [ text ("Totalsumma " ++ toString total) ]
-            , label [] [ text ("Moms " ++ toString (0.25 * total)) ]
-            , label [] [ text ("Totalt inkl moms " ++ toString (1.25 * total)) ]
+            [ pbv "Totalsumma" total
+            , pbv "Moms" (25 * total)
+            , pbv "Totalt inkl moms" (1.25 * total)
             ]
         ]
 
