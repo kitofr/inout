@@ -74,6 +74,72 @@ footer =
         ]
 
 
+type Reporting
+    = DailyReporting ( String, Float, Int, String, Float )
+    | HourlyReporting ( String, Float, Int, String, Float )
+
+
+type alias Invoice =
+    { rows : List Reporting }
+
+
+invoiceRows invoice =
+    div [ class "rows" ]
+        (List.map
+            (\row ->
+                case row of
+                    DailyReporting day ->
+                        invoiceDayRow day
+
+                    HourlyReporting hours ->
+                        invoiceHourRow hours
+            )
+            invoice.rows
+        )
+
+
+invoiceDayRow : ( String, Float, Int, String, Float ) -> Html Msg
+invoiceDayRow ( description, price, amount, fromMonths, addedSum ) =
+    div [ class "row" ]
+        [ label [] [ text ("Beskrivning " ++ description) ]
+        , label [] [ text ("Dagspris " ++ toString price) ]
+        , label [] [ text ("Antal dagar " ++ toString amount) ]
+        , label [] [ text ("Dagarna avser: " ++ fromMonths) ]
+        , label [] [ text ("Övrig summa " ++ toString addedSum) ]
+        ]
+
+
+invoiceHourRow : ( String, Float, Int, String, Float ) -> Html Msg
+invoiceHourRow ( description, price, amount, fromMonths, addedSum ) =
+    div [ class "row" ]
+        [ label [] [ text ("Beskrivning " ++ description) ]
+        , label [] [ text ("Timpris " ++ toString price) ]
+        , label [] [ text ("Antal timmar " ++ toString amount) ]
+        , label [] [ text ("Timmarna avser: " ++ fromMonths) ]
+        , label [] [ text ("Övrig summa " ++ toString addedSum) ]
+        ]
+
+
+sumInvoice : Invoice -> Float
+sumInvoice invoice =
+    1000
+
+
+paymentInfoSection : Invoice -> Html msg
+paymentInfoSection invoice =
+    let
+        total =
+            sumInvoice invoice
+    in
+    div [ class "payment-info-section" ]
+        [ div [ class "total" ]
+            [ label [] [ text ("Totalsumma " ++ toString total) ]
+            , label [] [ text ("Moms " ++ toString (0.25 * total)) ]
+            , label [] [ text ("Totalt inkl moms " ++ toString (1.25 * total)) ]
+            ]
+        ]
+
+
 invoiceView ( year, month ) duration count =
     let
         invoice =
@@ -81,15 +147,23 @@ invoiceView ( year, month ) duration count =
 
         contract =
             { customer = "Tingent", reference = "Teodor Överli", adress = "Regeringsgatan 74", postNumber = "111 39", county = "Stockholm" }
+
+        rows =
+            [ HourlyReporting ( "Mjukvaruutveckling", 1030, 100, "November 2018", 0 ) ]
     in
     div []
         [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent GoHome) ] [ text "Back" ]
         , invoiceHeader invoice.number
-        , p [] [ text (toString year) ]
-        , p [] [ text (toString month) ]
-        , p [] [ text (toString duration) ]
-        , p [] [ text (toString count) ]
         , invoiceContractDetails invoice contract
+        , invoiceRows (Invoice rows)
+        , paymentInfoSection (Invoice rows)
+
+        --, div [ class "rows" ]
+        --    [ p [] [ text (toString year) ]
+        --    , p [] [ text (toString month) ]
+        --    , p [] [ text (toString duration) ]
+        --    , p [] [ text (toString count) ]
+        --    ]
         , paymentInfo
         , footer
         ]
