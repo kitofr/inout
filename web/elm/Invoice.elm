@@ -58,24 +58,22 @@ invoiceContractDetails :
     -> { customer : String, reference : String, adress : String, postNumber : String, county : String }
     -> Html Msg
 invoiceContractDetails invoice contract =
-    div [ id "invoice" ]
-        [ div []
-            [ div [ class "info-header" ]
-                [ div [ class "invoice-info" ]
-                    [ pbv "Fakturanummer" invoice.number
-                    , pbsv "Fakturadatum" invoice.date
-                    , pb ("Bet.Villkor " ++ invoice.paymentDue ++ " dagar netto")
-                    , pbsv "Referens Agical" invoice.reference
-                    ]
-                , div []
-                    [ pbsv "Kund" contract.customer
-                    , pbsv "Referens" contract.reference
-                    , pb "Adress: "
-                    , div [ class "adress.tab" ]
-                        [ p [] [ text contract.adress ]
-                        , br [] []
-                        , p [] [ text (contract.postNumber ++ " " ++ contract.county) ]
-                        ]
+    div []
+        [ div [ class "info-header" ]
+            [ div [ class "invoice-info" ]
+                [ pbv "Fakturanummer" invoice.number
+                , pbsv "Fakturadatum" invoice.date
+                , pb ("Bet.Villkor " ++ invoice.paymentDue ++ " dagar netto")
+                , pbsv "Referens Agical" invoice.reference
+                ]
+            , div []
+                [ pbsv "Kund" contract.customer
+                , pbsv "Referens" contract.reference
+                , pb "Adress: "
+                , div [ class "adress tab" ]
+                    [ p [] [ text contract.adress ]
+                    , br [] []
+                    , p [] [ text (contract.postNumber ++ " " ++ contract.county) ]
                     ]
                 ]
             ]
@@ -125,7 +123,7 @@ invoiceRows invoice =
 
 invoiceDayRow : ( String, Float, Int, String, Float ) -> Html Msg
 invoiceDayRow ( description, price, amount, fromMonths, addedSum ) =
-    div [ class "row" ]
+    div [ class "invoice-row" ]
         [ pbsv "Beskrivning " description
         , pbv "Dagspris " price
         , pbv "Antal dagar " amount
@@ -189,22 +187,23 @@ invoiceView ( year, month ) duration count =
     div []
         [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent GoHome) ] [ text "Back" ]
         , invoiceHeader invoice.number
-        , invoiceContractDetails invoice contract
-        , invoiceRows (Invoice rows)
-        , paymentInfoSection (Invoice rows)
-
-        --, div [ class "rows" ]
-        --    [ p [] [ text (toString year) ]
-        --    , p [] [ text (toString month) ]
-        --    , p [] [ text (toString duration) ]
-        --    , p [] [ text (toString count) ]
-        --    ]
-        , paymentInfo
+        , div [ class "invoice" ]
+            [ invoiceContractDetails invoice contract
+            , invoiceRows (Invoice rows)
+            , paymentInfoSection (Invoice rows)
+            , paymentInfo
+            ]
         , footer
         ]
 
 
 
+--, div [ class "rows" ]
+--    [ p [] [ text (toString year) ]
+--    , p [] [ text (toString month) ]
+--    , p [] [ text (toString duration) ]
+--    , p [] [ text (toString count) ]
+--    ]
 --[div []
 --      invoiceHeader
 --      [div [id "invoice"]

@@ -1,0 +1,118 @@
+@media print {
+  .app {
+    font-family: sans-serif;
+  }
+
+  .navbar-header{
+    display: none !important;
+  }
+
+  .btn{
+    display: none !important;
+  }
+
+  #faktura {
+    font-weight: bold;
+    width: 88%;
+    margin-left: 5px;
+    font-size: 1em;
+    padding-bottom:2px;
+    font-family: sans-serif;
+  }
+
+  @page { 
+    margin: 3;
+    size: A4;
+  }
+
+  img {
+    display: inline-block;
+  }
+
+  p {
+    font-weight: normal;
+  }
+
+  .lbl {
+    font-size: 1em;
+  }
+
+  .header img{
+    display: inline-block;
+    float: left;
+    margin-left: 10px;
+    margin-right: 40px;
+  }
+
+  .header {
+    color: #333;
+    margin-bottom: 1em;
+  }
+
+  .info-header {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 1em;
+    line-height: 0.6em;
+  }
+
+  .info-header .adress {
+    line-height: 1.6em;
+  }
+
+  .invoice-row {
+    background-color: #eee;
+    margin-bottom: 5px;
+    padding: 1px 1px;
+    line-height: 1.2em;
+  }
+
+  .invoice-info {
+    float: right;
+    text-align: right;
+  }
+
+  .total {
+    float: right;
+    text-align: right;
+  }
+
+  body { 
+    margin: 1.0cm 1.6cm 1.6cm 1.0cm;
+  }
+
+  #invoice{
+    border: 1px solid #ccc;
+    border-radius:10px;
+    padding-left: 9px;
+    padding-right: 8px;
+    margin-top: 20px;
+  }
+
+  .payment-info {
+    margin-top: 20px;
+    margin-bottom: 0px;
+    border-top: 1px solid #ccc;
+  }
+
+  .footer {
+    font-family: sans-serif;
+    border: none !important;
+    line-height: 3px;
+    position: absolute;
+    bottom: 10;
+    width: 80%;
+    height: 100;
+  }
+
+  .contact {
+    width: 100%;
+    text-align: right;
+    position: absolute;
+  }
+
+  .agical {
+    width: 40%;
+    position: absolute;
+  }
+}
+
