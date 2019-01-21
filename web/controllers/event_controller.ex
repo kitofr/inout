@@ -1,4 +1,5 @@
 defmodule Inout.EventController do
+  require Logger
   use Inout.Web, :controller
 
   alias Inout.Event
@@ -15,8 +16,13 @@ defmodule Inout.EventController do
               preload: [contract: c, user: u]
 
     events = Repo.all(query)
+              |> Enum.map(fn e -> Map.put_new(e, :posix, to_unix(e.inserted_at)) end)
 
     render(conn, "index.html", events: events)
+  end
+
+  defp to_unix(datetime) do
+    datetime |> Ecto.DateTime.to_erl |> :calendar.datetime_to_gregorian_seconds |> Kernel.-(62167219200)
   end
 
   def as_json(conn, _params) do
@@ -29,6 +35,8 @@ defmodule Inout.EventController do
               preload: [contract: c, user: u]
 
     events = Repo.all(query)
+              |> Enum.map(fn e -> Map.put_new(e, :posix, to_unix(e.inserted_at)) end)
+
     json(conn, %{ events: events })
   end
 
