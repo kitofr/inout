@@ -39,7 +39,7 @@ init flags location =
         , timeSinceLastCheckIn = 0
         , edit = Nothing
         , page = Home
-        , currentTab = 2018
+        , currentTab = 2019
         , contract = Contract "None"
         }
     , Cmd.batch
