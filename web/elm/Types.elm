@@ -25,6 +25,7 @@ type alias Event =
     , status : String
     , location : String
     , device : String
+    , posix : Int
     , inserted_at : Date
     , updated_at : Date
     }
@@ -89,6 +90,7 @@ emptyEvent =
     , status = "empty"
     , location = "elm"
     , device = "none"
+    , posix = 0
     , inserted_at = date
     , updated_at = date
     }

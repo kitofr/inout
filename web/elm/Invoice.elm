@@ -34,6 +34,7 @@ pbv txt value =
         ]
 
 
+invoiceHeader : Int -> Html Msg
 invoiceHeader invoiceNumber =
     div [ id "faktura" ]
         [ div [ class "header" ]
@@ -43,6 +44,7 @@ invoiceHeader invoiceNumber =
         ]
 
 
+paymentInfo : Html Msg
 paymentInfo =
     div [ class "payment-info" ]
         [ pb "Betalningsinformation"
@@ -106,6 +108,7 @@ type alias Invoice =
     { rows : List Reporting }
 
 
+invoiceRows : Invoice -> Html Msg
 invoiceRows invoice =
     div [ class "rows" ]
         (List.map
@@ -173,6 +176,7 @@ paymentInfoSection invoice =
         ]
 
 
+invoiceView : ( Int, Int ) -> a -> b -> Html Msg
 invoiceView ( year, month ) duration count =
     let
         invoice =

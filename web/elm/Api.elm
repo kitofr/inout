@@ -211,6 +211,7 @@ decodeEvent =
         |: field "status" JD.string
         |: field "location" JD.string
         |: field "device" JD.string
+        |: field "posix" JD.int
         |: (field "inserted_at" JD.string |> JD.andThen cetTime)
         |: (field "updated_at" JD.string |> JD.andThen cetTime)
 
