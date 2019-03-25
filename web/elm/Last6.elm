@@ -1,4 +1,4 @@
-module Last5 exposing (last5)
+module Last6 exposing (last6)
 
 import DateUtil exposing (periodToStr, toTimeDuration)
 import Html exposing (Html, div, h3, h5, li, p, text, ul)
@@ -18,8 +18,8 @@ dayItem day =
         ]
 
 
-last5 : List DayItem -> Html Msg
-last5 sorted =
+last6 : List DayItem -> Html Msg
+last6 sorted =
     div []
         [ h3 [] [ text "Last 6: " ]
         , List.map dayItem (List.take 6 sorted)

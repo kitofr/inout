@@ -11,7 +11,7 @@ import Html exposing (Html, a, button, div, h3, h5, li, p, text, ul)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Invoice exposing (invoiceView)
-import Last5 exposing (last5)
+import Last6 exposing (last6)
 import Msgs exposing (Msg(ViewEvent))
 import Seq exposing (desc, groupBy)
 import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
@@ -219,7 +219,7 @@ eventsComponent currentTab events =
             sortedDayItems events
     in
     div [ class "container-fluid" ]
-        [ last5 monthlySorted
+        [ last6 monthlySorted
         , yearTabs currentTab events
         ]
 
