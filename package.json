@@ -14,5 +14,8 @@
   "devDependencies": {
     "elm": "^0.18.0",
     "elm-brunch": "^0.7.0"
+  },
+  "scripts": {
+    "deploy": "brunch build --production"
   }
 }
