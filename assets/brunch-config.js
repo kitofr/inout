@@ -26,17 +26,17 @@ exports.config = {
     watched: [ "static", "css", "js", "vendor", "elm"],
 
     // Where to compile files to
-    public: "priv/static"
+    public: "../priv/static"
   },
 
   // Configure your plugins
   plugins: {
     elmBrunch: {
-      executablePath: "./node_modules/elm/binwrappers",
-      elmFolder: "elm",
       mainModules: ["InOut.elm"],
-      outputFolder: "./vendor",
-      makeParameters : ['--warn']
+      elmMake: "elm-make",
+      elmFolder: "elm",
+      outputFolder: "../vendor",
+      makeParameters : ['--warn --yes']
     },
     babel: {
       // Do not use ES6 compiler in vendor code
