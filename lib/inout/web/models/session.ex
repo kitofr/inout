@@ -1,9 +1,9 @@
 defmodule Inout.Web.Session do
   alias Inout.Web.User
 
-  def login(params, repo) do
-    user = repo.get_by(User, email: String.downcase(params["email"]))
-    case authenticate(user, params["password"]) do
+  def login(email, password, repo) do
+    user = repo.get_by(User, email: String.downcase(email))
+    case authenticate(user, password) do
       true -> { :ok, user }
       _    -> :error
     end
