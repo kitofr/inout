@@ -28,20 +28,21 @@ defmodule Inout.Web do
 
   def controller do
     quote do
-      use Phoenix.Controller
+      use Phoenix.Controller, namespace: Inout.Web
 
       alias Inout.Repo
       import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
 
-      import Inout.Router.Helpers
-      import Inout.Gettext
+      import Inout.Web.Router.Helpers
+      import Inout.Web.Gettext
     end
   end
 
   def view do
     quote do
-      use Phoenix.View, root: "web/templates"
+      use Phoenix.View, root: "lib/inout/web/templates",
+                        namespace: Inout.Web
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
@@ -49,10 +50,10 @@ defmodule Inout.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Inout.Router.Helpers
-      import Inout.ErrorHelpers
-      import Inout.Gettext
-      import Inout.Session, only: [current_user: 1, logged_in?: 1]
+      import Inout.Web.Router.Helpers
+      import Inout.Web.ErrorHelpers
+      import Inout.Web.Gettext
+      import Inout.Web.Session, only: [current_user: 1, logged_in?: 1]
     end
   end
 
@@ -69,7 +70,7 @@ defmodule Inout.Web do
       alias Inout.Repo
       import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
-      import Inout.Gettext
+      import Inout.Web.Gettext
     end
   end
 

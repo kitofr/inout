@@ -1,7 +1,7 @@
 defmodule Inout.UserTest do
   use Inout.ModelCase
 
-  alias Inout.User
+  alias Inout.Web.User
 
   @valid_attrs %{crypted_password: "some content", email: "some content"}
   @invalid_attrs %{}

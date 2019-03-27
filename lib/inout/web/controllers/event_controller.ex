@@ -1,8 +1,8 @@
-defmodule Inout.EventController do
+defmodule Inout.Web.EventController do
   require Logger
   use Inout.Web, :controller
 
-  alias Inout.Event
+  alias Inout.Web.Event
 
   plug :scrub_params, "event" when action in [:create, :update]
 

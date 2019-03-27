@@ -1,4 +1,4 @@
-defmodule Inout.Registration do
+defmodule Inout.Web.Registration do
   import Ecto.Changeset, only: [put_change: 3]
 
   def create(changeset, repo) do

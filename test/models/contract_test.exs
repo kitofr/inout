@@ -1,7 +1,7 @@
 defmodule Inout.ContractTest do
   use Inout.ModelCase
 
-  alias Inout.Contract
+  alias Inout.Web.Contract
 
   @valid_attrs %{address: "some content", client: "some content", country: "some content", description: "some content", email: "some content", hourly_rate: 42, postalcode: "some content", reference: "some content"}
   @invalid_attrs %{}

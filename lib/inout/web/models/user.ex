@@ -1,4 +1,4 @@
-defmodule Inout.User do
+defmodule Inout.Web.User do
   use Inout.Web, :model
   use Ecto.Schema
 

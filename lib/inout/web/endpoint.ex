@@ -1,7 +1,7 @@
-defmodule Inout.Endpoint do
+defmodule Inout.Web.Endpoint do
   use Phoenix.Endpoint, otp_app: :inout
 
-  socket "/socket", Inout.UserSocket
+  socket "/socket", Inout.Web.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -36,5 +36,5 @@ defmodule Inout.Endpoint do
     signing_salt: "RWQcd5ID"
 
   plug Corsica, origins: "*"
-  plug Inout.Router
+  plug Inout.Web.Router
 end

@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :inout, Inout.Endpoint,
+config :inout, Inout.Web.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [scheme: "https", host: "inochut.herokuapp.com", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],

@@ -6,11 +6,11 @@
 use Mix.Config
 
 # Configures the endpoint
-config :inout, Inout.Endpoint,
+config :inout, Inout.Web.Endpoint,
   url: [host: "localhost"],
   root: Path.dirname(__DIR__),
   secret_key_base: "RYhUMSv03xrQCkUbnPwMxh6gG1ld7ZYbass1a1+FuQq6fS3+NeUvpAcfNFh2EZLl",
-  render_errors: [accepts: ~w(html json)],
+  render_errors: [view: Inout.Web.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Inout.PubSub,
            adapter: Phoenix.PubSub.PG2]
 

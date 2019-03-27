@@ -8,7 +8,7 @@ defmodule Inout do
 
     children = [
       # Start the endpoint when the application starts
-      supervisor(Inout.Endpoint, []),
+      supervisor(Inout.Web.Endpoint, []),
       # Start the Ecto repository
       supervisor(Inout.Repo, []),
       # Here you could define other workers and supervisors as children
@@ -19,12 +19,5 @@ defmodule Inout do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Inout.Supervisor]
     Supervisor.start_link(children, opts)
-  end
-
-  # Tell Phoenix to update the endpoint configuration
-  # whenever the application is updated.
-  def config_change(changed, _new, removed) do
-    Inout.Endpoint.config_change(changed, removed)
-    :ok
   end
 end

@@ -1,7 +1,7 @@
 defmodule Inout.EventControllerTest do
-  use Inout.ConnCase
+  use Inout.Web.ConnCase
 
-  alias Inout.Event
+  alias Inout.Web.Event
   @valid_attrs %{device: "some content", location: "some content", status: "some content"}
   @invalid_attrs %{}
 

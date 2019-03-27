@@ -1,4 +1,4 @@
-defmodule Inout.Gettext do
+defmodule Inout.Web.Gettext do
   @moduledoc """
   A module providing Internationalization with a gettext-based API.
 

@@ -1,7 +1,7 @@
 defmodule Inout.EventTest do
   use Inout.ModelCase
 
-  alias Inout.Event
+  alias Inout.Web.Event
 
   @valid_attrs %{device: "some content", location: "some content", status: "some content"}
   @invalid_attrs %{}

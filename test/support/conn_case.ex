@@ -1,4 +1,4 @@
-defmodule Inout.ConnCase do
+defmodule Inout.Web.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -25,10 +25,10 @@ defmodule Inout.ConnCase do
       import Ecto.Changeset
       import Ecto.Query, only: [from: 1, from: 2]
 
-      import Inout.Router.Helpers
+      import Inout.Web.Router.Helpers
 
       # The default endpoint for testing
-      @endpoint Inout.Endpoint
+      @endpoint Inout.Web.Endpoint
     end
   end
 

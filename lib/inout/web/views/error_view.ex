@@ -1,4 +1,4 @@
-defmodule Inout.ErrorView do
+defmodule Inout.Web.ErrorView do
   use Inout.Web, :view
 
   def render("404.html", _assigns) do

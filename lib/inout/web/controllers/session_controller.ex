@@ -1,4 +1,4 @@
-defmodule Inout.SessionController do
+defmodule Inout.Web.SessionController do
   use Inout.Web, :controller
 
   def new(conn, _params) do

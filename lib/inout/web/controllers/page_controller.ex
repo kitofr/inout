@@ -1,4 +1,4 @@
-defmodule Inout.PageController do
+defmodule Inout.Web.PageController do
   import GoodTimes
   use Inout.Web, :controller
 

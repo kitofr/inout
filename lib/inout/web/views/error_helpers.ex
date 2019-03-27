@@ -1,4 +1,4 @@
-defmodule Inout.ErrorHelpers do
+defmodule Inout.Web.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -26,10 +26,10 @@ defmodule Inout.ErrorHelpers do
     #
     #     dngettext "errors", "1 file", "%{count} files", count
     #
-    Gettext.dngettext(Inout.Gettext, "errors", msg, msg, opts[:count], opts)
+    Gettext.dngettext(Inout.Web.Gettext, "errors", msg, msg, opts[:count], opts)
   end
 
   def translate_error(msg) do
-    Gettext.dgettext(Inout.Gettext, "errors", msg)
+    Gettext.dgettext(Inout.Web.Gettext, "errors", msg)
   end
 end

@@ -1,7 +1,7 @@
-defmodule Inout.ContractController do
+defmodule Inout.Web.ContractController do
   use Inout.Web, :controller
 
-  alias Inout.Contract
+  alias Inout.Web.Contract
 
   plug :scrub_params, "contract" when action in [:create, :update]
 

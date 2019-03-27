@@ -1,4 +1,4 @@
-defmodule Inout.Session do
+defmodule Inout.Web.Session do
   alias Inout.User
 
   def login(params, repo) do

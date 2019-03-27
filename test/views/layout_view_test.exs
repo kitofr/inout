@@ -1,3 +1,3 @@
 defmodule Inout.LayoutViewTest do
-  use Inout.ConnCase, async: true
+  use Inout.Web.ConnCase, async: true
 end

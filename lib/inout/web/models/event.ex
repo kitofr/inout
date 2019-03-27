@@ -1,4 +1,4 @@
-defmodule Inout.Event do
+defmodule Inout.Web.Event do
   use Inout.Web, :model
   use Ecto.Schema
 

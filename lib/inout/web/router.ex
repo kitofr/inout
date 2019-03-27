@@ -1,4 +1,4 @@
-defmodule Inout.Router do
+defmodule Inout.Web.Router do
   use Inout.Web, :router
 
   pipeline :browser do
@@ -13,7 +13,7 @@ defmodule Inout.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", Inout do
+  scope "/", Inout.Web do
     pipe_through :browser # Use the default browser stack
 
     get "/invoice", PageController, :index

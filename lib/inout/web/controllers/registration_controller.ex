@@ -1,6 +1,6 @@
-defmodule Inout.RegistrationController do
+defmodule Inout.Web.RegistrationController do
   use Inout.Web, :controller
-  alias Inout.User
+  alias Inout.Web.User
 
    def new(conn, _params) do
      changeset = User.changeset(%User{})
