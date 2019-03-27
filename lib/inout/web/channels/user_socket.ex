@@ -5,7 +5,7 @@ defmodule Inout.Web.UserSocket do
   # channel "rooms:*", Inout.RoomChannel
 
   ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket, timeout: 45_000
+  # transport :websocket, Phoenix.Transports.WebSocket, timeout: 45_000
 
   # transport :longpoll, Phoenix.Transports.LongPoll
 

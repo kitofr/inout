@@ -14,7 +14,10 @@ config :inout, Inout.Web.Endpoint,
   pubsub: [name: Inout.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
-config :inout, ecto_repos: [Inout.Repo]
+  config :inout, 
+    ecto_repos: [Inout.Repo]
+
+  config :phoenix, :json_library, Jason
 
 # config :inout, Inout.Repo,
 #   adapter: Ecto.Adapters.Postgres,
