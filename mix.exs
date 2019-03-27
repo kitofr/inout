@@ -30,20 +30,21 @@ defmodule Inout.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.2.0"},
+    [{:phoenix, "~> 1.3.0"},
      {:phoenix_pubsub, "~> 1.0"},
      {:postgrex, ">= 0.0.0"},
      {:phoenix_ecto, "~> 3.0-rc"},
      {:phoenix_html, "~> 2.4"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:comeonin, "~> 1.0"},
-     {:poison, "~> 1.5.2"},
+     {:poison, "~> 2.2.0"},
      {:gettext, "~> 0.9"},
      {:good_times, "~> 1.1"},
      {:httpotion, "~> 3.0.0"},
      {:plug, "~> 1.0"},
      {:corsica, "~> 0.4"},
-     {:cowboy, "~> 1.0"}]
+     {:cowboy, "~> 1.0"},
+     {:plug_cowboy, "~> 1.0"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.
