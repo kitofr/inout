@@ -17,7 +17,7 @@ config :inout, Inout.Web.Endpoint,
   config :inout, 
     ecto_repos: [Inout.Repo]
 
-  config :phoenix, :json_library, Jason
+  config :phoenix, :json_library, Poison
 
 # config :inout, Inout.Repo,
 #   adapter: Ecto.Adapters.Postgres,
