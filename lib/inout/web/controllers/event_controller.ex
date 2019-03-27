@@ -1,5 +1,4 @@
 defmodule Inout.Web.EventController do
-  require Logger
   use Inout.Web, :controller
 
   alias Inout.Web.Event
@@ -26,7 +25,7 @@ defmodule Inout.Web.EventController do
   end
 
   defp to_unix(datetime) do
-    datetime |> Ecto.DateTime.to_erl |> :calendar.datetime_to_gregorian_seconds |> Kernel.-(62167219200)
+    datetime |> NaiveDateTime.to_erl |> :calendar.datetime_to_gregorian_seconds |> Kernel.-(62167219200)
   end
 
   def as_json(conn, _params) do
