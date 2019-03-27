@@ -3,14 +3,18 @@ defmodule Inout.Web.EventController do
   use Inout.Web, :controller
 
   alias Inout.Web.Event
+  alias Inout.Web.User
+  alias Inout.Web.Contract
+  alias Inout.Web.Session
+
 
   plug :scrub_params, "event" when action in [:create, :update]
 
   def index(conn, _params) do
-    user_id = Inout.Session.current_user(conn).id
-    query = from e in Inout.Event,
-              join: c in Inout.Contract, on: e.contract_id == c.id,
-              join: u in Inout.User, on: e.user_id == u.id,
+    user_id = Session.current_user(conn).id
+    query = from e in Event,
+              join: c in Contract, on: e.contract_id == c.id,
+              join: u in User, on: e.user_id == u.id,
               where: e.user_id == ^user_id,
               order_by: [desc: e.inserted_at],
               preload: [contract: c, user: u]
@@ -26,10 +30,10 @@ defmodule Inout.Web.EventController do
   end
 
   def as_json(conn, _params) do
-    user_id = Inout.Session.current_user(conn).id
-    query = from e in Inout.Event,
-              join: c in Inout.Contract, on: e.contract_id == c.id,
-              join: u in Inout.User, on: e.user_id == u.id,
+    user_id = Session.current_user(conn).id
+    query = from e in Event,
+              join: c in Contract, on: e.contract_id == c.id,
+              join: u in User, on: e.user_id == u.id,
               where: e.user_id == ^user_id,
               order_by: [desc: e.inserted_at],
               preload: [contract: c, user: u]
@@ -46,8 +50,8 @@ defmodule Inout.Web.EventController do
   end
 
   def create(conn, %{"event" => event_params}) do
-    user_id = Inout.Session.current_user(conn).id
-    last_contract = Inout.Contract |> Ecto.Query.last |> Inout.Repo.one
+    user_id = Session.current_user(conn).id
+    last_contract = Contract |> Ecto.Query.last |> Inout.Repo.one
 
     changeset = Event.changeset(
         %Event{},
@@ -67,14 +71,14 @@ defmodule Inout.Web.EventController do
   end
 
   def edit(conn, %{"id" => id}) do
-    user_id = Inout.Session.current_user(conn).id
-    query = from e in Inout.Event,
-              join: c in Inout.Contract, on: e.contract_id == c.id,
+    user_id = Session.current_user(conn).id
+    query = from e in Event,
+              join: c in Contract, on: e.contract_id == c.id,
               where: e.user_id == ^user_id,
               where: e.id == ^id,
               preload: [contract: c]
 
-    contracts = Repo.all(from(c in Inout.Contract, select: { c.client, c.id }))
+    contracts = Repo.all(from(c in Contract, select: { c.client, c.id }))
     event = Repo.one(query)
     changeset = Event.changeset(event)
     render(conn, "edit.html", event: event, contracts: contracts, changeset: changeset)

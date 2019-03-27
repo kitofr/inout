@@ -2,8 +2,10 @@ defmodule Inout.Web.PageController do
   import GoodTimes
   use Inout.Web, :controller
 
+  alias Inout.Web.Session
+
   def index(conn, _params) do
-    unless Inout.Session.logged_in? conn do
+    unless Session.logged_in? conn do
       redirect conn, to: "/login"
     end
     render conn, "index.html"

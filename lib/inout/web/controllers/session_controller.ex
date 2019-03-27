@@ -1,12 +1,14 @@
 defmodule Inout.Web.SessionController do
   use Inout.Web, :controller
 
+  alias Inout.Web.Session
+
   def new(conn, _params) do
     render conn, "new.html"
   end
 
   def create(conn, %{"session" => session_params}) do
-    case Inout.Session.login(session_params, Inout.Repo) do
+    case Session.login(session_params, Inout.Repo) do
       {:ok, user} ->
         conn
         |> put_session(:current_user, user.id)

@@ -2,18 +2,19 @@ defmodule Inout.Web.ContractController do
   use Inout.Web, :controller
 
   alias Inout.Web.Contract
+  alias Inout.Web.Session
 
   plug :scrub_params, "contract" when action in [:create, :update]
 
   def index(conn, _params) do
-    user_id = Inout.Session.current_user(conn).id
-    contracts = Repo.all(from c in Inout.Contract, where: c.user_id == ^user_id, order_by: [desc: c.inserted_at])
+    user_id = Session.current_user(conn).id
+    contracts = Repo.all(from c in Contract, where: c.user_id == ^user_id, order_by: [desc: c.inserted_at])
     render(conn, "index.html", contracts: contracts )
   end
 
   def as_json(conn, _params) do
-    user_id = Inout.Session.current_user(conn).id
-    contracts = Repo.all(from c in Inout.Contract, where: c.user_id == ^user_id, order_by: [desc: c.inserted_at])
+    user_id = Session.current_user(conn).id
+    contracts = Repo.all(from c in Contract, where: c.user_id == ^user_id, order_by: [desc: c.inserted_at])
     json(conn, %{ contracts: contracts })
   end
 
@@ -23,7 +24,7 @@ defmodule Inout.Web.ContractController do
   end
 
   def create(conn, %{"contract" => contract_params}) do
-    user_id = Inout.Session.current_user(conn).id
+    user_id = Session.current_user(conn).id
     changeset = Contract.changeset(
        %Contract{},
        Map.merge(contract_params, %{ "user_id" => "#{user_id}" } ))
