@@ -1,8 +1,8 @@
 module InputExtra exposing (dateInput, timeInput)
 
 import DateUtil exposing (zeroPad)
-import Html exposing (Html, input, select, div, text, option)
-import Html.Attributes as Attr exposing (type_, step, value, selected)
+import Html exposing (Html, div, input, option, select, text)
+import Html.Attributes as Attr exposing (selected, step, type_, value)
 
 
 dateInput : List (Html.Attribute msg) -> List (Html msg) -> Html msg
@@ -19,13 +19,11 @@ timeOption selectedValue time =
         current =
             if val == selectedValue then
                 True
+
             else
                 False
-
-        _ =
-            Debug.log "val, selected, time, current" ( val, selectedValue, time, current )
     in
-        option [ value val, selected current ] [ text val ]
+    option [ value val, selected current ] [ text val ]
 
 
 timeInput : List (Html.Attribute msg) -> String -> List Int -> Html msg
