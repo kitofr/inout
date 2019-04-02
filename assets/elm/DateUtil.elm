@@ -1,33 +1,32 @@
-module DateUtil
-    exposing
-        ( TimeDuration
-        , addTimeDurations
-        , dateStr
-        , dateToMonthStr
-        , emptyTimeDuration
-        , monthOrder
-        , parseStringDate
-        , periodToStr
-        , sortDates
-        , timePeriods
-        , timeStr
-        , timeTuple
-        , dateTuple
-        , toMonthStr
-        , toTimeDuration
-        , zeroPad
-        )
+module DateUtil exposing
+    ( TimeDuration
+    , addTimeDurations
+    , dateStr
+    , dateToMonthStr
+    , dateTuple
+    , emptyTimeDuration
+    , monthOrder
+    , parseStringDate
+    , periodToStr
+    , sortDates
+    , timePeriods
+    , timeStr
+    , timeTuple
+    , toMonthStr
+    , toTimeDuration
+    , zeroPad
+    )
 
-import Time exposing (Time)
 import Date
     exposing
         ( Date
-        , Month(Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec)
-        , Day(Mon, Tue, Wed, Thu, Fri, Sat, Sun)
+        , Day(Fri, Mon, Sat, Sun, Thu, Tue, Wed)
+        , Month(Apr, Aug, Dec, Feb, Jan, Jul, Jun, Mar, May, Nov, Oct, Sep)
         )
+import Date.Extra.Compare exposing (Compare2, is)
 import Date.Extra.Core exposing (monthToInt)
-import Date.Extra.Compare exposing (is, Compare2)
 import Date.Extra.Duration exposing (DeltaRecord)
+import Time exposing (Time)
 
 
 dateTuple : Date -> ( String, String, String )
@@ -47,7 +46,7 @@ dateTuple date =
                 |> toString
                 |> zeroPad
     in
-        ( year, month, day )
+    ( year, month, day )
 
 
 dateStr : Date -> String
@@ -56,7 +55,7 @@ dateStr date =
         ( year, month, day ) =
             dateTuple date
     in
-        year ++ "-" ++ month ++ "-" ++ day
+    year ++ "-" ++ month ++ "-" ++ day
 
 
 timeTuple : Date -> ( String, String, String )
@@ -71,7 +70,7 @@ timeTuple date =
         sec =
             Date.second date |> toString |> zeroPad
     in
-        ( hour, min, sec )
+    ( hour, min, sec )
 
 
 timeStr : Date -> String
@@ -80,7 +79,7 @@ timeStr date =
         ( hour, min, sec ) =
             timeTuple date
     in
-        hour ++ ":" ++ min ++ ":" ++ sec
+    hour ++ ":" ++ min ++ ":" ++ sec
 
 
 zeroPad : String -> String
@@ -89,6 +88,7 @@ zeroPad str =
         Ok num ->
             if num < 10 then
                 "0" ++ str
+
             else
                 str
 
@@ -98,8 +98,13 @@ zeroPad str =
 
 parseStringDate : String -> Date
 parseStringDate isoString =
+    let
+        _ =
+            Debug.log "isoString" isoString
+    in
     Date.fromString isoString
         |> Result.withDefault (Date.fromTime 0)
+        |> Debug.log "result in"
 
 
 sortDates : Compare2 -> Date -> Date -> Order
@@ -259,7 +264,7 @@ dateToMonthStr date =
                 Dec ->
                     "Dec"
     in
-        day ++ " " ++ (toString <| Date.day date) ++ " " ++ month
+    day ++ " " ++ (toString <| Date.day date) ++ " " ++ month
 
 
 type alias TimeDuration =
@@ -304,11 +309,11 @@ addTimeDurations a b =
         hour =
             a.hour + b.hour + Tuple.second min
     in
-        { millisecond = Tuple.first mil
-        , second = Tuple.first sec
-        , minute = Tuple.first min
-        , hour = hour
-        }
+    { millisecond = Tuple.first mil
+    , second = Tuple.first sec
+    , minute = Tuple.first min
+    , hour = hour
+    }
 
 
 periodToStr : TimeDuration -> String
@@ -342,6 +347,6 @@ timePeriods t =
         addLeadingZeros n =
             String.padLeft 2 '0' (toString n)
     in
-        [ days, hours, minutes, seconds ]
-            |> List.map addLeadingZeros
-            |> List.map2 (,) [ "days", "hours", "minutes", "seconds" ]
+    [ days, hours, minutes, seconds ]
+        |> List.map addLeadingZeros
+        |> List.map2 (,) [ "days", "hours", "minutes", "seconds" ]
