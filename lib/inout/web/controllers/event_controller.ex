@@ -79,7 +79,7 @@ defmodule Inout.Web.EventController do
 
     contracts = Repo.all(from(c in Contract, select: { c.client, c.id }))
     event = Repo.one(query)
-    changeset = Event.changeset(event)
+    changeset = Event.changeset(event, %{})
     render(conn, "edit.html", event: event, contracts: contracts, changeset: changeset)
   end
 
