@@ -158,9 +158,11 @@ update msg model =
 
         ViewEvent (HourSelected event hour) ->
             let
+                _ =
+                    Debug.log "selected hour" hour
+
                 dt =
                     updateHour event.inserted_at hour
-                        |> Debug.log "selected hour"
 
                 event_ =
                     { event | inserted_at = dt }

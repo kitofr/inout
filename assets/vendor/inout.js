@@ -12207,15 +12207,19 @@ var _user$project$DateUtil$sortDates = F3(
 		}
 	});
 var _user$project$DateUtil$parseStringDate = function (isoString) {
+	var _p5 = A2(_elm_lang$core$Debug$log, 'isoString', isoString);
 	return A2(
-		_elm_lang$core$Result$withDefault,
-		_elm_lang$core$Date$fromTime(0),
-		_elm_lang$core$Date$fromString(isoString));
+		_elm_lang$core$Debug$log,
+		'result in',
+		A2(
+			_elm_lang$core$Result$withDefault,
+			_elm_lang$core$Date$fromTime(0),
+			_elm_lang$core$Date$fromString(isoString)));
 };
 var _user$project$DateUtil$zeroPad = function (str) {
-	var _p5 = _elm_lang$core$String$toInt(str);
-	if (_p5.ctor === 'Ok') {
-		return (_elm_lang$core$Native_Utils.cmp(_p5._0, 10) < 0) ? A2(_elm_lang$core$Basics_ops['++'], '0', str) : str;
+	var _p6 = _elm_lang$core$String$toInt(str);
+	if (_p6.ctor === 'Ok') {
+		return (_elm_lang$core$Native_Utils.cmp(_p6._0, 10) < 0) ? A2(_elm_lang$core$Basics_ops['++'], '0', str) : str;
 	} else {
 		return '00';
 	}
@@ -12233,10 +12237,10 @@ var _user$project$DateUtil$timeTuple = function (date) {
 	return {ctor: '_Tuple3', _0: hour, _1: min, _2: sec};
 };
 var _user$project$DateUtil$timeStr = function (date) {
-	var _p6 = _user$project$DateUtil$timeTuple(date);
-	var hour = _p6._0;
-	var min = _p6._1;
-	var sec = _p6._2;
+	var _p7 = _user$project$DateUtil$timeTuple(date);
+	var hour = _p7._0;
+	var min = _p7._1;
+	var sec = _p7._2;
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		hour,
@@ -12261,10 +12265,10 @@ var _user$project$DateUtil$dateTuple = function (date) {
 	return {ctor: '_Tuple3', _0: year, _1: month, _2: day};
 };
 var _user$project$DateUtil$dateStr = function (date) {
-	var _p7 = _user$project$DateUtil$dateTuple(date);
-	var year = _p7._0;
-	var month = _p7._1;
-	var day = _p7._2;
+	var _p8 = _user$project$DateUtil$dateTuple(date);
+	var year = _p8._0;
+	var month = _p8._1;
+	var day = _p8._2;
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		year,
@@ -12948,10 +12952,6 @@ var _user$project$InputExtra$timeOption = F2(
 		var val = _user$project$DateUtil$zeroPad(
 			_elm_lang$core$Basics$toString(time));
 		var current = _elm_lang$core$Native_Utils.eq(val, selectedValue) ? true : false;
-		var _p0 = A2(
-			_elm_lang$core$Debug$log,
-			'val, selected, time, current',
-			{ctor: '_Tuple4', _0: val, _1: selectedValue, _2: time, _3: current});
 		return A2(
 			_elm_lang$html$Html$option,
 			{
@@ -13138,7 +13138,7 @@ var _user$project$EditEvent$editEvent = function (event) {
 										}
 									},
 									minutePart,
-									A2(_elm_lang$core$List$range, 1, 59)),
+									A2(_elm_lang$core$List$range, 0, 59)),
 								_1: {
 									ctor: '::',
 									_0: A2(
@@ -13566,13 +13566,11 @@ var _user$project$Update$update = F2(
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					case 'HourSelected':
-						var _p16 = _p5._0._0;
-						var dt = A2(
-							_elm_lang$core$Debug$log,
-							'selected hour',
-							A2(_user$project$Update$updateHour, _p16.inserted_at, _p5._0._1));
+						var _p18 = _p5._0._1;
+						var _p17 = _p5._0._0;
+						var dt = A2(_user$project$Update$updateHour, _p17.inserted_at, _p18);
 						var event_ = _elm_lang$core$Native_Utils.update(
-							_p16,
+							_p17,
 							{inserted_at: dt});
 						var edit = function () {
 							var _p14 = model.edit;
@@ -13588,6 +13586,7 @@ var _user$project$Update$update = F2(
 								return _elm_lang$core$Maybe$Nothing;
 							}
 						}();
+						var _p16 = A2(_elm_lang$core$Debug$log, 'selected hour', _p18);
 						return {
 							ctor: '_Tuple2',
 							_0: _elm_lang$core$Native_Utils.update(
@@ -13596,21 +13595,21 @@ var _user$project$Update$update = F2(
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					case 'TimeUpdated':
-						var _p19 = _p5._0._0;
+						var _p21 = _p5._0._0;
 						var time_ = _user$project$DateUtil$parseStringDate(
-							A2(_user$project$Update$createDateFromTime, _p19.inserted_at, _p5._0._1));
+							A2(_user$project$Update$createDateFromTime, _p21.inserted_at, _p5._0._1));
 						var event_ = _elm_lang$core$Native_Utils.update(
-							_p19,
+							_p21,
 							{inserted_at: time_});
 						var edit = function () {
-							var _p17 = model.edit;
-							if (_p17.ctor === 'Just') {
-								var _p18 = _p17._0;
+							var _p19 = model.edit;
+							if (_p19.ctor === 'Just') {
+								var _p20 = _p19._0;
 								return _elm_lang$core$Maybe$Just(
 									_elm_lang$core$Native_Utils.update(
-										_p18,
+										_p20,
 										{
-											events: A2(_user$project$Update$changeEvent, _p18.events, event_)
+											events: A2(_user$project$Update$changeEvent, _p20.events, event_)
 										}));
 							} else {
 								return _elm_lang$core$Maybe$Nothing;
@@ -13624,21 +13623,21 @@ var _user$project$Update$update = F2(
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					default:
-						var _p22 = _p5._0._0;
+						var _p24 = _p5._0._0;
 						var date_ = _user$project$DateUtil$parseStringDate(
-							A2(_user$project$Update$createDateFromDate, _p22.inserted_at, _p5._0._1));
+							A2(_user$project$Update$createDateFromDate, _p24.inserted_at, _p5._0._1));
 						var event_ = _elm_lang$core$Native_Utils.update(
-							_p22,
+							_p24,
 							{inserted_at: date_});
 						var edit = function () {
-							var _p20 = model.edit;
-							if (_p20.ctor === 'Just') {
-								var _p21 = _p20._0;
+							var _p22 = model.edit;
+							if (_p22.ctor === 'Just') {
+								var _p23 = _p22._0;
 								return _elm_lang$core$Maybe$Just(
 									_elm_lang$core$Native_Utils.update(
-										_p21,
+										_p23,
 										{
-											events: A2(_user$project$Update$changeEvent, _p21.events, event_)
+											events: A2(_user$project$Update$changeEvent, _p23.events, event_)
 										}));
 							} else {
 								return _elm_lang$core$Maybe$Nothing;
