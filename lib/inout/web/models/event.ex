@@ -2,10 +2,10 @@ defmodule Inout.Web.Event do
   use Inout.Web, :model
   use Ecto.Schema
 
-  @derive {
-    Poison.Encoder,
-    only: [:id, :status, :device, :location, :inserted_at, :updated_at, :posix]
-  }
+   @derive {
+     Jason.Encoder,
+     only: [:id, :status, :device, :location, :inserted_at, :updated_at, :posix]
+   }
   schema "events" do
     field :status, :string
     field :device, :string
@@ -16,8 +16,8 @@ defmodule Inout.Web.Event do
     timestamps()
   end
 
-  @required_fields ~w(status device location user_id contract_id)
-  @optional_fields ~w(inserted_at)
+  @required_fields ~w(status device location user_id contract_id)a
+  @optional_fields ~w(inserted_at)a
 
   @doc """
   Creates a changeset based on the `model` and `params`.

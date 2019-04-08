@@ -38,7 +38,7 @@ defmodule Inout.Mixfile do
      {:phoenix_html, "~> 2.4"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:comeonin, "~> 1.0"},
-     {:poison, "~> 3.0"},
+     {:jason, "~> 1.0"},
      {:gettext, "~> 0.9"},
      {:good_times, "~> 1.1"},
      {:httpotion, "~> 3.0.0"},

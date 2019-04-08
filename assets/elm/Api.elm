@@ -149,6 +149,10 @@ updateRequest url event =
 
 updateEvent : Event -> String -> Cmd Msg
 updateEvent event hostUrl =
+    let
+        _ =
+            Debug.log ">>> updateEvent" event
+    in
     Http.send (ApiEvent << UpdateEvent) <|
         updateRequest (hostUrl ++ "/events/" ++ toString event.id) event
 

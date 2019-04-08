@@ -36,6 +36,7 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :inout, Inout.Repo,
   adapter: Ecto.Adapters.Postgres,
+  types: Inout.PostgresTypes,
   username: "postgres",
   password: "postgres",
   database: "inout_dev",

@@ -12,6 +12,12 @@ import UrlParser exposing (parsePath)
 import ViewMsgs exposing (..)
 
 
+constructDate : String -> String -> String -> String -> String -> String -> Date
+constructDate year month day hour min sec =
+    (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec)
+        |> parseStringDate
+
+
 updateMinute : Date -> String -> Date
 updateMinute date min =
     let
@@ -21,8 +27,7 @@ updateMinute date min =
         ( hour, _, sec ) =
             timeTuple date
     in
-    (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec ++ "+02:00")
-        |> parseStringDate
+    constructDate year month day hour min sec
 
 
 updateHour : Date -> String -> Date
@@ -34,8 +39,7 @@ updateHour date hour =
         ( _, min, sec ) =
             timeTuple date
     in
-    (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec ++ "+02:00")
-        |> parseStringDate
+    constructDate year month day hour min sec
 
 
 changeEvent : List Event -> Event -> List Event
@@ -79,7 +83,6 @@ createDateFromDate d str =
         ++ m
         ++ ":"
         ++ s
-        ++ "+0000"
 
 
 setRoute : Location -> Types.Model -> Types.Model
@@ -113,6 +116,13 @@ update msg model =
             ( model, getEvents model.hostUrl )
 
         ViewEvent (Update event) ->
+            let
+                _ =
+                    Debug.log ">>>>>>> model.edit" model.edit
+
+                _ =
+                    Debug.log ">>>>>>> event" event
+            in
             ( model, updateEvent event model.hostUrl )
 
         ViewEvent (Delete event) ->
@@ -159,7 +169,7 @@ update msg model =
         ViewEvent (HourSelected event hour) ->
             let
                 _ =
-                    Debug.log "selected hour" hour
+                    Debug.log "selected hour" event.inserted_at
 
                 dt =
                     updateHour event.inserted_at hour
