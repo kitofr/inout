@@ -17,7 +17,11 @@
     <%= @event.location %>
   </li>
 
+  <li>
+    <strong>Inserted at:</strong>
+    <%= @event.inserted_at %>
+  </li>
 </ul>
 
-<%= link "Edit", to: event_path(@conn, :edit, @event) %>
+<%= link "Edit", to: event_path(@conn, :edit, @event) %><br/>
 <%= link "Back", to: event_path(@conn, :index) %>
