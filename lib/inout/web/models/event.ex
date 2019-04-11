@@ -3,10 +3,10 @@ defmodule Inout.Web.Event do
   use Ecto.Schema
   import Ecto.Changeset
 
-  #  @derive {
-  #    Jason.Encoder,
-  #    only: [:id, :status, :device, :location, :inserted_at, :updated_at, :posix]
-  #  }
+  @derive {
+    Jason.Encoder,
+    only: [:id, :status, :device, :location, :inserted_at, :updated_at, :posix]
+  }
   schema "events" do
     field :status, :string
     field :device, :string
@@ -17,13 +17,13 @@ defmodule Inout.Web.Event do
     timestamps()
   end
 
+  @updateable_fields ~w(status device location user_id contract_id inserted_at)a
   @required_fields ~w(status device location user_id contract_id)a
-  @optional_fields ~w(inserted_at)a
 
   @doc false
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, @updateable_fields)
     |> validate_required(@required_fields)
   end
 end

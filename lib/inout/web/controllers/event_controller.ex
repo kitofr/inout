@@ -87,20 +87,12 @@ defmodule Inout.Web.EventController do
 
   def update(conn, %{"id" => id, "event" => event_params}) do
     #TODO Make sure you only update your own events
-    Logger.debug ">>>>>>>>>>>>>event #{id}"
-
     event = Repo.get!(Event, id)
-    Logger.debug ">>>>>>>>>>>>>event #{inspect(event)}"
-    Logger.debug ">>>>> params #{inspect(event_params)}"
-
     changeset = Event.changeset(event, event_params)
-    Logger.debug ">>>>>>>>> changesset #{inspect(changeset)}"
 
     case Repo.update(changeset) do
       {:ok, event} ->
-        conn
-        |> put_flash(:info, "Event updated successfully.")
-        |> json(inspect(event))
+        render(conn, "show.html", event: event)
       {:error, changeset} ->
         render(conn, "edit.html", event: event, changeset: changeset)
     end
