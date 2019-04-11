@@ -2,10 +2,10 @@ defmodule Inout.Web.Contract do
   use Inout.Web, :model
   use Ecto.Schema
 
-  #@derive {
-  #  Jason.Encoder,
-  #  only: [:id, :client, :reference, :address, :postalcode, :country, :description, :email, :hourly_rate]
-  #}
+  @derive {
+    Jason.Encoder,
+    only: [:id, :client, :reference, :address, :postalcode, :country, :description, :email, :hourly_rate]
+  }
   schema "contracts" do
     field :client, :string
     field :reference, :string
