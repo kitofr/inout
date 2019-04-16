@@ -1,6 +1,8 @@
 defmodule Inout.Web.User do
   use Inout.Web, :model
   use Ecto.Schema
+  alias Inout.Web.Event
+  alias Inout.Web.Contract
 
   schema "users" do
     field :email, :string

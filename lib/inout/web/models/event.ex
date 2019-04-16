@@ -2,6 +2,8 @@ defmodule Inout.Web.Event do
   use Inout.Web, :model
   use Ecto.Schema
   import Ecto.Changeset
+  alias Inout.Web.User
+  alias Inout.Web.Contract
 
   @derive {
     Jason.Encoder,

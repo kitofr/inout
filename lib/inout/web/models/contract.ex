@@ -1,6 +1,7 @@
 defmodule Inout.Web.Contract do
   use Inout.Web, :model
   use Ecto.Schema
+  alias Inout.Web.User
 
   @derive {
     Jason.Encoder,

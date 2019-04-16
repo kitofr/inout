@@ -87,12 +87,13 @@ defmodule Inout.Web.EventController do
 
   def update(conn, %{"id" => id, "event" => event_params}) do
     #TODO Make sure you only update your own events
+    # user_id = Session.current_user(conn).id
     event = Repo.get!(Event, id)
     changeset = Event.changeset(event, event_params)
 
     case Repo.update(changeset) do
       {:ok, event} ->
-        render(conn, "show.html", event: event)
+        json(conn, Map.put_new(event, :posix, to_unix(event.inserted_at)))
       {:error, changeset} ->
         render(conn, "edit.html", event: event, changeset: changeset)
     end

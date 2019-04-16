@@ -1,2 +1,5 @@
-Postgrex.Types.define(Inout.PostgresTypes, [] ++ Ecto.Adapters.Postgres.extensions(), json: Jason)
-
+Postgrex.Types.define(
+  Inout.PostgrexTypes,
+  [] ++ Ecto.Adapters.Postgres.extensions(),
+  json: Jason
+)
