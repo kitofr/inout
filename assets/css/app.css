@@ -38,6 +38,11 @@ form.link, form.button {
   padding-left: 15px;
 }
 
+.contract-header {
+  display: inline-block;
+  margin-left: 1em;
+}
+
 /* Customize container */
 @media (min-width: 768px) {
   .container {

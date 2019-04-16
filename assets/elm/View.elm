@@ -8,7 +8,7 @@ import DateUtil exposing (TimeDuration, addTimeDurations, dateToMonthStr, emptyT
 import Dict
 import EditEvent exposing (edit)
 import Html exposing (Html, a, button, div, h3, h5, li, p, text, ul)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
 import Invoice exposing (invoiceView)
 import Last6 exposing (last6)
@@ -247,7 +247,9 @@ view model =
             div []
                 [ div [ class "container" ]
                     [ div [ class "row" ]
-                        [ h5 [] [ text ("Current contract: " ++ model.contract.name) ] ]
+                        [ h5 [ class "contract-header" ] [ text ("Current contract: " ++ model.contract.name) ]
+                        , h5 [ class "contract-header" ] [ a [ href "./events" ] [ text "Events" ] ]
+                        ]
                     , div [ class "row" ]
                         [ button [ class "btn btn-success", onClick (ViewEvent CheckIn) ] [ text "check in" ]
                         , button [ class "btn btn-primary", onClick (ViewEvent CheckOut) ] [ text "check out" ]

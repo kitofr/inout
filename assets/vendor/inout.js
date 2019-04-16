@@ -14748,14 +14748,44 @@ var _user$project$View$view = function (model) {
 								ctor: '::',
 								_0: A2(
 									_elm_lang$html$Html$h5,
-									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('contract-header'),
+										_1: {ctor: '[]'}
+									},
 									{
 										ctor: '::',
 										_0: _elm_lang$html$Html$text(
 											A2(_elm_lang$core$Basics_ops['++'], 'Current contract: ', model.contract.name)),
 										_1: {ctor: '[]'}
 									}),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$h5,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('contract-header'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$a,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$href('./events'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Events'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
 							}),
 						_1: {
 							ctor: '::',
