@@ -60,7 +60,7 @@ defmodule Inout.Web.EventController do
 
     case Repo.insert(changeset) do
       {:ok, event} ->
-        json conn, %{ event: event }
+        json(conn, %{ event:  add_posix(event)})
       {:error, changeset} ->
         json conn, %{ error: changeset }
     end
@@ -85,6 +85,10 @@ defmodule Inout.Web.EventController do
     render(conn, "edit.html", event: event, contracts: contracts, changeset: changeset)
   end
 
+  def add_posix(event) do
+    Map.put_new(event, :posix, to_unix(event.inserted_at))
+  end
+
   def update(conn, %{"id" => id, "event" => event_params}) do
     #TODO Make sure you only update your own events
     # user_id = Session.current_user(conn).id
@@ -93,7 +97,7 @@ defmodule Inout.Web.EventController do
 
     case Repo.update(changeset) do
       {:ok, event} ->
-        json(conn, Map.put_new(event, :posix, to_unix(event.inserted_at)))
+        json(conn, add_posix(event))
       {:error, changeset} ->
         render(conn, "edit.html", event: event, changeset: changeset)
     end
