@@ -12,7 +12,7 @@ import ApiMsgs
         )
 import Date exposing (Date)
 import Date.Extra.Compare exposing (Compare2(SameOrBefore))
-import Date.Extra.Format exposing (utcIsoString)
+import Date.Extra.Format exposing (isoStringNoOffset)
 import DateUtil exposing (sortDates)
 import Http
 import Json.Decode as JD exposing (Decoder, field, succeed)
@@ -127,8 +127,8 @@ encodeEvent { id, status, location, inserted_at, updated_at } =
                 [ ( "id", Encode.int <| id )
                 , ( "status", Encode.string <| status )
                 , ( "location", Encode.string <| location )
-                , ( "inserted_at", Encode.string <| utcIsoString inserted_at )
-                , ( "updated_at", Encode.string <| utcIsoString updated_at )
+                , ( "inserted_at", Encode.string <| isoStringNoOffset inserted_at )
+                , ( "updated_at", Encode.string <| isoStringNoOffset updated_at )
                 ]
           )
         ]
@@ -149,10 +149,6 @@ updateRequest url event =
 
 updateEvent : Event -> String -> Cmd Msg
 updateEvent event hostUrl =
-    let
-        _ =
-            Debug.log ">>> updateEvent" event
-    in
     Http.send (ApiEvent << UpdateEvent) <|
         updateRequest (hostUrl ++ "/events/" ++ toString event.id) event
 

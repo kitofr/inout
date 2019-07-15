@@ -116,13 +116,6 @@ update msg model =
             ( model, getEvents model.hostUrl )
 
         ViewEvent (Update event) ->
-            let
-                _ =
-                    Debug.log ">>>>>>> model.edit" model.edit
-
-                _ =
-                    Debug.log ">>>>>>> event" event
-            in
             ( model, updateEvent event model.hostUrl )
 
         ViewEvent (Delete event) ->
@@ -168,9 +161,6 @@ update msg model =
 
         ViewEvent (HourSelected event hour) ->
             let
-                _ =
-                    Debug.log "selected hour" event.inserted_at
-
                 dt =
                     updateHour event.inserted_at hour
 
