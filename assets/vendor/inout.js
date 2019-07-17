@@ -12576,7 +12576,7 @@ var _user$project$Api$encodeEvent = function (_p3) {
 										ctor: '_Tuple2',
 										_0: 'inserted_at',
 										_1: _elm_lang$core$Json_Encode$string(
-											_rluiten$elm_date_extra$Date_Extra_Format$utcIsoString(_p4.inserted_at))
+											_rluiten$elm_date_extra$Date_Extra_Format$isoStringNoOffset(_p4.inserted_at))
 									},
 									_1: {
 										ctor: '::',
@@ -12584,7 +12584,7 @@ var _user$project$Api$encodeEvent = function (_p3) {
 											ctor: '_Tuple2',
 											_0: 'updated_at',
 											_1: _elm_lang$core$Json_Encode$string(
-												_rluiten$elm_date_extra$Date_Extra_Format$utcIsoString(_p4.updated_at))
+												_rluiten$elm_date_extra$Date_Extra_Format$isoStringNoOffset(_p4.updated_at))
 										},
 										_1: {ctor: '[]'}
 									}
@@ -12615,12 +12615,11 @@ var _user$project$Api$updateRequest = F2(
 	});
 var _user$project$Api$updateEvent = F2(
 	function (event, hostUrl) {
-		var _p6 = A2(_elm_lang$core$Debug$log, '>>> updateEvent', event);
 		return A2(
 			_elm_lang$http$Http$send,
-			function (_p7) {
+			function (_p6) {
 				return _user$project$Msgs$ApiEvent(
-					_user$project$ApiMsgs$UpdateEvent(_p7));
+					_user$project$ApiMsgs$UpdateEvent(_p6));
 			},
 			A2(
 				_user$project$Api$updateRequest,
@@ -12636,9 +12635,9 @@ var _user$project$Api$updateEvent = F2(
 var _user$project$Api$getEvents = function (hostUrl) {
 	return A2(
 		_elm_lang$http$Http$send,
-		function (_p8) {
+		function (_p7) {
 			return _user$project$Msgs$ApiEvent(
-				_user$project$ApiMsgs$LoadEvents(_p8));
+				_user$project$ApiMsgs$LoadEvents(_p7));
 		},
 		A2(
 			_elm_lang$http$Http$get,
@@ -12646,12 +12645,12 @@ var _user$project$Api$getEvents = function (hostUrl) {
 			_user$project$Api$decodeEvents));
 };
 var _user$project$Api$loadContract = function (hostUrl) {
-	var _p9 = _elm_lang$core$Debug$log('loading contracts like a boss... ');
+	var _p8 = _elm_lang$core$Debug$log('loading contracts like a boss... ');
 	return A2(
 		_elm_lang$http$Http$send,
-		function (_p10) {
+		function (_p9) {
 			return _user$project$Msgs$ApiEvent(
-				_user$project$ApiMsgs$LoadContract(_p10));
+				_user$project$ApiMsgs$LoadContract(_p9));
 		},
 		A2(
 			_elm_lang$http$Http$get,
@@ -12662,9 +12661,9 @@ var _user$project$Api$post = F3(
 	function (decoder, url, body) {
 		return A2(
 			_elm_lang$http$Http$send,
-			function (_p11) {
+			function (_p10) {
 				return _user$project$Msgs$ApiEvent(
-					_user$project$ApiMsgs$CheckEvent(_p11));
+					_user$project$ApiMsgs$CheckEvent(_p10));
 			},
 			A3(
 				_elm_lang$http$Http$post,
@@ -12687,10 +12686,10 @@ var _user$project$Api$check = F3(
 	});
 var _user$project$Api$update = F2(
 	function (msg, model) {
-		var _p12 = msg;
-		switch (_p12.ctor) {
+		var _p11 = msg;
+		switch (_p11.ctor) {
 			case 'CheckEvent':
-				if (_p12._0.ctor === 'Ok') {
+				if (_p11._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: model,
@@ -12700,7 +12699,7 @@ var _user$project$Api$update = F2(
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			case 'UpdateEvent':
-				if (_p12._0.ctor === 'Ok') {
+				if (_p11._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -12712,7 +12711,7 @@ var _user$project$Api$update = F2(
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			case 'DeleteEvent':
-				if (_p12._0.ctor === 'Ok') {
+				if (_p11._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -12724,11 +12723,11 @@ var _user$project$Api$update = F2(
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			case 'LoadContract':
-				if (_p12._0.ctor === 'Ok') {
+				if (_p11._0.ctor === 'Ok') {
 					var contract = function () {
-						var _p13 = _p12._0._0;
-						if (_p13.ctor === '::') {
-							return _p13._0;
+						var _p12 = _p11._0._0;
+						if (_p12.ctor === '::') {
+							return _p12._0;
 						} else {
 							return _user$project$Types$Contract('None');
 						}
@@ -12741,24 +12740,24 @@ var _user$project$Api$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
-					var _p14 = A2(_elm_lang$core$Debug$log, 'Could not load contract: ', _p12._0._0);
+					var _p13 = A2(_elm_lang$core$Debug$log, 'Could not load contract: ', _p11._0._0);
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			default:
-				if (_p12._0.ctor === 'Ok') {
+				if (_p11._0.ctor === 'Ok') {
 					var ev = A2(
 						_elm_lang$core$List$sortWith,
 						F2(
 							function (a, b) {
 								return A3(_user$project$DateUtil$sortDates, _rluiten$elm_date_extra$Date_Extra_Compare$SameOrBefore, a.inserted_at, b.inserted_at);
 							}),
-						_p12._0._0);
+						_p11._0._0);
 					var first = _elm_lang$core$List$head(ev);
 					var checkedIn = function () {
-						var _p15 = first;
-						if (_p15.ctor === 'Just') {
-							var _p16 = _p15._0;
-							return _elm_lang$core$Native_Utils.eq(_p16.status, 'check-in') ? _elm_lang$core$Date$toTime(_p16.inserted_at) : 0;
+						var _p14 = first;
+						if (_p14.ctor === 'Just') {
+							var _p15 = _p14._0;
+							return _elm_lang$core$Native_Utils.eq(_p15.status, 'check-in') ? _elm_lang$core$Date$toTime(_p15.inserted_at) : 0;
 						} else {
 							return 0;
 						}
@@ -13440,13 +13439,10 @@ var _user$project$Update$update = F2(
 							_1: _user$project$Api$getEvents(model.hostUrl)
 						};
 					case 'Update':
-						var _p8 = _p5._0._0;
-						var _p6 = A2(_elm_lang$core$Debug$log, '>>>>>>> event', _p8);
-						var _p7 = A2(_elm_lang$core$Debug$log, '>>>>>>> model.edit', model.edit);
 						return {
 							ctor: '_Tuple2',
 							_0: model,
-							_1: A2(_user$project$Api$updateEvent, _p8, model.hostUrl)
+							_1: A2(_user$project$Api$updateEvent, _p5._0._0, model.hostUrl)
 						};
 					case 'Delete':
 						return {
@@ -13485,14 +13481,14 @@ var _user$project$Update$update = F2(
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					case 'CreateInvoice':
-						var _p13 = _p5._0._0._0;
-						var _p12 = _p5._0._1;
-						var _p11 = _p5._0._0._1;
-						var _p10 = _p5._0._2;
-						var _p9 = A2(
+						var _p10 = _p5._0._0._0;
+						var _p9 = _p5._0._1;
+						var _p8 = _p5._0._0._1;
+						var _p7 = _p5._0._2;
+						var _p6 = A2(
 							_elm_lang$core$Debug$log,
 							'INVOICE',
-							{ctor: '_Tuple4', _0: _p13, _1: _p11, _2: _p12, _3: _p10});
+							{ctor: '_Tuple4', _0: _p10, _1: _p8, _2: _p9, _3: _p7});
 						return {
 							ctor: '_Tuple2',
 							_0: _elm_lang$core$Native_Utils.update(
@@ -13500,18 +13496,45 @@ var _user$project$Update$update = F2(
 								{
 									page: A3(
 										_user$project$Types$Invoice,
-										{ctor: '_Tuple2', _0: _p13, _1: _p11},
-										_p12,
-										_p10)
+										{ctor: '_Tuple2', _0: _p10, _1: _p8},
+										_p9,
+										_p7)
 								}),
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					case 'MinuteSelected':
-						var _p16 = _p5._0._0;
+						var _p13 = _p5._0._0;
 						var dt = A2(
 							_elm_lang$core$Debug$log,
 							'selected minute',
-							A2(_user$project$Update$updateMinute, _p16.inserted_at, _p5._0._1));
+							A2(_user$project$Update$updateMinute, _p13.inserted_at, _p5._0._1));
+						var event_ = _elm_lang$core$Native_Utils.update(
+							_p13,
+							{inserted_at: dt});
+						var edit = function () {
+							var _p11 = model.edit;
+							if (_p11.ctor === 'Just') {
+								var _p12 = _p11._0;
+								return _elm_lang$core$Maybe$Just(
+									_elm_lang$core$Native_Utils.update(
+										_p12,
+										{
+											events: A2(_user$project$Update$changeEvent, _p12.events, event_)
+										}));
+							} else {
+								return _elm_lang$core$Maybe$Nothing;
+							}
+						}();
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{edit: edit}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					case 'HourSelected':
+						var _p16 = _p5._0._0;
+						var dt = A2(_user$project$Update$updateHour, _p16.inserted_at, _p5._0._1);
 						var event_ = _elm_lang$core$Native_Utils.update(
 							_p16,
 							{inserted_at: dt});
@@ -13536,12 +13559,13 @@ var _user$project$Update$update = F2(
 								{edit: edit}),
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
-					case 'HourSelected':
-						var _p20 = _p5._0._0;
-						var dt = A2(_user$project$Update$updateHour, _p20.inserted_at, _p5._0._1);
+					case 'TimeUpdated':
+						var _p19 = _p5._0._0;
+						var time_ = _user$project$DateUtil$parseStringDate(
+							A2(_user$project$Update$createDateFromTime, _p19.inserted_at, _p5._0._1));
 						var event_ = _elm_lang$core$Native_Utils.update(
-							_p20,
-							{inserted_at: dt});
+							_p19,
+							{inserted_at: time_});
 						var edit = function () {
 							var _p17 = model.edit;
 							if (_p17.ctor === 'Just') {
@@ -13556,35 +13580,6 @@ var _user$project$Update$update = F2(
 								return _elm_lang$core$Maybe$Nothing;
 							}
 						}();
-						var _p19 = A2(_elm_lang$core$Debug$log, 'selected hour', _p20.inserted_at);
-						return {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Native_Utils.update(
-								model,
-								{edit: edit}),
-							_1: _elm_lang$core$Platform_Cmd$none
-						};
-					case 'TimeUpdated':
-						var _p23 = _p5._0._0;
-						var time_ = _user$project$DateUtil$parseStringDate(
-							A2(_user$project$Update$createDateFromTime, _p23.inserted_at, _p5._0._1));
-						var event_ = _elm_lang$core$Native_Utils.update(
-							_p23,
-							{inserted_at: time_});
-						var edit = function () {
-							var _p21 = model.edit;
-							if (_p21.ctor === 'Just') {
-								var _p22 = _p21._0;
-								return _elm_lang$core$Maybe$Just(
-									_elm_lang$core$Native_Utils.update(
-										_p22,
-										{
-											events: A2(_user$project$Update$changeEvent, _p22.events, event_)
-										}));
-							} else {
-								return _elm_lang$core$Maybe$Nothing;
-							}
-						}();
 						return {
 							ctor: '_Tuple2',
 							_0: _elm_lang$core$Native_Utils.update(
@@ -13593,21 +13588,21 @@ var _user$project$Update$update = F2(
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					default:
-						var _p26 = _p5._0._0;
+						var _p22 = _p5._0._0;
 						var date_ = _user$project$DateUtil$parseStringDate(
-							A2(_user$project$Update$createDateFromDate, _p26.inserted_at, _p5._0._1));
+							A2(_user$project$Update$createDateFromDate, _p22.inserted_at, _p5._0._1));
 						var event_ = _elm_lang$core$Native_Utils.update(
-							_p26,
+							_p22,
 							{inserted_at: date_});
 						var edit = function () {
-							var _p24 = model.edit;
-							if (_p24.ctor === 'Just') {
-								var _p25 = _p24._0;
+							var _p20 = model.edit;
+							if (_p20.ctor === 'Just') {
+								var _p21 = _p20._0;
 								return _elm_lang$core$Maybe$Just(
 									_elm_lang$core$Native_Utils.update(
-										_p25,
+										_p21,
 										{
-											events: A2(_user$project$Update$changeEvent, _p25.events, event_)
+											events: A2(_user$project$Update$changeEvent, _p21.events, event_)
 										}));
 							} else {
 								return _elm_lang$core$Maybe$Nothing;
