@@ -1,10 +1,7 @@
 module View exposing (view)
 
 import Charts exposing (barChart)
-import Date
-import Date.Extra.Compare exposing (Compare2(..))
-import Date.Extra.Duration exposing (DeltaRecord)
-import DateUtil exposing (TimeDuration, addTimeDurations, dateToMonthStr, emptyTimeDuration, monthOrder, periodToStr, sortDates, toMonthStr, toTimeDuration)
+import DateUtil exposing (Compare2(..), DeltaRecord, TimeDuration, addTimeDurations, dateToMonthStr, emptyTimeDuration, monthOrder, periodToStr, sortDates, toMonthStr, toTimeDuration)
 import Dict
 import EditEvent exposing (edit)
 import Html exposing (Html, a, button, div, h3, h5, li, p, text, ul)
@@ -14,6 +11,7 @@ import Invoice exposing (invoiceView)
 import Last6 exposing (last6)
 import Msgs exposing (Msg(..))
 import Seq exposing (desc, groupBy)
+import Time exposing (..)
 import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
 import Types exposing (DayItem, Event, Model, Page(..), emptyEvent, timeDifference)
 import ViewMsgs exposing (ViewMsg(..))

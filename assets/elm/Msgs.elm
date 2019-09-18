@@ -1,13 +1,13 @@
 module Msgs exposing (Msg(..))
 
 import ApiMsgs exposing (ApiMsg)
-import Navigation exposing (Location)
-import Time exposing (Time)
+import Time exposing (Posix)
+import Url exposing (Url)
 import ViewMsgs exposing (ViewMsg)
 
 
 type Msg
     = ApiEvent ApiMsg
-    | Tick Time
+    | Tick Posix
     | ViewEvent ViewMsg
-    | SetRoute Location
+    | SetRoute Url

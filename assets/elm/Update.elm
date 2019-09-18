@@ -1,45 +1,13 @@
 module Update exposing (setRoute, update)
 
 import Api exposing (check, deleteEvent, getEvents, updateEvent)
-import Date exposing (Date)
-import Date.Extra.Create exposing (getTimezoneOffset)
 import DateUtil exposing (dateStr, dateTuple, parseStringDate, timeTuple, zeroPad)
 import Msgs exposing (Msg(..))
-import Navigation exposing (Location)
 import Route exposing (route)
+import Time exposing (..)
 import Types exposing (Event, Model, Page(..))
-import Url exposing (Parser(..))
+import Url exposing (Parser(..), Url)
 import ViewMsgs exposing (..)
-
-
-constructDate : String -> String -> String -> String -> String -> String -> Date
-constructDate year month day hour min sec =
-    (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec)
-        |> parseStringDate
-
-
-updateMinute : Date -> String -> Date
-updateMinute date min =
-    let
-        ( year, month, day ) =
-            dateTuple date
-
-        ( hour, _, sec ) =
-            timeTuple date
-    in
-    constructDate year month day hour min sec
-
-
-updateHour : Date -> String -> Date
-updateHour date hour =
-    let
-        ( year, month, day ) =
-            dateTuple date
-
-        ( _, min, sec ) =
-            timeTuple date
-    in
-    constructDate year month day hour min sec
 
 
 changeEvent : List Event -> Event -> List Event
@@ -53,36 +21,6 @@ changeEvent lst e =
                 ev
         )
         lst
-
-
-createDateFromTime : Date -> String -> String
-createDateFromTime d str =
-    let
-        date_ =
-            d |> dateStr
-    in
-    date_ ++ "T" ++ str
-
-
-createDateFromDate : Date -> String -> String
-createDateFromDate d str =
-    let
-        h =
-            Date.hour d |> String.fromInt |> zeroPad
-
-        m =
-            Date.minute d |> String.fromInt |> zeroPad
-
-        s =
-            Date.second d |> String.fromInt |> zeroPad
-    in
-    str
-        ++ "T"
-        ++ h
-        ++ ":"
-        ++ m
-        ++ ":"
-        ++ s
 
 
 setRoute : Location -> Types.Model -> Types.Model
@@ -141,81 +79,16 @@ update msg model =
             ( { model | page = Invoice ( year, month ) total dayCount }, Cmd.none )
 
         ViewEvent (MinuteSelected event min) ->
-            let
-                dt =
-                    updateMinute event.inserted_at min
-                        |> Debug.log "selected minute"
-
-                event_ =
-                    { event | inserted_at = dt }
-
-                edit =
-                    case model.edit of
-                        Just dayitem ->
-                            Just { dayitem | events = changeEvent dayitem.events event_ }
-
-                        _ ->
-                            Nothing
-            in
-            ( { model | edit = edit }, Cmd.none )
+            ( model, Cmd.none )
 
         ViewEvent (HourSelected event hour) ->
-            let
-                dt =
-                    updateHour event.inserted_at hour
-
-                event_ =
-                    { event | inserted_at = dt }
-
-                edit =
-                    case model.edit of
-                        Just dayitem ->
-                            Just { dayitem | events = changeEvent dayitem.events event_ }
-
-                        _ ->
-                            Nothing
-            in
-            ( { model | edit = edit }, Cmd.none )
+            ( model, Cmd.none )
 
         ViewEvent (TimeUpdated event time) ->
-            let
-                time_ =
-                    time
-                        |> createDateFromTime event.inserted_at
-                        |> parseStringDate
-
-                event_ =
-                    { event | inserted_at = time_ }
-
-                edit =
-                    case model.edit of
-                        Just dayitem ->
-                            Just { dayitem | events = changeEvent dayitem.events event_ }
-
-                        _ ->
-                            Nothing
-            in
-            ( { model | edit = edit }, Cmd.none )
+            ( model, Cmd.none )
 
         ViewEvent (DateUpdated event date) ->
-            let
-                date_ =
-                    date
-                        |> createDateFromDate event.inserted_at
-                        |> parseStringDate
-
-                event_ =
-                    { event | inserted_at = date_ }
-
-                edit =
-                    case model.edit of
-                        Just dayitem ->
-                            Just { dayitem | events = changeEvent dayitem.events event_ }
-
-                        _ ->
-                            Nothing
-            in
-            ( { model | edit = edit }, Cmd.none )
+            ( model, Cmd.none )
 
         SetRoute location ->
             ( setRoute location model, Cmd.none )
@@ -229,7 +102,7 @@ update msg model =
                         |> toFloat
 
                 withTimeZone =
-                    getTimezoneOffset (Date.fromTime model.checkInAt)
+                    Date.fromTime model.checkInAt
                         |> (\x ->
                                 x
                                     * -1

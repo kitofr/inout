@@ -1,10 +1,13 @@
 module DateUtil exposing
-    ( TimeDuration
+    ( Compare2(..)
+    , DeltaRecord
+    , TimeDuration
     , addTimeDurations
     , dateStr
     , dateToMonthStr
     , dateTuple
     , emptyTimeDuration
+    , is
     , monthOrder
     , parseStringDate
     , periodToStr
@@ -17,67 +20,105 @@ module DateUtil exposing
     , zeroPad
     )
 
-import Date
-    exposing
-        ( Date
-        , Day(..)
-        , Month(..)
-        )
-import Date.Extra.Compare exposing (Compare2, is)
-import Date.Extra.Core exposing (monthToInt)
-import Date.Extra.Duration exposing (DeltaRecord)
-import Time exposing (Time)
+import Iso8601
+import String exposing (..)
+import Time exposing (..)
 
 
-dateTuple : Date -> ( String, String, String )
-dateTuple date =
+type alias DeltaRecord =
+    { year : Int
+    , month : Int
+    , day : Int
+    , hour : Int
+    , minute : Int
+    , second : Int
+    , millisecond : Int
+    }
+
+
+is : Compare2 -> Posix -> Posix -> Bool
+is comp first second =
+    let
+        a =
+            Time.posixToMillis first
+
+        b =
+            Time.posixToMillis second
+    in
+    case comp of
+        After ->
+            a > b
+
+        Before ->
+            a < b
+
+        SameOrAfter ->
+            a >= b
+
+        SameOrBefore ->
+            a <= b
+
+        Same ->
+            a == b
+
+
+type Compare2
+    = After
+    | Before
+    | Same
+    | SameOrAfter
+    | SameOrBefore
+
+
+dateTuple : Posix -> Zone -> ( String, String, String )
+dateTuple posix zone =
     let
         year =
-            Date.year date |> String.fromInt
+            Time.toYear zone posix |> String.fromInt
 
         month =
-            Date.month date
+            Time.toMonth zone posix
                 |> monthToInt
                 |> String.fromInt
                 |> zeroPad
 
         day =
-            Date.day date
+            Time.toDay zone posix
                 |> String.fromInt
                 |> zeroPad
     in
     ( year, month, day )
 
 
-dateStr : Date -> String
-dateStr date =
+dateStr : Posix -> Zone -> String
+dateStr posix zone =
     let
         ( year, month, day ) =
-            dateTuple date
+            dateTuple posix zone
     in
     year ++ "-" ++ month ++ "-" ++ day
 
 
-timeTuple : Date -> ( String, String, String )
-timeTuple date =
+timeTuple : Posix -> Zone -> ( String, String, String )
+timeTuple posix zone =
     let
         hour =
-            Date.hour date |> String.fromInt |> zeroPad
+            Time.toHour zone posix |> String.fromInt |> zeroPad
 
         min =
-            Date.minute date |> String.fromInt |> zeroPad
+            Time.toMinute zone posix |> String.fromInt |> zeroPad
 
         sec =
-            Date.second date |> String.fromInt |> zeroPad
+            Time.toSecond zone posix |> String.fromInt |> zeroPad
     in
     ( hour, min, sec )
 
 
-timeStr : Date -> String
-timeStr date =
+timeStr : Posix -> Zone -> String
+timeStr posix zone =
     let
         ( hour, min, sec ) =
-            timeTuple date
+            timeTuple posix zone
     in
     hour ++ ":" ++ min ++ ":" ++ sec
 
@@ -85,7 +126,7 @@ timeStr date =
 zeroPad : String -> String
 zeroPad str =
     case String.toInt str of
-        Ok num ->
+        Just num ->
             if num < 10 then
                 "0" ++ str
 
@@ -96,18 +137,14 @@ zeroPad str =
             "00"
 
 
-parseStringDate : String -> Date
+parseStringDate : String -> Posix
 parseStringDate isoString =
-    let
-        _ =
-            Debug.log "isoString" isoString
-    in
-    Date.fromString isoString
-        |> Result.withDefault (Date.fromTime 0)
+    Iso8601.toTime isoString
+        |> Result.withDefault (Time.millisToPosix 0)
         |> Debug.log "result in"
 
 
-sortDates : Compare2 -> Date -> Date -> Order
+sortDates : Compare2 -> Posix -> Posix -> Order
 sortDates order a b =
     case is order a b of
         True ->
@@ -160,9 +197,9 @@ toMonthStr num =
             "WFT month: " ++ String.fromInt num
 
 
-monthOrder : Date -> Int
-monthOrder date =
-    case Date.month date of
+monthOrder : Posix -> Zone -> Int
+monthOrder posix zone =
+    case Time.toMonth zone posix of
         Jan ->
             1
 
@@ -200,11 +237,11 @@ monthOrder date =
             12
 
 
-dateToMonthStr : Date -> String
-dateToMonthStr date =
+dateToMonthStr : Posix -> Zone -> String
+dateToMonthStr posix zone =
     let
         day =
-            case Date.dayOfWeek date of
+            case Time.toWeekday zone posix of
                 Mon ->
                     "Mon"
 
@@ -227,7 +264,7 @@ dateToMonthStr date =
                     "Sun"
 
         month =
-            case Date.month date of
+            case Time.toMonth zone posix of
                 Jan ->
                     "Jan"
 
@@ -264,7 +301,7 @@ dateToMonthStr date =
                 Dec ->
                     "Dec"
     in
-    day ++ " " ++ (String.fromInt <| Date.day date) ++ " " ++ month
+    day ++ " " ++ (String.fromInt <| Time.toDay zone posix) ++ " " ++ month
 
 
 type alias TimeDuration =
@@ -329,7 +366,7 @@ periodToStr period =
 -- [ ("days", "02"), ("hours", "06"), ("minutes", "15"), ("seconds", "03")]
 
 
-timePeriods : Time -> List ( String, String )
+timePeriods : Float -> List ( String, String )
 timePeriods t =
     let
         seconds =
@@ -350,3 +387,43 @@ timePeriods t =
     [ days, hours, minutes, seconds ]
         |> List.map addLeadingZeros
         |> List.map2 (\a b -> ( a, b )) [ "days", "hours", "minutes", "seconds" ]
+
+
+monthToInt : Month -> Int
+monthToInt month =
+    case month of
+        Jan ->
+            1
+
+        Feb ->
+            2
+
+        Mar ->
+            3
+
+        Apr ->
+            4
+
+        May ->
+            5
+
+        Jun ->
+            6
+
+        Jul ->
+            7
+
+        Aug ->
+            8
+
+        Sep ->
+            9
+
+        Oct ->
+            10
+
+        Nov ->
+            11
+
+        Dec ->
+            12

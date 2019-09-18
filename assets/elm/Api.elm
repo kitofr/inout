@@ -4,15 +4,13 @@ import ApiMsgs
     exposing
         ( ApiMsg(..)
         )
-import Date exposing (Date)
-import Date.Extra.Compare exposing (Compare2(..))
-import Date.Extra.Format exposing (isoStringNoOffset)
-import DateUtil exposing (sortDates)
+import DateUtil exposing (Compare2(..), sortDates)
 import Http
 import Json.Decode as JD exposing (Decoder, field, succeed)
 import Json.Decode.Extra exposing ((|:))
 import Json.Encode as Encode
 import Msgs exposing (Msg(..))
+import Time
 import Types exposing (Contract, Event, Model)
 
 
@@ -121,8 +119,8 @@ encodeEvent { id, status, location, inserted_at, updated_at } =
                 [ ( "id", Encode.int <| id )
                 , ( "status", Encode.string <| status )
                 , ( "location", Encode.string <| location )
-                , ( "inserted_at", Encode.string <| isoStringNoOffset inserted_at )
-                , ( "updated_at", Encode.string <| isoStringNoOffset updated_at )
+                , ( "inserted_at", Encode.string <| Iso8601.fromTime inserted_at )
+                , ( "updated_at", Encode.string <| Iso8601.fromTime updated_at )
                 ]
           )
         ]

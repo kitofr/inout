@@ -3,12 +3,12 @@ module TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
 import DateUtil exposing (timePeriods)
 import Html exposing (Html, div, span, text)
 import Html.Attributes exposing (class)
-import Time exposing (Time)
+import Time exposing (Posix, Zone)
 
 
-viewTimeSinceLastCheckIn : Time -> List (Html msg)
-viewTimeSinceLastCheckIn t =
-    List.map viewTimePeriod (timePeriods t)
+viewTimeSinceLastCheckIn : Posix -> Zone -> List (Html msg)
+viewTimeSinceLastCheckIn t zone =
+    List.map viewTimePeriod (timePeriods (toFloat (Time.toMillis zone t)))
 
 
 viewTimePeriod : ( String, String ) -> Html msg
