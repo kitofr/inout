@@ -3,8 +3,8 @@ module Invoice exposing (invoiceView)
 import Html exposing (..)
 import Html.Attributes exposing (class, id, src)
 import Html.Events exposing (onClick)
-import Msgs exposing (Msg(ViewEvent))
-import ViewMsgs exposing (ViewMsg(GoHome))
+import Msgs exposing (Msg(..))
+import ViewMsgs exposing (ViewMsg(..))
 
 
 ph : String -> Html Msg
@@ -30,7 +30,7 @@ pbv : String -> a -> Html Msg
 pbv txt value =
     p []
         [ b [ class "lbl" ] [ text (txt ++ ": ") ]
-        , text (toString value)
+        , text (String.fromInt value)
         ]
 
 
@@ -39,7 +39,7 @@ invoiceHeader invoiceNumber =
     div [ id "faktura" ]
         [ div [ class "header" ]
             [ img [ src "images/agical_128x40.png" ] []
-            , h1 [] [ text ("Faktura " ++ toString invoiceNumber) ]
+            , h1 [] [ text ("Faktura " ++ String.fromInt invoiceNumber) ]
             ]
         ]
 
@@ -203,10 +203,10 @@ invoiceView ( year, month ) duration count =
 
 
 --, div [ class "rows" ]
---    [ p [] [ text (toString year) ]
---    , p [] [ text (toString month) ]
---    , p [] [ text (toString duration) ]
---    , p [] [ text (toString count) ]
+--    [ p [] [ text (String.fromInt year) ]
+--    , p [] [ text (String.fromInt month) ]
+--    , p [] [ text (String.fromInt duration) ]
+--    , p [] [ text (String.fromInt count) ]
 --    ]
 --[div []
 --      invoiceHeader

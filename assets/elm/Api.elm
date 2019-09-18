@@ -2,23 +2,17 @@ module Api exposing (check, deleteEvent, getEvents, loadContract, update, update
 
 import ApiMsgs
     exposing
-        ( ApiMsg
-            ( CheckEvent
-            , DeleteEvent
-            , LoadContract
-            , LoadEvents
-            , UpdateEvent
-            )
+        ( ApiMsg(..)
         )
 import Date exposing (Date)
-import Date.Extra.Compare exposing (Compare2(SameOrBefore))
+import Date.Extra.Compare exposing (Compare2(..))
 import Date.Extra.Format exposing (isoStringNoOffset)
 import DateUtil exposing (sortDates)
 import Http
 import Json.Decode as JD exposing (Decoder, field, succeed)
 import Json.Decode.Extra exposing ((|:))
 import Json.Encode as Encode
-import Msgs exposing (Msg(ApiEvent))
+import Msgs exposing (Msg(..))
 import Types exposing (Contract, Event, Model)
 
 
@@ -150,7 +144,7 @@ updateRequest url event =
 updateEvent : Event -> String -> Cmd Msg
 updateEvent event hostUrl =
     Http.send (ApiEvent << UpdateEvent) <|
-        updateRequest (hostUrl ++ "/events/" ++ toString event.id) event
+        updateRequest (hostUrl ++ "/events/" ++ String.fromInt event.id) event
 
 
 deleteRequest : String -> Http.Request String
@@ -169,7 +163,7 @@ deleteRequest url =
 deleteEvent : Event -> String -> Cmd Msg
 deleteEvent event hostUrl =
     Http.send (ApiEvent << DeleteEvent) <|
-        deleteRequest (hostUrl ++ "/events/" ++ toString event.id)
+        deleteRequest (hostUrl ++ "/events/" ++ String.fromInt event.id)
 
 
 decodeContracts : JD.Decoder (List Contract)

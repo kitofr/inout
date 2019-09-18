@@ -4,7 +4,7 @@ import Api exposing (check, deleteEvent, getEvents, updateEvent)
 import Date exposing (Date)
 import Date.Extra.Create exposing (getTimezoneOffset)
 import DateUtil exposing (dateStr, dateTuple, parseStringDate, timeTuple, zeroPad)
-import Msgs exposing (Msg(ApiEvent, SetRoute, Tick, ViewEvent))
+import Msgs exposing (Msg(..))
 import Navigation exposing (Location)
 import Route exposing (route)
 import Types exposing (Event, Model, Page(..))
@@ -68,13 +68,13 @@ createDateFromDate : Date -> String -> String
 createDateFromDate d str =
     let
         h =
-            Date.hour d |> toString |> zeroPad
+            Date.hour d |> String.fromInt |> zeroPad
 
         m =
-            Date.minute d |> toString |> zeroPad
+            Date.minute d |> String.fromInt |> zeroPad
 
         s =
-            Date.second d |> toString |> zeroPad
+            Date.second d |> String.fromInt |> zeroPad
     in
     str
         ++ "T"

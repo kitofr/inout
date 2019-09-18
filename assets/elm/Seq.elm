@@ -1,12 +1,14 @@
-module Seq exposing (nth, groupBy, desc)
+module Seq exposing (desc, groupBy, nth)
 
 import Dict
 
 
 {-| Retrieves the nth element from a list
 
-    nth 0 ['e','l','m'] '-' == 'e'
-    nth 5 ['e','l','m'] '-' == '-'
+    nth 0 [ 'e', 'l', 'm' ] '-' == 'e'
+
+    nth 5 [ 'e', 'l', 'm' ] '-' == '-'
+
 -}
 nth : Int -> List a -> a -> a
 nth n lst def =
@@ -20,6 +22,7 @@ with comparer as key and the group as value
       == { "10" = [ { age = 10, name = "Kalle" }, { age = 10, name = "John" }]
          , "8" = [ { age = 8, name = "Kevin" } ]
          }
+
 -}
 groupBy : (a -> comparable) -> List a -> Dict.Dict comparable (List a)
 groupBy fun coll =
@@ -32,9 +35,9 @@ groupBy fun coll =
                 list =
                     Maybe.withDefault [] (Dict.get key acc)
             in
-                Dict.insert key (x :: list) acc
+            Dict.insert key (x :: list) acc
     in
-        List.foldl reducer Dict.empty coll
+    List.foldl reducer Dict.empty coll
 
 
 {-| sorts in descending order

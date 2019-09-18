@@ -5,9 +5,9 @@ import Html exposing (Html, div, h3, h5, li, p, text, ul)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import List
-import Msgs exposing (Msg(ViewEvent))
+import Msgs exposing (Msg(..))
 import Types exposing (DayItem)
-import ViewMsgs exposing (ViewMsg(EditItem))
+import ViewMsgs exposing (ViewMsg(..))
 
 
 dayItem : DayItem -> Html Msg

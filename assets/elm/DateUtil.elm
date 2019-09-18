@@ -20,8 +20,8 @@ module DateUtil exposing
 import Date
     exposing
         ( Date
-        , Day(Fri, Mon, Sat, Sun, Thu, Tue, Wed)
-        , Month(Apr, Aug, Dec, Feb, Jan, Jul, Jun, Mar, May, Nov, Oct, Sep)
+        , Day(..)
+        , Month(..)
         )
 import Date.Extra.Compare exposing (Compare2, is)
 import Date.Extra.Core exposing (monthToInt)
@@ -33,17 +33,17 @@ dateTuple : Date -> ( String, String, String )
 dateTuple date =
     let
         year =
-            Date.year date |> toString
+            Date.year date |> String.fromInt
 
         month =
             Date.month date
                 |> monthToInt
-                |> toString
+                |> String.fromInt
                 |> zeroPad
 
         day =
             Date.day date
-                |> toString
+                |> String.fromInt
                 |> zeroPad
     in
     ( year, month, day )
@@ -62,13 +62,13 @@ timeTuple : Date -> ( String, String, String )
 timeTuple date =
     let
         hour =
-            Date.hour date |> toString |> zeroPad
+            Date.hour date |> String.fromInt |> zeroPad
 
         min =
-            Date.minute date |> toString |> zeroPad
+            Date.minute date |> String.fromInt |> zeroPad
 
         sec =
-            Date.second date |> toString |> zeroPad
+            Date.second date |> String.fromInt |> zeroPad
     in
     ( hour, min, sec )
 
@@ -157,7 +157,7 @@ toMonthStr num =
             "Dec"
 
         _ ->
-            "WFT month: " ++ toString num
+            "WFT month: " ++ String.fromInt num
 
 
 monthOrder : Date -> Int
@@ -264,7 +264,7 @@ dateToMonthStr date =
                 Dec ->
                     "Dec"
     in
-    day ++ " " ++ (toString <| Date.day date) ++ " " ++ month
+    day ++ " " ++ (String.fromInt <| Date.day date) ++ " " ++ month
 
 
 type alias TimeDuration =
@@ -291,7 +291,7 @@ emptyTimeDuration =
 
 addTime : Int -> ( Int, Int )
 addTime t =
-    ( t % 60, t // 60 )
+    ( modBy 60 t, t // 60 )
 
 
 addTimeDurations : TimeDuration -> TimeDuration -> TimeDuration
@@ -318,8 +318,8 @@ addTimeDurations a b =
 
 periodToStr : TimeDuration -> String
 periodToStr period =
-    -- List map toString |> String.join ?
-    toString period.hour ++ "h " ++ toString period.minute ++ "min " ++ toString period.second ++ "sec"
+    -- List map String.fromInt |> String.join ?
+    String.fromInt period.hour ++ "h " ++ String.fromInt period.minute ++ "min " ++ String.fromInt period.second ++ "sec"
 
 
 
@@ -333,20 +333,20 @@ timePeriods : Time -> List ( String, String )
 timePeriods t =
     let
         seconds =
-            floor (t / 1000) % 60
+            modBy 60 (floor (t / 1000))
 
         minutes =
-            floor (t / 1000 / 60) % 60
+            modBy 60 (floor (t / 1000 / 60))
 
         hours =
-            floor (t / (1000 * 60 * 60)) % 24
+            modBy 24 (floor (t / (1000 * 60 * 60)))
 
         days =
             floor (t / (1000 * 60 * 60 * 24))
 
         addLeadingZeros n =
-            String.padLeft 2 '0' (toString n)
+            String.padLeft 2 '0' (String.fromInt n)
     in
     [ days, hours, minutes, seconds ]
         |> List.map addLeadingZeros
-        |> List.map2 (,) [ "days", "hours", "minutes", "seconds" ]
+        |> List.map2 (\a b -> ( a, b )) [ "days", "hours", "minutes", "seconds" ]

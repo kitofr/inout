@@ -10,7 +10,7 @@ module Types exposing
     )
 
 import Date exposing (Date)
-import Date.Extra.Compare exposing (Compare2(SameOrBefore))
+import Date.Extra.Compare exposing (Compare2(..))
 import Date.Extra.Duration exposing (DeltaRecord, diff)
 import DateUtil exposing (TimeDuration, sortDates)
 import Time exposing (Time)

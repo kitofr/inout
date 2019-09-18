@@ -2,7 +2,7 @@ module View exposing (view)
 
 import Charts exposing (barChart)
 import Date
-import Date.Extra.Compare exposing (Compare2(SameOrBefore))
+import Date.Extra.Compare exposing (Compare2(..))
 import Date.Extra.Duration exposing (DeltaRecord)
 import DateUtil exposing (TimeDuration, addTimeDurations, dateToMonthStr, emptyTimeDuration, monthOrder, periodToStr, sortDates, toMonthStr, toTimeDuration)
 import Dict
@@ -12,11 +12,11 @@ import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
 import Invoice exposing (invoiceView)
 import Last6 exposing (last6)
-import Msgs exposing (Msg(ViewEvent))
+import Msgs exposing (Msg(..))
 import Seq exposing (desc, groupBy)
 import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
-import Types exposing (DayItem, Event, Model, Page(Home, Invoice), emptyEvent, timeDifference)
-import ViewMsgs exposing (ViewMsg(CheckIn, CheckOut, CreateInvoice, GoHome, Load, TabClicked))
+import Types exposing (DayItem, Event, Model, Page(..), emptyEvent, timeDifference)
+import ViewMsgs exposing (ViewMsg(..))
 
 
 monthItem : { count : Int, year : Int, month : Int, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
@@ -26,14 +26,14 @@ monthItem { count, year, month, total, monthlyDayCount } =
             periodToStr total
 
         dayCount =
-            toString count
+            String.fromInt count
 
         dates =
             ( year, month )
     in
     li [ class "list-group-item list-group-item-success row" ]
         [ h5 [ class "list-group-item-heading" ]
-            [ text (toMonthStr month ++ " " ++ toString year) ]
+            [ text (toMonthStr month ++ " " ++ String.fromInt year) ]
         , div
             [ class "row" ]
             [ p [ class "list-group-item-text monthly-hours col-md-6 col-xs-6" ] [ text totalStr ]
@@ -178,7 +178,7 @@ yearTab currentTab ( year, _ ) =
                 ""
     in
     li [ "nav-item" ++ active |> class ]
-        [ a [ class "nav-link", onClick (ViewEvent (TabClicked year)) ] [ text (toString year) ]
+        [ a [ class "nav-link", onClick (ViewEvent (TabClicked year)) ] [ text (String.fromInt year) ]
         ]
 
 
@@ -232,7 +232,7 @@ view model =
                 |> Maybe.withDefault emptyEvent
 
         eventText =
-            toString (1000 * event.posix) ++ " " ++ toString event.inserted_at
+            String.fromInt (1000 * event.posix) ++ " " ++ String.fromInt event.inserted_at
 
         shouldEdit =
             case model.edit of

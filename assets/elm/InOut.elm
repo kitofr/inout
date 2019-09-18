@@ -1,7 +1,7 @@
 module InOut exposing (main)
 
 import Api exposing (getEvents, loadContract)
-import Msgs exposing (Msg(SetRoute, Tick))
+import Msgs exposing (Msg(..))
 import Navigation exposing (Location)
 import Time exposing (second)
 import Types exposing (Contract, Flags, Model, Page(..))

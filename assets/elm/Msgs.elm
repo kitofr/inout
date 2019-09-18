@@ -1,8 +1,8 @@
-module Msgs exposing (Msg(ApiEvent, Tick, ViewEvent, SetRoute))
+module Msgs exposing (Msg(..))
 
+import ApiMsgs exposing (ApiMsg)
 import Navigation exposing (Location)
 import Time exposing (Time)
-import ApiMsgs exposing (ApiMsg)
 import ViewMsgs exposing (ViewMsg)
 
 

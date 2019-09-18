@@ -1,9 +1,9 @@
 module TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
 
-import Html exposing (div, span, Html, text)
+import DateUtil exposing (timePeriods)
+import Html exposing (Html, div, span, text)
 import Html.Attributes exposing (class)
 import Time exposing (Time)
-import DateUtil exposing (timePeriods)
 
 
 viewTimeSinceLastCheckIn : Time -> List (Html msg)
