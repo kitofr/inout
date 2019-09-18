@@ -1,6 +1,6 @@
 module Route exposing (Route(..), route)
 
-import UrlParser exposing ((</>), Parser, map, oneOf, s, string, top)
+import Url exposing (Parser)
 
 
 type Route

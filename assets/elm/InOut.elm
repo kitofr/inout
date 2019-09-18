@@ -2,16 +2,16 @@ module InOut exposing (main)
 
 import Api exposing (getEvents, loadContract)
 import Msgs exposing (Msg(..))
-import Navigation exposing (Location)
 import Time exposing (second)
 import Types exposing (Contract, Flags, Model, Page(..))
 import Update exposing (setRoute)
+import Url exposing (Url)
 import View exposing (view)
 
 
 main : Program Flags Model Msg
 main =
-    Navigation.programWithFlags SetRoute
+    Browser.application SetRoute
         { init = init
         , view = view
         , update = Update.update
@@ -29,9 +29,9 @@ subscriptions model =
             Time.every second Tick
 
 
-init : Flags -> Location -> ( Model, Cmd Msg )
-init flags location =
-    ( setRoute location
+init : Flags -> Url -> ( Model, Cmd Msg )
+init flags url =
+    ( setRoute url
         { events = []
         , hostUrl = flags.hostUrl
         , checkInAt = 0

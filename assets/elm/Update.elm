@@ -8,7 +8,7 @@ import Msgs exposing (Msg(..))
 import Navigation exposing (Location)
 import Route exposing (route)
 import Types exposing (Event, Model, Page(..))
-import UrlParser exposing (parsePath)
+import Url exposing (Parser(..))
 import ViewMsgs exposing (..)
 
 
@@ -89,7 +89,7 @@ setRoute : Location -> Types.Model -> Types.Model
 setRoute location model =
     let
         route =
-            UrlParser.parsePath Route.route location
+            Url.Parser.parsePath Route.route location
                 |> Maybe.withDefault Route.Home
     in
     case route of

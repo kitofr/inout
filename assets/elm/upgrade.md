@@ -8,9 +8,9 @@
   - [ ] If you used Html.program*, install elm/browser and switch to Browser.element or Browser.document
   - [ ] If you used Html.beginnerProgram, install elm/browser and switch Browser.sandbox
 - elm/browser
-  - [ ] Change code using Navigation.program* to use Browser.application
+  - [x] Change code using Navigation.program* to use Browser.application
   - [ ] Use the Browser.Key passed to your init function in any calls to Browser.Navigation.pushUrl/replaceUrl/back/forward
 - elm/url
-  - [ ] Changes uses of Navigation.Location to Url.Url
-  - [ ] Change code using UrlParser.* to use Url.Parser.*
+  - [x] Changes uses of Navigation.Location to Url.Url
+  - [x] Change code using UrlParser.* to use Url.Parser.*
 
