@@ -14,3 +14,6 @@
   - [x] Changes uses of Navigation.Location to Url.Url
   - [x] Change code using UrlParser.* to use Url.Parser.*
 
+
+$ npx elm make --output ../vendor/inout.js InOut.elm
+

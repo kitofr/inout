@@ -14,8 +14,7 @@
             "elm/svg": "1.0.1",
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
-            "elm-community/json-extra": "4.0.0",
-            "rluiten/elm-date-extra": "8.1.2"
+            "elm-community/json-extra": "4.0.0"
         },
         "indirect": {
             "elm/parser": "1.1.0",
