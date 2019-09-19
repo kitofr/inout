@@ -1,12 +1,13 @@
 module Update exposing (setRoute, update)
 
 import Api exposing (check, deleteEvent, getEvents, updateEvent)
+import Browser.Navigation as Navigation
 import DateUtil exposing (dateStr, dateTuple, parseStringDate, timeTuple, zeroPad)
 import Msgs exposing (Msg(..))
 import Route exposing (route)
 import Time exposing (..)
 import Types exposing (Event, Model, Page(..))
-import Url exposing (Parser(..), Url)
+import Url.Parser exposing ((</>), Parser, int, map, oneOf, s, string, top)
 import ViewMsgs exposing (..)
 
 
@@ -21,21 +22,6 @@ changeEvent lst e =
                 ev
         )
         lst
-
-
-setRoute : Location -> Types.Model -> Types.Model
-setRoute location model =
-    let
-        route =
-            Url.Parser.parsePath Route.route location
-                |> Maybe.withDefault Route.Home
-    in
-    case route of
-        Route.Home ->
-            { model | page = Home }
-
-        Route.Invoice ->
-            { model | page = Home }
 
 
 update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
@@ -91,7 +77,7 @@ update msg model =
             ( model, Cmd.none )
 
         SetRoute location ->
-            ( setRoute location model, Cmd.none )
+            ( model, Cmd.none )
 
         Tick t ->
             let
