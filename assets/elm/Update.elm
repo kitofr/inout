@@ -1,4 +1,4 @@
-module Update exposing (setRoute, update)
+module Update exposing (update)
 
 import Api exposing (check, deleteEvent, getEvents, updateEvent)
 import Browser.Navigation as Navigation
@@ -58,10 +58,6 @@ update msg model =
             ( { model | page = Home }, Cmd.none )
 
         ViewEvent (CreateInvoice ( year, month ) total dayCount) ->
-            let
-                _ =
-                    Debug.log "INVOICE" ( year, month, total, dayCount )
-            in
             ( { model | page = Invoice ( year, month ) total dayCount }, Cmd.none )
 
         ViewEvent (MinuteSelected event min) ->
@@ -86,13 +82,5 @@ update msg model =
                         * 1000
                         * min
                         |> toFloat
-
-                withTimeZone =
-                    Date.fromTime model.checkInAt
-                        |> (\x ->
-                                x
-                                    * -1
-                                    |> min2Millsec
-                           )
             in
-            ( { model | timeSinceLastCheckIn = t - model.checkInAt - withTimeZone }, Cmd.none )
+            ( { model | timeSinceLastCheckIn = Time.millisToPosix (Time.posixToMillis t - Time.posixToMillis model.checkInAt) }, Cmd.none )

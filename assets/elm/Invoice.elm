@@ -26,11 +26,11 @@ pbsv txt value =
         ]
 
 
-pbv : String -> a -> Html Msg
+pbv : String -> number -> Html Msg
 pbv txt value =
     p []
         [ b [ class "lbl" ] [ text (txt ++ ": ") ]
-        , text (String.fromInt value)
+        , text (Debug.toString value)
         ]
 
 
@@ -99,9 +99,18 @@ footer =
         ]
 
 
+type alias Report =
+    { description : String
+    , price : Float
+    , amount : Int
+    , period : String
+    , other : Float
+    }
+
+
 type Reporting
-    = DailyReporting ( String, Float, Int, String, Float )
-    | HourlyReporting ( String, Float, Int, String, Float )
+    = DailyReporting Report
+    | HourlyReporting Report
 
 
 type alias Invoice =
@@ -124,25 +133,25 @@ invoiceRows invoice =
         )
 
 
-invoiceDayRow : ( String, Float, Int, String, Float ) -> Html Msg
-invoiceDayRow ( description, price, amount, fromMonths, addedSum ) =
+invoiceDayRow : Report -> Html Msg
+invoiceDayRow { description, price, amount, period, other } =
     div [ class "invoice-row" ]
         [ pbsv "Beskrivning " description
         , pbv "Dagspris " price
         , pbv "Antal dagar " amount
-        , pbsv "Dagarna avser: " fromMonths
-        , pbv "Övrig summa " addedSum
+        , pbsv "Dagarna avser: " period
+        , pbv "Övrig summa " other
         ]
 
 
-invoiceHourRow : ( String, Float, Int, String, Float ) -> Html Msg
-invoiceHourRow ( description, price, amount, fromMonths, addedSum ) =
+invoiceHourRow : Report -> Html Msg
+invoiceHourRow { description, price, amount, period, other } =
     div [ class "row" ]
         [ pbsv "Beskrivning " description
         , pbv "Timpris " price
         , pbv "Antal timmar " amount
-        , pbsv "Timmarna avser: " fromMonths
-        , pbv "Övrig summa " addedSum
+        , pbsv "Timmarna avser: " period
+        , pbv "Övrig summa " other
         ]
 
 
@@ -151,11 +160,11 @@ sumInvoice invoice =
     List.foldl
         (\row total ->
             case row of
-                HourlyReporting ( _, price, amount, _, addedSum ) ->
-                    total + price * toFloat amount + addedSum
+                HourlyReporting report ->
+                    total + report.price * toFloat report.amount + report.other
 
-                DailyReporting ( _, price, amount, _, addedSum ) ->
-                    total + price * toFloat amount + addedSum
+                DailyReporting report ->
+                    total + report.price * toFloat report.amount + report.other
         )
         0
         invoice.rows
@@ -185,8 +194,11 @@ invoiceView ( year, month ) duration count =
         contract =
             { customer = "Tingent", reference = "Teodor Överli", adress = "Regeringsgatan 74", postNumber = "111 39", county = "Stockholm" }
 
+        report =
+            Report "Mjukvaruutveckling" 1030 100 "November 2018" 0
+
         rows =
-            [ HourlyReporting ( "Mjukvaruutveckling", 1030, 100, "November 2018", 0 ) ]
+            [ HourlyReporting report ]
     in
     div []
         [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent GoHome) ] [ text "Back" ]
