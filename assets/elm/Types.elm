@@ -48,6 +48,7 @@ type alias Model =
     { events : List Event
     , hostUrl : String
     , checkInAt : Posix
+    , zone : Zone
     , page : Page
     , edit : Maybe DayItem
     , timeSinceLastCheckIn : Posix

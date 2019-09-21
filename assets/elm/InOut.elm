@@ -2,9 +2,9 @@ module InOut exposing (main)
 
 import Api exposing (getEvents, loadContract)
 import Msgs exposing (Msg(..))
-import Time exposing (second)
+import Time exposing (..)
 import Types exposing (Contract, Flags, Model, Page(..))
-import Update exposing (setRoute)
+import Update exposing (..)
 import Url exposing (Url)
 import View exposing (view)
 
@@ -26,21 +26,21 @@ subscriptions model =
             Sub.none
 
         _ ->
-            Time.every second Tick
+            Time.every 1000 Tick
 
 
 init : Flags -> Url -> ( Model, Cmd Msg )
 init flags url =
-    ( setRoute url
-        { events = []
-        , hostUrl = flags.hostUrl
-        , checkInAt = 0
-        , timeSinceLastCheckIn = 0
-        , edit = Nothing
-        , page = Home
-        , currentTab = 2019
-        , contract = Contract "None"
-        }
+    ( { events = []
+      , hostUrl = flags.hostUrl
+      , checkInAt = 0
+      , timeSinceLastCheckIn = 0
+      , edit = Nothing
+      , page = Home
+      , currentTab = 2019
+      , contract = Contract "None"
+      , zone = Time.utc
+      }
     , Cmd.batch
         [ getEvents flags.hostUrl
         , loadContract flags.hostUrl

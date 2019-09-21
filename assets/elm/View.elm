@@ -54,7 +54,7 @@ totalsRect :
     ( Int
     , List
         { a
-            | date : Date.Date
+            | date : Posix
             , diff :
                 { day : Int
                 , millisecond : Int
@@ -66,6 +66,7 @@ totalsRect :
                 }
         }
     )
+    -> Zone
     ->
         { count : Int
         , month : Int
@@ -77,7 +78,7 @@ totalsRect :
         , total : TimeDuration
         , year : Int
         }
-totalsRect rec =
+totalsRect rec zone =
     let
         data =
             Tuple.second rec
@@ -85,7 +86,7 @@ totalsRect rec =
         year =
             case List.head data of
                 Just d ->
-                    Date.year d.date
+                    Time.toYear zone d.date
 
                 _ ->
                     0
@@ -114,10 +115,11 @@ monthlyTotals :
                     , second : Int
                     , year : Int
                     }
-                , date : Date.Date
+                , date : Posix
             }
+    -> Zone
     -> Html Msg
-monthlyTotals active sorted =
+monthlyTotals active sorted zone =
     let
         paneClass =
             if active then
@@ -127,11 +129,11 @@ monthlyTotals active sorted =
                 "tab-pane"
 
         perMonth =
-            groupBy (\x -> monthOrder x.date) sorted
+            groupBy (\x -> monthOrder x.date zone) sorted
                 |> Dict.toList
 
         sortedMonthTotals =
-            List.map totalsRect perMonth
+            List.map (\p -> totalsRect p zone) perMonth
                 |> List.sortWith (\x y -> desc x.month y.month)
     in
     div [ class paneClass ]
@@ -140,11 +142,11 @@ monthlyTotals active sorted =
         ]
 
 
-sortedDayItems : List Event -> List DayItem
-sortedDayItems events =
+sortedDayItems : List Event -> Zone -> List DayItem
+sortedDayItems events zone =
     let
         grouped =
-            groupBy (\x -> dateToMonthStr x.inserted_at) events
+            groupBy (\x -> dateToMonthStr x.inserted_at zone) events
 
         dayItems =
             List.map
@@ -156,7 +158,7 @@ sortedDayItems events =
                     { dateStr = Tuple.first x
                     , diff = timeDifference (Tuple.second x)
                     , date = date
-                    , dayNumber = Date.day date
+                    , dayNumber = Time.toDay zone date
                     , events = Tuple.second x
                     }
                 )
@@ -180,18 +182,18 @@ yearTab currentTab ( year, _ ) =
         ]
 
 
-groupedByYear : List Event -> List ( Int, List Event )
-groupedByYear events =
-    groupBy (\x -> Date.year x.inserted_at) events
+groupedByYear : List Event -> Zone -> List ( Int, List Event )
+groupedByYear events zone =
+    groupBy (\x -> Time.toYear zone x.inserted_at) events
         |> Dict.toList
         |> List.sortWith (\( x, _ ) ( y, _ ) -> desc x y)
 
 
-yearTabs : Int -> List Event -> Html Msg
-yearTabs currentTab events =
+yearTabs : Int -> List Event -> Zone -> Html Msg
+yearTabs currentTab events zone =
     let
         list =
-            groupedByYear events
+            groupedByYear events zone
     in
     div []
         [ ul [ class "nav nav-pills" ]
@@ -201,24 +203,24 @@ yearTabs currentTab events =
                 (\( y, es ) ->
                     let
                         sorted =
-                            sortedDayItems es
+                            sortedDayItems es zone
                     in
-                    monthlyTotals (y == currentTab) sorted
+                    monthlyTotals (y == currentTab) sorted zone
                 )
                 list
             )
         ]
 
 
-eventsComponent : Int -> List Event -> Html Msg
-eventsComponent currentTab events =
+eventsComponent : Int -> List Event -> Zone -> Html Msg
+eventsComponent currentTab events zone =
     let
         monthlySorted =
-            sortedDayItems events
+            sortedDayItems events zone
     in
     div [ class "container-fluid" ]
         [ last6 monthlySorted
-        , yearTabs currentTab events
+        , yearTabs currentTab events zone
         ]
 
 
@@ -230,12 +232,12 @@ view model =
                 |> Maybe.withDefault emptyEvent
 
         eventText =
-            String.fromInt (1000 * event.posix) ++ " " ++ String.fromInt event.inserted_at
+            String.fromInt (1000 * event.posix) ++ " " ++ String.fromInt (Time.toMillis model.zone event.inserted_at)
 
         shouldEdit =
             case model.edit of
                 Just dayItem ->
-                    edit dayItem
+                    edit dayItem model.zone
 
                 _ ->
                     div [] []
@@ -252,10 +254,10 @@ view model =
                         [ button [ class "btn btn-success", onClick (ViewEvent CheckIn) ] [ text "check in" ]
                         , button [ class "btn btn-primary", onClick (ViewEvent CheckOut) ] [ text "check out" ]
                         ]
-                    , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
+                    , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn model.zone)
                     , div [ class "row check-timer" ] [ text eventText ]
                     , shouldEdit
-                    , eventsComponent model.currentTab model.events
+                    , eventsComponent model.currentTab model.events model.zone
                     ]
                 ]
 
