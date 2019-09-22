@@ -33,10 +33,10 @@ exports.config = {
   plugins: {
     elmBrunch: {
       mainModules: ["InOut.elm"],
-      elmMake: "elm-make",
+      elmMake: "npx elm make",
       elmFolder: "elm",
       outputFolder: "../vendor",
-      makeParameters : ['--warn --yes']
+      makeParameters : ['']
     },
     babel: {
       // Do not use ES6 compiler in vendor code

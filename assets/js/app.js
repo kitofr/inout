@@ -21,7 +21,9 @@ import "phoenix_html"
 // import socket from "./socket"
 
 const elmDiv = document.getElementById('elm-main')
-    , elmApp = Elm.InOut.embed(elmDiv, {
-          hostUrl: hostUrl 
-        });
+    , elmApp = Elm.InOut.init({
+        node: elmDiv, flags: {
+        hostUrl: hostUrl 
+      }
+    });
 

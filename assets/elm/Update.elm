@@ -74,7 +74,13 @@ update msg model =
         ViewEvent (DateUpdated event date) ->
             ( model, Cmd.none )
 
-        SetRoute location ->
+        --SetRoute location ->
+        --    ( model, Cmd.none )
+
+        LinkClicked _ ->
+            ( model, Cmd.none )
+        
+        UrlChanged _ ->
             ( model, Cmd.none )
 
         Tick t ->
