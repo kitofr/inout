@@ -1,6 +1,8 @@
 module InOut exposing (main)
 
 import Api exposing (getEvents, loadContract)
+import Browser
+import Browser.Navigation as Nav
 import Msgs exposing (Msg(..))
 import Time exposing (..)
 import Types exposing (Contract, Flags, Model, Page(..))
@@ -11,17 +13,19 @@ import View exposing (view)
 
 main : Program Flags Model Msg
 main =
-    Browser.application SetRoute
+    Browser.application
         { init = init
         , view = view
         , update = Update.update
         , subscriptions = subscriptions
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
         }
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case model.checkInAt of
+    case Time.toMillis model.zone model.checkInAt of
         0 ->
             Sub.none
 
@@ -29,12 +33,12 @@ subscriptions model =
             Time.every 1000 Tick
 
 
-init : Flags -> Url -> ( Model, Cmd Msg )
-init flags url =
+init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init flags url key =
     ( { events = []
       , hostUrl = flags.hostUrl
-      , checkInAt = 0
-      , timeSinceLastCheckIn = 0
+      , checkInAt = Time.millisToPosix 0
+      , timeSinceLastCheckIn = Time.millisToPosix 0
       , edit = Nothing
       , page = Home
       , currentTab = 2019

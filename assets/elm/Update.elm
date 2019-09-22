@@ -31,10 +31,12 @@ update msg model =
             Api.update apiMsg model
 
         ViewEvent (TabClicked year) ->
-            ( { model | currentTab = year }, Cmd.none )
+            --( { model | currentTab = year }, Cmd.none )
+            ( model, Cmd.none )
 
         ViewEvent CloseEdit ->
-            ( { model | edit = Nothing }, Cmd.none )
+            --( { model | edit = Nothing }, Cmd.none )
+            ( model, Cmd.none )
 
         ViewEvent Load ->
             ( model, getEvents model.hostUrl )

@@ -1,5 +1,6 @@
 module View exposing (view)
 
+import Browser
 import Charts exposing (barChart)
 import DateUtil exposing (Compare2(..), DeltaRecord, TimeDuration, addTimeDurations, dateToMonthStr, emptyTimeDuration, monthOrder, periodToStr, sortDates, toMonthStr, toTimeDuration)
 import Dict
@@ -224,7 +225,7 @@ eventsComponent currentTab events zone =
         ]
 
 
-view : Model -> Html Msg
+view : Model -> Browser.Document Msg
 view model =
     let
         event =
@@ -244,22 +245,32 @@ view model =
     in
     case model.page of
         Home ->
-            div []
-                [ div [ class "container" ]
-                    [ div [ class "row" ]
-                        [ h5 [ class "contract-header" ] [ text ("Current contract: " ++ model.contract.name) ]
-                        , h5 [ class "contract-header" ] [ a [ href "./events" ] [ text "Events" ] ]
+            { title = "Inout"
+            , body =
+                [ div []
+                    [ div [ class "container" ]
+                        [ div [ class "row" ]
+                            [ h5 [ class "contract-header" ] [ text ("Current contract: " ++ model.contract.name) ]
+                            , h5 [ class "contract-header" ] [ a [ href "./events" ] [ text "Events" ] ]
+                            ]
+                        , div [ class "row" ]
+                            [ button [ class "btn btn-success", onClick (ViewEvent CheckIn) ] [ text "check in" ]
+                            , button [ class "btn btn-primary", onClick (ViewEvent CheckOut) ] [ text "check out" ]
+                            ]
+                        , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn model.zone)
+                        , div [ class "row check-timer" ] [ text eventText ]
+                        , shouldEdit
+                        , eventsComponent model.currentTab model.events model.zone
                         ]
-                    , div [ class "row" ]
-                        [ button [ class "btn btn-success", onClick (ViewEvent CheckIn) ] [ text "check in" ]
-                        , button [ class "btn btn-primary", onClick (ViewEvent CheckOut) ] [ text "check out" ]
-                        ]
-                    , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn model.zone)
-                    , div [ class "row check-timer" ] [ text eventText ]
-                    , shouldEdit
-                    , eventsComponent model.currentTab model.events model.zone
                     ]
                 ]
+            }
 
         Invoice when duration count ->
-            invoiceView when duration count
+            { title = "Inovoice"
+            , body = []
+            }
+
+
+
+--            invoiceView when duration count
