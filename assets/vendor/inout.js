@@ -7656,10 +7656,18 @@ var author$project$Update$update = F2(
 				switch (msg.a.$) {
 					case 'TabClicked':
 						var year = msg.a.a;
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{currentTab: year}),
+							elm$core$Platform$Cmd$none);
 					case 'CloseEdit':
 						var _n1 = msg.a;
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{edit: elm$core$Maybe$Nothing}),
+							elm$core$Platform$Cmd$none);
 					case 'Load':
 						var _n2 = msg.a;
 						return _Utils_Tuple2(
@@ -8582,9 +8590,28 @@ var author$project$Seq$groupBy = F2(
 			});
 		return A3(elm$core$List$foldl, reducer, elm$core$Dict$empty, coll);
 	});
+var author$project$Types$toDate = F2(
+	function (zone, time) {
+		return {
+			day: A2(elm$time$Time$toDay, zone, time),
+			hour: A2(elm$time$Time$toHour, zone, time),
+			millisecond: A2(elm$time$Time$toMillis, zone, time),
+			minute: A2(elm$time$Time$toMinute, zone, time),
+			month: A2(elm$time$Time$toMonth, zone, time),
+			posix: time,
+			second: A2(elm$time$Time$toSecond, zone, time),
+			weekDay: A2(elm$time$Time$toWeekday, zone, time),
+			year: A2(elm$time$Time$toYear, zone, time),
+			zone: zone
+		};
+	});
 var author$project$Types$diff = F2(
 	function (a, b) {
-		return {day: 0, hour: 0, millisecond: 0, minute: 0, month: 0, second: 0, year: 0};
+		var d = elm$time$Time$posixToMillis(a) - elm$time$Time$posixToMillis(b);
+		return A2(
+			author$project$Types$toDate,
+			elm$time$Time$utc,
+			elm$time$Time$millisToPosix(d));
 	});
 var author$project$Types$sortEvents = F2(
 	function (events, order) {

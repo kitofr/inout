@@ -31,12 +31,10 @@ update msg model =
             Api.update apiMsg model
 
         ViewEvent (TabClicked year) ->
-            --( { model | currentTab = year }, Cmd.none )
-            ( model, Cmd.none )
+            ( { model | currentTab = year }, Cmd.none )
 
         ViewEvent CloseEdit ->
-            --( { model | edit = Nothing }, Cmd.none )
-            ( model, Cmd.none )
+            ( { model | edit = Nothing }, Cmd.none )
 
         ViewEvent Load ->
             ( model, getEvents model.hostUrl )
@@ -76,10 +74,9 @@ update msg model =
 
         --SetRoute location ->
         --    ( model, Cmd.none )
-
         LinkClicked _ ->
             ( model, Cmd.none )
-        
+
         UrlChanged _ ->
             ( model, Cmd.none )
 

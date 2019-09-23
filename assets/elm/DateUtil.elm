@@ -1,6 +1,6 @@
 module DateUtil exposing
     ( Compare2(..)
-    , DeltaRecord
+    , Date
     , TimeDuration
     , addTimeDurations
     , dateStr
@@ -25,14 +25,17 @@ import String exposing (..)
 import Time exposing (..)
 
 
-type alias DeltaRecord =
+type alias Date =
     { year : Int
-    , month : Int
+    , month : Time.Month
     , day : Int
+    , weekDay : Time.Weekday
     , hour : Int
     , minute : Int
     , second : Int
     , millisecond : Int
+    , posix : Time.Posix
+    , zone : Time.Zone
     }
 
 
@@ -141,7 +144,6 @@ parseStringDate : String -> Posix
 parseStringDate isoString =
     Iso8601.toTime isoString
         |> Result.withDefault (Time.millisToPosix 0)
-        |> Debug.log "result in"
 
 
 sortDates : Compare2 -> Posix -> Posix -> Order
@@ -312,7 +314,7 @@ type alias TimeDuration =
     }
 
 
-toTimeDuration : DeltaRecord -> TimeDuration
+toTimeDuration : Date -> TimeDuration
 toTimeDuration duration =
     { hour = duration.hour
     , minute = duration.minute

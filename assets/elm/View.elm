@@ -2,7 +2,7 @@ module View exposing (view)
 
 import Browser
 import Charts exposing (barChart)
-import DateUtil exposing (Compare2(..), DeltaRecord, TimeDuration, addTimeDurations, dateToMonthStr, emptyTimeDuration, monthOrder, periodToStr, sortDates, toMonthStr, toTimeDuration)
+import DateUtil exposing (Compare2(..), Date, TimeDuration, addTimeDurations, dateToMonthStr, emptyTimeDuration, monthOrder, periodToStr, sortDates, toMonthStr, toTimeDuration)
 import Dict
 import EditEvent exposing (edit)
 import Html exposing (Html, a, button, div, h3, h5, li, p, text, ul)
@@ -46,7 +46,7 @@ monthItem { count, year, month, total, monthlyDayCount } =
         ]
 
 
-monthlySum : List { a | diff : DeltaRecord } -> TimeDuration
+monthlySum : List { a | diff : Date } -> TimeDuration
 monthlySum month =
     List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
 
@@ -56,15 +56,7 @@ totalsRect :
     , List
         { a
             | date : Posix
-            , diff :
-                { day : Int
-                , millisecond : Int
-                , month : Int
-                , second : Int
-                , year : Int
-                , hour : Int
-                , minute : Int
-                }
+            , diff : Date
         }
     )
     -> Zone
@@ -102,24 +94,7 @@ totalsRect rec zone =
     }
 
 
-monthlyTotals :
-    Bool
-    ->
-        List
-            { a
-                | diff :
-                    { day : Int
-                    , hour : Int
-                    , millisecond : Int
-                    , minute : Int
-                    , month : Int
-                    , second : Int
-                    , year : Int
-                    }
-                , date : Posix
-            }
-    -> Zone
-    -> Html Msg
+monthlyTotals : Bool -> List DayItem -> Zone -> Html Msg
 monthlyTotals active sorted zone =
     let
         paneClass =

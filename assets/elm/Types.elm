@@ -12,7 +12,7 @@ module Types exposing
 --import Date.Extra.Compare exposing (Compare2(..))
 --import Date.Extra.Duration exposing (DeltaRecord, diff)
 
-import DateUtil exposing (Compare2(..), DeltaRecord, TimeDuration, sortDates)
+import DateUtil exposing (Compare2(..), Date, TimeDuration, sortDates)
 import Time exposing (..)
 
 
@@ -60,7 +60,7 @@ type alias Model =
 type alias DayItem =
     { date : Posix
     , dateStr : String
-    , diff : DeltaRecord
+    , diff : Date
     , dayNumber : Int
     , events : List Event
     }
@@ -88,18 +88,32 @@ emptyEvent =
     }
 
 
-diff a b =
-    { year = 0
-    , month = 0
-    , day = 0
-    , hour = 0
-    , minute = 0
-    , second = 0
-    , millisecond = 0
+toDate : Time.Zone -> Time.Posix -> Date
+toDate zone time =
+    { year = Time.toYear zone time
+    , month = Time.toMonth zone time
+    , day = Time.toDay zone time
+    , weekDay = Time.toWeekday zone time
+    , hour = Time.toHour zone time
+    , minute = Time.toMinute zone time
+    , second = Time.toSecond zone time
+    , millisecond = Time.toMillis zone time
+    , posix = time
+    , zone = zone
     }
 
 
-timeDifference : List Event -> DeltaRecord
+diff : Posix -> Posix -> Date
+diff a b =
+    let
+        d =
+            Time.posixToMillis a
+                - Time.posixToMillis b
+    in
+    toDate Time.utc (Time.millisToPosix d)
+
+
+timeDifference : List Event -> Date
 timeDifference coll =
     let
         sorted =
