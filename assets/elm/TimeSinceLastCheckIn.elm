@@ -6,9 +6,13 @@ import Html.Attributes exposing (class)
 import Time exposing (Posix, Zone)
 
 
-viewTimeSinceLastCheckIn : Posix -> Zone -> List (Html msg)
-viewTimeSinceLastCheckIn t zone =
-    List.map viewTimePeriod (timePeriods (toFloat (Time.toMillis zone t)))
+viewTimeSinceLastCheckIn : Posix -> List (Html msg)
+viewTimeSinceLastCheckIn t =
+    let
+        tp =
+            timePeriods (toFloat (Time.posixToMillis t))
+    in
+    List.map viewTimePeriod tp
 
 
 viewTimePeriod : ( String, String ) -> Html msg

@@ -87,5 +87,9 @@ update msg model =
                         * 1000
                         * min
                         |> toFloat
+
+                newTime =
+                    Time.posixToMillis t
+                        - Time.posixToMillis model.checkInAt
             in
-            ( { model | timeSinceLastCheckIn = Time.millisToPosix (Time.posixToMillis t - Time.posixToMillis model.checkInAt) }, Cmd.none )
+            ( { model | timeSinceLastCheckIn = Time.millisToPosix newTime }, Cmd.none )

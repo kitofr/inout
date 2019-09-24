@@ -25,7 +25,7 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case Time.toMillis model.zone model.checkInAt of
+    case Time.posixToMillis model.checkInAt of
         0 ->
             Sub.none
 

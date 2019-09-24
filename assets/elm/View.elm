@@ -232,7 +232,7 @@ view model =
                             [ button [ class "btn btn-success", onClick (ViewEvent CheckIn) ] [ text "check in" ]
                             , button [ class "btn btn-primary", onClick (ViewEvent CheckOut) ] [ text "check out" ]
                             ]
-                        , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn model.zone)
+                        , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
                         , div [ class "row check-timer" ] [ text eventText ]
                         , shouldEdit
                         , eventsComponent model.currentTab model.events model.zone

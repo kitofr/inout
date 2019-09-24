@@ -7105,15 +7105,8 @@ var elm$time$Time$posixToMillis = function (_n0) {
 	var millis = _n0.a;
 	return millis;
 };
-var elm$time$Time$toMillis = F2(
-	function (_n0, time) {
-		return A2(
-			elm$core$Basics$modBy,
-			1000,
-			elm$time$Time$posixToMillis(time));
-	});
 var author$project$InOut$subscriptions = function (model) {
-	var _n0 = A2(elm$time$Time$toMillis, model.zone, model.checkInAt);
+	var _n0 = elm$time$Time$posixToMillis(model.checkInAt);
 	if (!_n0) {
 		return elm$core$Platform$Sub$none;
 	} else {
@@ -7424,6 +7417,13 @@ var elm$time$Time$toHour = F2(
 				elm$time$Time$flooredDiv,
 				A2(elm$time$Time$toAdjustedMinutes, zone, time),
 				60));
+	});
+var elm$time$Time$toMillis = F2(
+	function (_n0, time) {
+		return A2(
+			elm$core$Basics$modBy,
+			1000,
+			elm$time$Time$posixToMillis(time));
 	});
 var elm$time$Time$toMinute = F2(
 	function (zone, time) {
@@ -7754,6 +7754,7 @@ var author$project$Update$update = F2(
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			default:
 				var t = msg.a;
+				var newTime = elm$time$Time$posixToMillis(t) - elm$time$Time$posixToMillis(model.checkInAt);
 				var min2Millsec = function (min) {
 					return (60 * 1000) * min;
 				};
@@ -7761,8 +7762,7 @@ var author$project$Update$update = F2(
 					_Utils_update(
 						model,
 						{
-							timeSinceLastCheckIn: elm$time$Time$millisToPosix(
-								elm$time$Time$posixToMillis(t) - elm$time$Time$posixToMillis(model.checkInAt))
+							timeSinceLastCheckIn: elm$time$Time$millisToPosix(newTime)
 						}),
 					elm$core$Platform$Cmd$none);
 		}
@@ -8263,14 +8263,11 @@ var author$project$TimeSinceLastCheckIn$viewTimePeriod = function (_n0) {
 					]))
 			]));
 };
-var author$project$TimeSinceLastCheckIn$viewTimeSinceLastCheckIn = F2(
-	function (t, zone) {
-		return A2(
-			elm$core$List$map,
-			author$project$TimeSinceLastCheckIn$viewTimePeriod,
-			author$project$DateUtil$timePeriods(
-				A2(elm$time$Time$toMillis, zone, t)));
-	});
+var author$project$TimeSinceLastCheckIn$viewTimeSinceLastCheckIn = function (t) {
+	var tp = author$project$DateUtil$timePeriods(
+		elm$time$Time$posixToMillis(t));
+	return A2(elm$core$List$map, author$project$TimeSinceLastCheckIn$viewTimePeriod, tp);
+};
 var author$project$Types$emptyEvent = {
 	device: 'none',
 	id: 0,
@@ -9248,7 +9245,7 @@ var author$project$View$view = function (model) {
 										[
 											elm$html$Html$Attributes$class('row check-timer')
 										]),
-									A2(author$project$TimeSinceLastCheckIn$viewTimeSinceLastCheckIn, model.timeSinceLastCheckIn, model.zone)),
+									author$project$TimeSinceLastCheckIn$viewTimeSinceLastCheckIn(model.timeSinceLastCheckIn)),
 									A2(
 									elm$html$Html$div,
 									_List_fromArray(
