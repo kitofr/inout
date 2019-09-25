@@ -1,12 +1,14 @@
 module Update exposing (update)
 
 import Api exposing (check, deleteEvent, getEvents, updateEvent)
+import Browser
 import Browser.Navigation as Navigation
 import DateUtil exposing (dateStr, dateTuple, parseStringDate, timeTuple, zeroPad)
 import Msgs exposing (Msg(..))
 import Route exposing (route)
 import Time exposing (..)
 import Types exposing (Event, Model, Page(..))
+import Url
 import Url.Parser exposing ((</>), Parser, int, map, oneOf, s, string, top)
 import ViewMsgs exposing (..)
 
@@ -31,10 +33,16 @@ update msg model =
             Api.update apiMsg model
 
         ViewEvent (TabClicked year) ->
+            let
+                _ =
+                    Debug.log "year" year
+            in
             ( { model | currentTab = year }, Cmd.none )
 
+        --( model, Cmd.none )
         ViewEvent CloseEdit ->
-            ( { model | edit = Nothing }, Cmd.none )
+            --( { model | edit = Nothing }, Cmd.none )
+            ( model, Cmd.none )
 
         ViewEvent Load ->
             ( model, getEvents model.hostUrl )
@@ -72,13 +80,16 @@ update msg model =
         ViewEvent (DateUpdated event date) ->
             ( model, Cmd.none )
 
-        --SetRoute location ->
-        --    ( model, Cmd.none )
-        LinkClicked _ ->
-            ( model, Cmd.none )
+        LinkClicked urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model, Navigation.pushUrl model.key (Url.toString url) )
 
-        UrlChanged _ ->
-            ( model, Cmd.none )
+                Browser.External href ->
+                    ( model, Navigation.load href )
+
+        UrlChanged url ->
+            ( { model | url = url }, Cmd.none )
 
         Tick t ->
             let

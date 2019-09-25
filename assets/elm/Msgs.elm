@@ -13,7 +13,3 @@ type Msg
     | ViewEvent ViewMsg
     | LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
-
-
-
---  | SetRoute Url

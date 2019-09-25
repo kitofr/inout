@@ -44,6 +44,8 @@ init flags url key =
       , currentTab = 2019
       , contract = Contract "None"
       , zone = Time.utc
+      , url = url
+      , key = key
       }
     , Cmd.batch
         [ getEvents flags.hostUrl

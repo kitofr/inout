@@ -33,7 +33,7 @@ exports.config = {
   plugins: {
     elmBrunch: {
       mainModules: ["InOut.elm"],
-      elmMake: "npx elm make",
+      elmMake: "npx elm --version && npx elm make",
       elmFolder: "elm",
       outputFolder: "../vendor",
       makeParameters : ['']

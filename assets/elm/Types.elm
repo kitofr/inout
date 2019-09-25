@@ -9,11 +9,10 @@ module Types exposing
     , timeDifference
     )
 
---import Date.Extra.Compare exposing (Compare2(..))
---import Date.Extra.Duration exposing (DeltaRecord, diff)
-
+import Browser.Navigation as Nav
 import DateUtil exposing (Compare2(..), Date, TimeDuration, sortDates)
 import Time exposing (..)
+import Url
 
 
 type alias Flags =
@@ -54,6 +53,8 @@ type alias Model =
     , timeSinceLastCheckIn : Posix
     , currentTab : Int
     , contract : Contract
+    , key : Nav.Key
+    , url : Url.Url
     }
 
 
