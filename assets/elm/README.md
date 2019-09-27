@@ -38,7 +38,7 @@
     elmBrunch: {
       executablePath: "../../node_modules/elm/binwrappers",
       elmFolder: "web/elm",
-      mainModules: ["InOut.elm"],
+      mainModules: ["Main.elm"],
       outputFolder: "../static/vendor",
       makeParameters : ['--warn']
     }
@@ -58,7 +58,7 @@
     }
   ```
   ```
-  -- web/elm/InOut.elm
+  -- web/elm/Main.elm
   module InOut exposing (main)
   ...
   

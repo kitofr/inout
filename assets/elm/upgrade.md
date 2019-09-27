@@ -15,5 +15,5 @@
   - [x] Change code using UrlParser.* to use Url.Parser.*
 
 
-$ npx elm make --output ../vendor/inout.js InOut.elm
+$ npx elm make --output ../vendor/inout.js Main.elm
 

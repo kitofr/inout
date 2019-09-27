@@ -19,11 +19,11 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
+import { Elm } from "../elm/Main.elm";
 
 const elmDiv = document.getElementById('elm-main')
-    , elmApp = Elm.InOut.init({
-        node: elmDiv, flags: {
-        hostUrl: hostUrl 
-      }
+    , elmApp = Elm.Main.init({
+        node: elmDiv, 
+        flags: { hostUrl: hostUrl }
     });
 

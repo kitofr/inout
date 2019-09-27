@@ -1,4 +1,4 @@
 
 compile:
-	npx elm make --output ../vendor/inout.js InOut.elm
+	npx elm make --output ../vendor/inout.js Main.elm
 

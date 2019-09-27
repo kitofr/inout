@@ -7863,12 +7863,17 @@ var author$project$Update$update = F2(
 				switch (msg.a.$) {
 					case 'TabClicked':
 						var year = msg.a.a;
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+						var _n1 = A2(elm$core$Debug$log, 'year', year);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{currentTab: year}),
+							elm$core$Platform$Cmd$none);
 					case 'CloseEdit':
-						var _n1 = msg.a;
+						var _n2 = msg.a;
 						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 					case 'Load':
-						var _n2 = msg.a;
+						var _n3 = msg.a;
 						return _Utils_Tuple2(
 							model,
 							author$project$Api$getEvents(model.hostUrl));
@@ -7892,29 +7897,29 @@ var author$project$Update$update = F2(
 								}),
 							elm$core$Platform$Cmd$none);
 					case 'CheckIn':
-						var _n3 = msg.a;
+						var _n4 = msg.a;
 						return _Utils_Tuple2(
 							model,
 							A3(author$project$Api$check, 'in', model.contract.name, model.hostUrl));
 					case 'CheckOut':
-						var _n4 = msg.a;
+						var _n5 = msg.a;
 						return _Utils_Tuple2(
 							model,
 							A3(author$project$Api$check, 'out', model.contract.name, model.hostUrl));
 					case 'GoHome':
-						var _n5 = msg.a;
+						var _n6 = msg.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{page: author$project$Types$Home}),
 							elm$core$Platform$Cmd$none);
 					case 'CreateInvoice':
-						var _n6 = msg.a;
-						var _n7 = _n6.a;
-						var year = _n7.a;
-						var month = _n7.b;
-						var total = _n6.b;
-						var dayCount = _n6.c;
+						var _n7 = msg.a;
+						var _n8 = _n7.a;
+						var year = _n8.a;
+						var month = _n8.b;
+						var total = _n7.b;
+						var dayCount = _n7.c;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -7927,24 +7932,24 @@ var author$project$Update$update = F2(
 								}),
 							elm$core$Platform$Cmd$none);
 					case 'MinuteSelected':
-						var _n8 = msg.a;
-						var event = _n8.a;
-						var min = _n8.b;
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-					case 'HourSelected':
 						var _n9 = msg.a;
 						var event = _n9.a;
-						var hour = _n9.b;
+						var min = _n9.b;
 						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-					case 'TimeUpdated':
+					case 'HourSelected':
 						var _n10 = msg.a;
 						var event = _n10.a;
-						var time = _n10.b;
+						var hour = _n10.b;
 						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-					default:
+					case 'TimeUpdated':
 						var _n11 = msg.a;
 						var event = _n11.a;
-						var date = _n11.b;
+						var time = _n11.b;
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					default:
+						var _n12 = msg.a;
+						var event = _n12.a;
+						var date = _n12.b;
 						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 				}
 			case 'LinkClicked':

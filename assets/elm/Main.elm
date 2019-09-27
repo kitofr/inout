@@ -1,4 +1,4 @@
-module InOut exposing (main)
+module Main exposing (main)
 
 import Api exposing (getEvents, loadContract)
 import Browser

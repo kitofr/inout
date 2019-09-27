@@ -38,6 +38,7 @@ module.exports = (env, options) => ({
         use: {
           loader: 'elm-webpack-loader',
           options: {
+            pathToElm: "node_modules/.bin/elm",
             debug: options.mode === "development"
           }
         }

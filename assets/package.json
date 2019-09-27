@@ -3,6 +3,7 @@
   "scripts": {
     "deploy": "webpack --mode production",
     "watch": "webpack --mode development --watch",
+    "compile": "elm make --output ./vendor/inout.js ./elm/Main.elm",
     "elm": "elm"
   },
   "dependencies": {
