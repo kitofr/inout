@@ -1,18 +1,5 @@
 .alert:empty { display: none; }
 
-.header {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.logo {
-  width: 519px;
-  height: 71px;
-  display: inline-block;
-  margin-bottom: 1em;
-  background-image: url("/images/phoenix.png");
-  background-size: 519px 71px;
-}
-
 ul {
   margin: 8px;
 }
@@ -36,9 +23,14 @@ li {
   margin-right: 8px; 
 }
 
+.container h3 {
+  padding: 8px;
+  font-size: 1.3em;
+}
+
 .list-group-item p{
   display: inline-block;
-  color: #2e57a7;
+  color: #3b4c6e;
 }
 
 .list-group-item-success {
@@ -61,10 +53,6 @@ li {
   margin-right: 8px;
 }
 
-.container-narrow > hr {
-  margin: 30px 0;
-}
-
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
@@ -74,20 +62,6 @@ li {
   margin: 35px 0;
 }
 
-@media screen and (min-width: 768px) {
-  .header,
-  .marketing {
-    padding-right: 0;
-    padding-left: 0;
-  }
-  .header {
-    margin-bottom: 30px;
-  }
-  .jumbotron {
-    border-bottom: 0;
-  }
-}
-
 .monthly-count {
   display: inline-block;
   width: 3em;
@@ -95,6 +69,8 @@ li {
   border: 1px solid #3BA99C;
   border-radius: 5px;
   padding: 4px;
+  margin-left: 4px;
+  margin-right: 4px;
   background-color: #3BA99C;
   color: white;
 }
@@ -113,6 +89,7 @@ li {
 
 .time-period {
   display: inline-block;
+  margin-top: 4px;
   margin-right: 10px;
 }
 
@@ -126,8 +103,8 @@ li {
 .time-period .period {
   font-size: 50%;
   display: block;
-  color: #8980F5;
-  padding-top: 10px;
+  color: #666;
+  padding-top: 12px;
   text-transform: uppercase;
 }
 

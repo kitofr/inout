@@ -13,13 +13,14 @@ import View exposing (view)
 
 main : Program Flags Model Msg
 main =
-    Browser.application
+    Browser.element
         { init = init
         , view = view
         , update = Update.update
         , subscriptions = subscriptions
-        , onUrlChange = UrlChanged
-        , onUrlRequest = LinkClicked
+
+        --        , onUrlChange = UrlChanged
+        --        , onUrlRequest = LinkClicked
         }
 
 
@@ -34,8 +35,8 @@ subscriptions model =
             Sub.none
 
 
-init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags url key =
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     ( { events = []
       , hostUrl = flags.hostUrl
       , checkInAt = Time.millisToPosix 0
@@ -45,8 +46,9 @@ init flags url key =
       , currentTab = 2019
       , contract = Contract "None"
       , zone = Time.utc
-      , url = url
-      , key = key
+
+      --      , url = url
+      --      , key = key
       }
     , Cmd.batch
         [ getEvents flags.hostUrl

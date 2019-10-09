@@ -200,7 +200,7 @@ eventsComponent currentTab events zone =
         ]
 
 
-view : Model -> Browser.Document Msg
+view : Model -> Html.Html Msg
 view model =
     let
         event =
@@ -220,31 +220,25 @@ view model =
     in
     case model.page of
         Home ->
-            { title = "Inout"
-            , body =
-                [ div []
-                    [ div [ class "container" ]
-                        [ div [ class "row" ]
-                            [ h5 [ class "contract-header" ] [ text ("Current contract: " ++ model.contract.name) ]
-                            , h5 [ class "contract-header" ] [ a [ href "./events" ] [ text "Events" ] ]
-                            ]
-                        , div [ class "row" ]
-                            [ button [ class "pure-button-success pure-button", onClick (ViewEvent CheckIn) ] [ text "check in" ]
-                            , button [ class "pure-button-primary pure-button", onClick (ViewEvent CheckOut) ] [ text "check out" ]
-                            ]
-                        , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
-                        , div [ class "row check-timer" ] [ text eventText ]
-                        , shouldEdit
-                        , eventsComponent model.currentTab model.events model.zone
+            div []
+                [ div [ class "container" ]
+                    [ div [ class "row" ]
+                        [ h5 [ class "contract-header" ] [ text ("Current contract: " ++ model.contract.name) ]
+                        , h5 [ class "contract-header" ] [ a [ href "./events" ] [ text "Events" ] ]
                         ]
+                    , div [ class "row" ]
+                        [ button [ class "pure-button-success pure-button", onClick (ViewEvent CheckIn) ] [ text "check in" ]
+                        , button [ class "pure-button-primary pure-button", onClick (ViewEvent CheckOut) ] [ text "check out" ]
+                        ]
+                    , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
+                    , div [ class "row check-timer" ] [ text eventText ]
+                    , shouldEdit
+                    , eventsComponent model.currentTab model.events model.zone
                     ]
                 ]
-            }
 
         Invoice when duration count ->
-            { title = "Inovoice"
-            , body = []
-            }
+            div [] []
 
 
 
