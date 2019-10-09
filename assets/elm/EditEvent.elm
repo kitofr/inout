@@ -60,8 +60,8 @@ editEvent event zone =
                 ]
                 minutePart
                 (List.range 0 59)
-            , button [ marginLeft 10, class "btn btn-success", onClick (ViewEvent (Update event)) ] [ text "Update" ]
-            , button [ class "btn btn-danger", onClick (ViewEvent (Delete event)) ] [ text "Delete" ]
+            , button [ marginLeft 10, class "pure-button", onClick (ViewEvent (Update event)) ] [ text "Update" ]
+            , button [ class "pure-button button-error", onClick (ViewEvent (Delete event)) ] [ text "Delete" ]
             ]
         ]
 
@@ -75,7 +75,7 @@ edit dayItem zone =
             [ (\( a, b ) -> style a b) ( "display", "inline-block" )
             , (\( a, b ) -> style a b) ( "margin-left", "20px" )
             , type_ "button"
-            , class "btn btn-warning"
+            , class "pure-button pure-button-warning"
             , onClick (ViewEvent CloseEdit)
             ]
             [ span [] [ text "close" ]

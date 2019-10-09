@@ -1,8 +1,8 @@
 {
   "repository": {},
   "scripts": {
-    "deploy": "webpack --mode production",
-    "watch": "webpack --mode development --watch",
+    "deploy": "webpack --config webpack.config.js --mode production",
+    "watch": "webpack --config webpack.config.js --mode development --watch",
     "compile": "elm make --output ./vendor/inout.js ./elm/Main.elm",
     "elm": "elm"
   },
@@ -16,12 +16,12 @@
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^2.1.1",
-    "mini-css-extract-plugin": "^0.4.0",
+    "elm": "^0.19.0-no-deps",
+    "elm-webpack-loader": "^6.0.0",
+    "mini-css-extract-plugin": "^0.8.0",
     "optimize-css-assets-webpack-plugin": "^4.0.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "4.4.0",
-    "webpack-cli": "^2.0.10",
-    "elm": "^0.19.0-no-deps",
-    "elm-webpack-loader": "^6.0.0"
+    "webpack-cli": "^2.0.10"
   }
 }

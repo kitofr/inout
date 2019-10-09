@@ -38,7 +38,7 @@ monthItem { count, year, month, total, monthlyDayCount } =
             [ p [ class "list-group-item-text monthly-hours col-md-6 col-xs-6" ] [ text totalStr ]
             , p [ class "list-group-item-text monthly-count col-md-1 col-xs-2" ] [ text dayCount ]
             , p [ class "list-group-item-text col-md-1 col-xs-3" ]
-                [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent (CreateInvoice dates total count)) ] [ text "Invoice" ] ]
+                [ button [ class "pure-button pure-button-error", onClick (ViewEvent (CreateInvoice dates total count)) ] [ text "Invoice" ] ]
             ]
         , div [ class "row" ]
             [ p [ class "list-group-item-text monthly-chart col-md-8" ] [ barChart monthlyDayCount ]
@@ -154,7 +154,7 @@ yearTab currentTab ( year, _ ) =
                 ""
     in
     li [ "nav-item" ++ active |> class ]
-        [ a [ class "nav-link", onClick (ViewEvent (TabClicked year)) ] [ text (String.fromInt year) ]
+        [ div [ class "nav-link", onClick (ViewEvent (TabClicked year)) ] [ text (String.fromInt year) ]
         ]
 
 
@@ -194,7 +194,7 @@ eventsComponent currentTab events zone =
         monthlySorted =
             sortedDayItems events zone
     in
-    div [ class "container-fluid" ]
+    div [ class "container" ]
         [ last6 monthlySorted
         , yearTabs currentTab events zone
         ]
@@ -229,8 +229,8 @@ view model =
                             , h5 [ class "contract-header" ] [ a [ href "./events" ] [ text "Events" ] ]
                             ]
                         , div [ class "row" ]
-                            [ button [ class "btn btn-success", onClick (ViewEvent CheckIn) ] [ text "check in" ]
-                            , button [ class "btn btn-primary", onClick (ViewEvent CheckOut) ] [ text "check out" ]
+                            [ button [ class "pure-button-success pure-button", onClick (ViewEvent CheckIn) ] [ text "check in" ]
+                            , button [ class "pure-button-primary pure-button", onClick (ViewEvent CheckOut) ] [ text "check out" ]
                             ]
                         , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
                         , div [ class "row check-timer" ] [ text eventText ]

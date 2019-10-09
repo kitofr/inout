@@ -35,7 +35,7 @@ update msg model =
         ViewEvent (TabClicked year) ->
             let
                 _ =
-                    Debug.log "year" year
+                    Debug.log "year " year
             in
             ( { model | currentTab = year }, Cmd.none )
 

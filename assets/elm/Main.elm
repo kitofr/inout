@@ -30,7 +30,8 @@ subscriptions model =
             Sub.none
 
         _ ->
-            Time.every 1000 Tick
+            --Time.every 1000 Tick
+            Sub.none
 
 
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
