@@ -9,34 +9,6 @@ li {
   padding: 4px;
 }
 
-.list-group-item {
-  list-style-type: none;
-  background-color: #beb8f1;
-  border-radius: 5px;
-  padding: 8px;
-  margin-bottom: 4px;
-}
-
-.list-group-item h5 {
-  display: inline-block;
-  color: #666;
-  margin-right: 8px; 
-}
-
-.container h3 {
-  padding: 8px;
-  font-size: 1.3em;
-}
-
-.list-group-item p{
-  display: inline-block;
-  color: #3b4c6e;
-}
-
-.list-group-item-success {
-  background-color: #cccbde;
-}
-
 .header,
 .marketing {
   padding-right: 15px;
