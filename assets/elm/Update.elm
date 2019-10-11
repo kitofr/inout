@@ -68,6 +68,10 @@ update msg model =
             ( { model | page = Invoice ( year, month ) total dayCount }, Cmd.none )
 
         ViewEvent (MinuteSelected event min) ->
+            let
+                _ =
+                    Debug.log "minute" ( event, min )
+            in
             ( model, Cmd.none )
 
         ViewEvent (HourSelected event hour) ->
@@ -79,22 +83,6 @@ update msg model =
         ViewEvent (DateUpdated event date) ->
             ( model, Cmd.none )
 
-        --LinkClicked urlRequest ->
-        --    let
-        --        _ =
-        --            Debug.log "urlRequest" urlRequest
-        --    in
-        --    case urlRequest of
-        --        Browser.Internal url ->
-        --            ( model, Navigation.pushUrl model.key (Url.toString url) )
-        --        Browser.External href ->
-        --            ( model, Navigation.load href )
-        --UrlChanged url ->
-        --    let
-        --        _ =
-        --            Debug.log "url" url
-        --    in
-        --    ( { model | url = url }, Cmd.none )
         Tick t ->
             let
                 min2Millsec min =
