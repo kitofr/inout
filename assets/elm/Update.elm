@@ -41,8 +41,7 @@ update msg model =
 
         --( model, Cmd.none )
         ViewEvent CloseEdit ->
-            --( { model | edit = Nothing }, Cmd.none )
-            ( model, Cmd.none )
+            ( { model | edit = Nothing }, Cmd.none )
 
         ViewEvent Load ->
             ( model, getEvents model.hostUrl )
@@ -80,25 +79,22 @@ update msg model =
         ViewEvent (DateUpdated event date) ->
             ( model, Cmd.none )
 
-        LinkClicked urlRequest ->
-            let
-                _ =
-                    Debug.log "urlRequest" urlRequest
-            in
-            case urlRequest of
-                Browser.Internal url ->
-                    ( model, Navigation.pushUrl model.key (Url.toString url) )
-
-                Browser.External href ->
-                    ( model, Navigation.load href )
-
-        UrlChanged url ->
-            let
-                _ =
-                    Debug.log "url" url
-            in
-            ( { model | url = url }, Cmd.none )
-
+        --LinkClicked urlRequest ->
+        --    let
+        --        _ =
+        --            Debug.log "urlRequest" urlRequest
+        --    in
+        --    case urlRequest of
+        --        Browser.Internal url ->
+        --            ( model, Navigation.pushUrl model.key (Url.toString url) )
+        --        Browser.External href ->
+        --            ( model, Navigation.load href )
+        --UrlChanged url ->
+        --    let
+        --        _ =
+        --            Debug.log "url" url
+        --    in
+        --    ( { model | url = url }, Cmd.none )
         Tick t ->
             let
                 min2Millsec min =

@@ -11,5 +11,8 @@ type Msg
     = ApiEvent ApiMsg
     | Tick Posix
     | ViewEvent ViewMsg
-    | LinkClicked Browser.UrlRequest
-    | UrlChanged Url.Url
+
+
+
+--    | LinkClicked Browser.UrlRequest
+--    | UrlChanged Url.Url
