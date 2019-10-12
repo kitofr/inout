@@ -6769,29 +6769,26 @@ var elm$time$Time$Zone = F2(
 		return {$: 'Zone', a: a, b: b};
 	});
 var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
-var author$project$Main$init = F3(
-	function (flags, url, key) {
-		return _Utils_Tuple2(
-			{
-				checkInAt: elm$time$Time$millisToPosix(0),
-				contract: author$project$Types$Contract('None'),
-				currentTab: 2019,
-				edit: elm$core$Maybe$Nothing,
-				events: _List_Nil,
-				hostUrl: flags.hostUrl,
-				key: key,
-				page: author$project$Types$Home,
-				timeSinceLastCheckIn: elm$time$Time$millisToPosix(0),
-				url: url,
-				zone: elm$time$Time$utc
-			},
-			elm$core$Platform$Cmd$batch(
-				_List_fromArray(
-					[
-						author$project$Api$getEvents(flags.hostUrl),
-						author$project$Api$loadContract(flags.hostUrl)
-					])));
-	});
+var author$project$Main$init = function (flags) {
+	return _Utils_Tuple2(
+		{
+			checkInAt: elm$time$Time$millisToPosix(0),
+			contract: author$project$Types$Contract('None'),
+			currentTab: 2019,
+			edit: elm$core$Maybe$Nothing,
+			events: _List_Nil,
+			hostUrl: flags.hostUrl,
+			page: author$project$Types$Home,
+			timeSinceLastCheckIn: elm$time$Time$millisToPosix(0),
+			zone: elm$time$Time$utc
+		},
+		elm$core$Platform$Cmd$batch(
+			_List_fromArray(
+				[
+					author$project$Api$getEvents(flags.hostUrl),
+					author$project$Api$loadContract(flags.hostUrl)
+				])));
+};
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var elm$time$Time$posixToMillis = function (_n0) {
@@ -6805,12 +6802,6 @@ var author$project$Main$subscriptions = function (model) {
 	} else {
 		return elm$core$Platform$Sub$none;
 	}
-};
-var author$project$Msgs$LinkClicked = function (a) {
-	return {$: 'LinkClicked', a: a};
-};
-var author$project$Msgs$UrlChanged = function (a) {
-	return {$: 'UrlChanged', a: a};
 };
 var elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
@@ -7339,211 +7330,6 @@ var author$project$Types$Invoice = F3(
 	function (a, b, c) {
 		return {$: 'Invoice', a: a, b: b, c: c};
 	});
-var elm$browser$Browser$External = function (a) {
-	return {$: 'External', a: a};
-};
-var elm$browser$Browser$Internal = function (a) {
-	return {$: 'Internal', a: a};
-};
-var elm$browser$Browser$Dom$NotFound = function (a) {
-	return {$: 'NotFound', a: a};
-};
-var elm$core$Basics$never = function (_n0) {
-	never:
-	while (true) {
-		var nvr = _n0.a;
-		var $temp$_n0 = nvr;
-		_n0 = $temp$_n0;
-		continue never;
-	}
-};
-var elm$core$Task$perform = F2(
-	function (toMessage, task) {
-		return elm$core$Task$command(
-			elm$core$Task$Perform(
-				A2(elm$core$Task$map, toMessage, task)));
-	});
-var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
-	switch (handler.$) {
-		case 'Normal':
-			return 0;
-		case 'MayStopPropagation':
-			return 1;
-		case 'MayPreventDefault':
-			return 2;
-		default:
-			return 3;
-	}
-};
-var elm$core$String$dropLeft = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3(
-			elm$core$String$slice,
-			n,
-			elm$core$String$length(string),
-			string);
-	});
-var elm$core$String$startsWith = _String_startsWith;
-var elm$url$Url$Http = {$: 'Http'};
-var elm$url$Url$Https = {$: 'Https'};
-var elm$core$String$indexes = _String_indexes;
-var elm$core$String$left = F2(
-	function (n, string) {
-		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
-	});
-var elm$core$String$contains = _String_contains;
-var elm$url$Url$Url = F6(
-	function (protocol, host, port_, path, query, fragment) {
-		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
-	});
-var elm$url$Url$chompBeforePath = F5(
-	function (protocol, path, params, frag, str) {
-		if (elm$core$String$isEmpty(str) || A2(elm$core$String$contains, '@', str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, ':', str);
-			if (!_n0.b) {
-				return elm$core$Maybe$Just(
-					A6(elm$url$Url$Url, protocol, str, elm$core$Maybe$Nothing, path, params, frag));
-			} else {
-				if (!_n0.b.b) {
-					var i = _n0.a;
-					var _n1 = elm$core$String$toInt(
-						A2(elm$core$String$dropLeft, i + 1, str));
-					if (_n1.$ === 'Nothing') {
-						return elm$core$Maybe$Nothing;
-					} else {
-						var port_ = _n1;
-						return elm$core$Maybe$Just(
-							A6(
-								elm$url$Url$Url,
-								protocol,
-								A2(elm$core$String$left, i, str),
-								port_,
-								path,
-								params,
-								frag));
-					}
-				} else {
-					return elm$core$Maybe$Nothing;
-				}
-			}
-		}
-	});
-var elm$url$Url$chompBeforeQuery = F4(
-	function (protocol, params, frag, str) {
-		if (elm$core$String$isEmpty(str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, '/', str);
-			if (!_n0.b) {
-				return A5(elm$url$Url$chompBeforePath, protocol, '/', params, frag, str);
-			} else {
-				var i = _n0.a;
-				return A5(
-					elm$url$Url$chompBeforePath,
-					protocol,
-					A2(elm$core$String$dropLeft, i, str),
-					params,
-					frag,
-					A2(elm$core$String$left, i, str));
-			}
-		}
-	});
-var elm$url$Url$chompBeforeFragment = F3(
-	function (protocol, frag, str) {
-		if (elm$core$String$isEmpty(str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, '?', str);
-			if (!_n0.b) {
-				return A4(elm$url$Url$chompBeforeQuery, protocol, elm$core$Maybe$Nothing, frag, str);
-			} else {
-				var i = _n0.a;
-				return A4(
-					elm$url$Url$chompBeforeQuery,
-					protocol,
-					elm$core$Maybe$Just(
-						A2(elm$core$String$dropLeft, i + 1, str)),
-					frag,
-					A2(elm$core$String$left, i, str));
-			}
-		}
-	});
-var elm$url$Url$chompAfterProtocol = F2(
-	function (protocol, str) {
-		if (elm$core$String$isEmpty(str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, '#', str);
-			if (!_n0.b) {
-				return A3(elm$url$Url$chompBeforeFragment, protocol, elm$core$Maybe$Nothing, str);
-			} else {
-				var i = _n0.a;
-				return A3(
-					elm$url$Url$chompBeforeFragment,
-					protocol,
-					elm$core$Maybe$Just(
-						A2(elm$core$String$dropLeft, i + 1, str)),
-					A2(elm$core$String$left, i, str));
-			}
-		}
-	});
-var elm$url$Url$fromString = function (str) {
-	return A2(elm$core$String$startsWith, 'http://', str) ? A2(
-		elm$url$Url$chompAfterProtocol,
-		elm$url$Url$Http,
-		A2(elm$core$String$dropLeft, 7, str)) : (A2(elm$core$String$startsWith, 'https://', str) ? A2(
-		elm$url$Url$chompAfterProtocol,
-		elm$url$Url$Https,
-		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
-};
-var elm$browser$Browser$Navigation$load = _Browser_load;
-var elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
-var elm$url$Url$addPort = F2(
-	function (maybePort, starter) {
-		if (maybePort.$ === 'Nothing') {
-			return starter;
-		} else {
-			var port_ = maybePort.a;
-			return starter + (':' + elm$core$String$fromInt(port_));
-		}
-	});
-var elm$url$Url$addPrefixed = F3(
-	function (prefix, maybeSegment, starter) {
-		if (maybeSegment.$ === 'Nothing') {
-			return starter;
-		} else {
-			var segment = maybeSegment.a;
-			return _Utils_ap(
-				starter,
-				_Utils_ap(prefix, segment));
-		}
-	});
-var elm$url$Url$toString = function (url) {
-	var http = function () {
-		var _n0 = url.protocol;
-		if (_n0.$ === 'Http') {
-			return 'http://';
-		} else {
-			return 'https://';
-		}
-	}();
-	return A3(
-		elm$url$Url$addPrefixed,
-		'#',
-		url.fragment,
-		A3(
-			elm$url$Url$addPrefixed,
-			'?',
-			url.query,
-			_Utils_ap(
-				A2(
-					elm$url$Url$addPort,
-					url.port_,
-					_Utils_ap(http, url.host)),
-				url.path)));
-};
 var author$project$Update$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -7562,7 +7348,11 @@ var author$project$Update$update = F2(
 							elm$core$Platform$Cmd$none);
 					case 'CloseEdit':
 						var _n2 = msg.a;
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{edit: elm$core$Maybe$Nothing}),
+							elm$core$Platform$Cmd$none);
 					case 'Load':
 						var _n3 = msg.a;
 						return _Utils_Tuple2(
@@ -7626,48 +7416,27 @@ var author$project$Update$update = F2(
 						var _n9 = msg.a;
 						var event = _n9.a;
 						var min = _n9.b;
+						var _n10 = A2(
+							elm$core$Debug$log,
+							'minute',
+							_Utils_Tuple2(event, min));
 						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 					case 'HourSelected':
-						var _n10 = msg.a;
-						var event = _n10.a;
-						var hour = _n10.b;
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-					case 'TimeUpdated':
 						var _n11 = msg.a;
 						var event = _n11.a;
-						var time = _n11.b;
+						var hour = _n11.b;
 						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-					default:
+					case 'TimeUpdated':
 						var _n12 = msg.a;
 						var event = _n12.a;
-						var date = _n12.b;
+						var time = _n12.b;
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					default:
+						var _n13 = msg.a;
+						var event = _n13.a;
+						var date = _n13.b;
 						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 				}
-			case 'LinkClicked':
-				var urlRequest = msg.a;
-				var _n13 = A2(elm$core$Debug$log, 'urlRequest', urlRequest);
-				if (urlRequest.$ === 'Internal') {
-					var url = urlRequest.a;
-					return _Utils_Tuple2(
-						model,
-						A2(
-							elm$browser$Browser$Navigation$pushUrl,
-							model.key,
-							elm$url$Url$toString(url)));
-				} else {
-					var href = urlRequest.a;
-					return _Utils_Tuple2(
-						model,
-						elm$browser$Browser$Navigation$load(href));
-				}
-			case 'UrlChanged':
-				var url = msg.a;
-				var _n15 = A2(elm$core$Debug$log, 'url', url);
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{url: url}),
-					elm$core$Platform$Cmd$none);
 			default:
 				var t = msg.a;
 				var newTime = elm$time$Time$posixToMillis(t) - elm$time$Time$posixToMillis(model.checkInAt);
@@ -7756,6 +7525,18 @@ var author$project$DateUtil$timeTuple = F2(
 	});
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
+};
+var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
 };
 var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var elm$html$Html$Events$on = F2(
@@ -9021,7 +8802,7 @@ var author$project$View$eventsComponent = F3(
 			elm$html$Html$div,
 			_List_fromArray(
 				[
-					elm$html$Html$Attributes$class('container-fluid')
+					elm$html$Html$Attributes$class('container')
 				]),
 			_List_fromArray(
 				[
@@ -9056,127 +8837,268 @@ var author$project$View$view = function (model) {
 		A2(elm$time$Time$toMillis, model.zone, event.inserted_at)));
 	var _n0 = model.page;
 	if (_n0.$ === 'Home') {
-		return {
-			body: _List_fromArray(
+		return A2(
+			elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
 				[
 					A2(
 					elm$html$Html$div,
-					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('container')
+						]),
 					_List_fromArray(
 						[
 							A2(
 							elm$html$Html$div,
 							_List_fromArray(
 								[
-									elm$html$Html$Attributes$class('container')
+									elm$html$Html$Attributes$class('row')
 								]),
 							_List_fromArray(
 								[
 									A2(
-									elm$html$Html$div,
+									elm$html$Html$h5,
 									_List_fromArray(
 										[
-											elm$html$Html$Attributes$class('row')
+											elm$html$Html$Attributes$class('contract-header')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('Current contract: ' + model.contract.name)
+										])),
+									A2(
+									elm$html$Html$h5,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('contract-header')
 										]),
 									_List_fromArray(
 										[
 											A2(
-											elm$html$Html$h5,
+											elm$html$Html$a,
 											_List_fromArray(
 												[
-													elm$html$Html$Attributes$class('contract-header')
+													elm$html$Html$Attributes$href('./events')
 												]),
 											_List_fromArray(
 												[
-													elm$html$Html$text('Current contract: ' + model.contract.name)
-												])),
-											A2(
-											elm$html$Html$h5,
-											_List_fromArray(
-												[
-													elm$html$Html$Attributes$class('contract-header')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													elm$html$Html$a,
-													_List_fromArray(
-														[
-															elm$html$Html$Attributes$href('./events')
-														]),
-													_List_fromArray(
-														[
-															elm$html$Html$text('Events')
-														]))
+													elm$html$Html$text('Events')
 												]))
-										])),
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('row')
+								]),
+							_List_fromArray(
+								[
 									A2(
-									elm$html$Html$div,
+									elm$html$Html$button,
 									_List_fromArray(
 										[
-											elm$html$Html$Attributes$class('row')
+											elm$html$Html$Attributes$class('btn btn-success'),
+											elm$html$Html$Events$onClick(
+											author$project$Msgs$ViewEvent(author$project$ViewMsgs$CheckIn))
 										]),
 									_List_fromArray(
 										[
-											A2(
-											elm$html$Html$button,
-											_List_fromArray(
-												[
-													elm$html$Html$Attributes$class('btn btn-success'),
-													elm$html$Html$Events$onClick(
-													author$project$Msgs$ViewEvent(author$project$ViewMsgs$CheckIn))
-												]),
-											_List_fromArray(
-												[
-													elm$html$Html$text('check in')
-												])),
-											A2(
-											elm$html$Html$button,
-											_List_fromArray(
-												[
-													elm$html$Html$Attributes$class('btn btn-primary'),
-													elm$html$Html$Events$onClick(
-													author$project$Msgs$ViewEvent(author$project$ViewMsgs$CheckOut))
-												]),
-											_List_fromArray(
-												[
-													elm$html$Html$text('check out')
-												]))
+											elm$html$Html$text('check in')
 										])),
 									A2(
-									elm$html$Html$div,
+									elm$html$Html$button,
 									_List_fromArray(
 										[
-											elm$html$Html$Attributes$class('row check-timer')
-										]),
-									author$project$TimeSinceLastCheckIn$viewTimeSinceLastCheckIn(model.timeSinceLastCheckIn)),
-									A2(
-									elm$html$Html$div,
-									_List_fromArray(
-										[
-											elm$html$Html$Attributes$class('row check-timer')
+											elm$html$Html$Attributes$class('btn btn-primary'),
+											elm$html$Html$Events$onClick(
+											author$project$Msgs$ViewEvent(author$project$ViewMsgs$CheckOut))
 										]),
 									_List_fromArray(
 										[
-											elm$html$Html$text(eventText)
-										])),
-									shouldEdit,
-									A3(author$project$View$eventsComponent, model.currentTab, model.events, model.zone)
-								]))
+											elm$html$Html$text('check out')
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('row check-timer')
+								]),
+							author$project$TimeSinceLastCheckIn$viewTimeSinceLastCheckIn(model.timeSinceLastCheckIn)),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('row check-timer')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(eventText)
+								])),
+							shouldEdit,
+							A3(author$project$View$eventsComponent, model.currentTab, model.events, model.zone)
 						]))
-				]),
-			title: 'Inout'
-		};
+				]));
 	} else {
 		var when = _n0.a;
 		var duration = _n0.b;
 		var count = _n0.c;
-		return {body: _List_Nil, title: 'Inovoice'};
+		return A2(elm$html$Html$div, _List_Nil, _List_Nil);
 	}
 };
-var elm$browser$Browser$application = _Browser_application;
-var author$project$Main$main = elm$browser$Browser$application(
-	{init: author$project$Main$init, onUrlChange: author$project$Msgs$UrlChanged, onUrlRequest: author$project$Msgs$LinkClicked, subscriptions: author$project$Main$subscriptions, update: author$project$Update$update, view: author$project$View$view});
+var elm$browser$Browser$External = function (a) {
+	return {$: 'External', a: a};
+};
+var elm$browser$Browser$Internal = function (a) {
+	return {$: 'Internal', a: a};
+};
+var elm$browser$Browser$Dom$NotFound = function (a) {
+	return {$: 'NotFound', a: a};
+};
+var elm$core$Basics$never = function (_n0) {
+	never:
+	while (true) {
+		var nvr = _n0.a;
+		var $temp$_n0 = nvr;
+		_n0 = $temp$_n0;
+		continue never;
+	}
+};
+var elm$core$Task$perform = F2(
+	function (toMessage, task) {
+		return elm$core$Task$command(
+			elm$core$Task$Perform(
+				A2(elm$core$Task$map, toMessage, task)));
+	});
+var elm$core$String$dropLeft = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(
+			elm$core$String$slice,
+			n,
+			elm$core$String$length(string),
+			string);
+	});
+var elm$core$String$startsWith = _String_startsWith;
+var elm$url$Url$Http = {$: 'Http'};
+var elm$url$Url$Https = {$: 'Https'};
+var elm$core$String$indexes = _String_indexes;
+var elm$core$String$left = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
+	});
+var elm$core$String$contains = _String_contains;
+var elm$url$Url$Url = F6(
+	function (protocol, host, port_, path, query, fragment) {
+		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
+	});
+var elm$url$Url$chompBeforePath = F5(
+	function (protocol, path, params, frag, str) {
+		if (elm$core$String$isEmpty(str) || A2(elm$core$String$contains, '@', str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, ':', str);
+			if (!_n0.b) {
+				return elm$core$Maybe$Just(
+					A6(elm$url$Url$Url, protocol, str, elm$core$Maybe$Nothing, path, params, frag));
+			} else {
+				if (!_n0.b.b) {
+					var i = _n0.a;
+					var _n1 = elm$core$String$toInt(
+						A2(elm$core$String$dropLeft, i + 1, str));
+					if (_n1.$ === 'Nothing') {
+						return elm$core$Maybe$Nothing;
+					} else {
+						var port_ = _n1;
+						return elm$core$Maybe$Just(
+							A6(
+								elm$url$Url$Url,
+								protocol,
+								A2(elm$core$String$left, i, str),
+								port_,
+								path,
+								params,
+								frag));
+					}
+				} else {
+					return elm$core$Maybe$Nothing;
+				}
+			}
+		}
+	});
+var elm$url$Url$chompBeforeQuery = F4(
+	function (protocol, params, frag, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '/', str);
+			if (!_n0.b) {
+				return A5(elm$url$Url$chompBeforePath, protocol, '/', params, frag, str);
+			} else {
+				var i = _n0.a;
+				return A5(
+					elm$url$Url$chompBeforePath,
+					protocol,
+					A2(elm$core$String$dropLeft, i, str),
+					params,
+					frag,
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$chompBeforeFragment = F3(
+	function (protocol, frag, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '?', str);
+			if (!_n0.b) {
+				return A4(elm$url$Url$chompBeforeQuery, protocol, elm$core$Maybe$Nothing, frag, str);
+			} else {
+				var i = _n0.a;
+				return A4(
+					elm$url$Url$chompBeforeQuery,
+					protocol,
+					elm$core$Maybe$Just(
+						A2(elm$core$String$dropLeft, i + 1, str)),
+					frag,
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$chompAfterProtocol = F2(
+	function (protocol, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '#', str);
+			if (!_n0.b) {
+				return A3(elm$url$Url$chompBeforeFragment, protocol, elm$core$Maybe$Nothing, str);
+			} else {
+				var i = _n0.a;
+				return A3(
+					elm$url$Url$chompBeforeFragment,
+					protocol,
+					elm$core$Maybe$Just(
+						A2(elm$core$String$dropLeft, i + 1, str)),
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$fromString = function (str) {
+	return A2(elm$core$String$startsWith, 'http://', str) ? A2(
+		elm$url$Url$chompAfterProtocol,
+		elm$url$Url$Http,
+		A2(elm$core$String$dropLeft, 7, str)) : (A2(elm$core$String$startsWith, 'https://', str) ? A2(
+		elm$url$Url$chompAfterProtocol,
+		elm$url$Url$Https,
+		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
+};
+var elm$browser$Browser$element = _Browser_element;
+var author$project$Main$main = elm$browser$Browser$element(
+	{init: author$project$Main$init, subscriptions: author$project$Main$subscriptions, update: author$project$Update$update, view: author$project$View$view});
 _Platform_export({'Main':{'init':author$project$Main$main(
 	A2(
 		elm$json$Json$Decode$andThen,

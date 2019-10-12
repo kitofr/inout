@@ -2,6 +2,8 @@ module DateUtil exposing
     ( Compare2(..)
     , Date
     , TimeDuration
+    , addHoursToPosix
+    , addMinutesToPosix
     , addTimeDurations
     , dateStr
     , dateToMonthStr
@@ -23,6 +25,30 @@ module DateUtil exposing
 import Iso8601
 import String exposing (..)
 import Time exposing (..)
+
+
+addHoursToPosix : Posix -> Int -> Posix
+addHoursToPosix posix toAdd =
+    let
+        posixInMillis =
+            Time.posixToMillis posix
+
+        toAddInMillis =
+            toAdd * 60 * 60 * 1000
+    in
+    Time.millisToPosix (posixInMillis + toAddInMillis)
+
+
+addMinutesToPosix : Posix -> Int -> Posix
+addMinutesToPosix posix toAdd =
+    let
+        posixInMillis =
+            Time.posixToMillis posix
+
+        toAddInMillis =
+            toAdd * 60 * 1000
+    in
+    Time.millisToPosix (posixInMillis + toAddInMillis)
 
 
 type alias Date =
