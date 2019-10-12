@@ -2,9 +2,9 @@ module DateUtil exposing
     ( Compare2(..)
     , Date
     , TimeDuration
-    , addHoursToPosix
-    , addMinutesToPosix
     , addTimeDurations
+    , changeHourInPosix
+    , changeMinuteInPosix
     , dateStr
     , dateToMonthStr
     , dateTuple
@@ -25,30 +25,27 @@ module DateUtil exposing
 import Iso8601
 import String exposing (..)
 import Time exposing (..)
+import Time.Extra exposing (partsToPosix, posixToParts)
 
 
-addHoursToPosix : Posix -> Int -> Posix
-addHoursToPosix posix toAdd =
+changeHourInPosix : Zone -> Posix -> Int -> Posix
+changeHourInPosix zone posix hour =
     let
-        posixInMillis =
-            Time.posixToMillis posix
-
-        toAddInMillis =
-            toAdd * 60 * 60 * 1000
+        posixParts =
+            posix
+                |> posixToParts zone
     in
-    Time.millisToPosix (posixInMillis + toAddInMillis)
+    partsToPosix zone { posixParts | hour = hour }
 
 
-addMinutesToPosix : Posix -> Int -> Posix
-addMinutesToPosix posix toAdd =
+changeMinuteInPosix : Zone -> Posix -> Int -> Posix
+changeMinuteInPosix zone posix minute =
     let
-        posixInMillis =
-            Time.posixToMillis posix
-
-        toAddInMillis =
-            toAdd * 60 * 1000
+        posixParts =
+            posix
+                |> posixToParts zone
     in
-    Time.millisToPosix (posixInMillis + toAddInMillis)
+    partsToPosix zone { posixParts | minute = minute }
 
 
 type alias Date =
