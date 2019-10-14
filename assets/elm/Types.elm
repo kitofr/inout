@@ -53,9 +53,6 @@ type alias Model =
     , timeSinceLastCheckIn : Posix
     , currentTab : Int
     , contract : Contract
-
-    --    , key : Nav.Key
-    --    , url : Url.Url
     }
 
 
