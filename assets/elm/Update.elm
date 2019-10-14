@@ -108,11 +108,15 @@ update msg model =
             in
             ( { model | edit = edit }, Cmd.none )
 
-        ViewEvent (TimeUpdated event time) ->
-            ( model, Cmd.none )
-
         ViewEvent (DateUpdated event date) ->
-            ( model, Cmd.none )
+            let
+                inserted =
+                    Debug.log "date" (changeDateInPosix model.zone event.inserted_at date)
+
+                edit =
+                    updateEdit model event inserted
+            in
+            ( { model | edit = edit }, Cmd.none )
 
         Tick t ->
             let

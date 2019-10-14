@@ -3,6 +3,7 @@ module DateUtil exposing
     , Date
     , TimeDuration
     , addTimeDurations
+    , changeDateInPosix
     , changeHourInPosix
     , changeMinuteInPosix
     , dateStr
@@ -46,6 +47,33 @@ changeMinuteInPosix zone posix minute =
                 |> posixToParts zone
     in
     partsToPosix zone { posixParts | minute = minute }
+
+
+changeDateInPosix : Zone -> Posix -> String -> Posix
+changeDateInPosix zone posix date =
+    let
+        date_ =
+            date
+                |> String.split "-"
+                |> List.map (\m -> m |> String.toInt |> Maybe.withDefault 0)
+    in
+    case date_ of
+        [ year, month, day ] ->
+            let
+                parts =
+                    posixToParts zone posix
+
+                monthConstant =
+                    toMonthType month
+                        |> Maybe.withDefault parts.month
+            in
+            partsToPosix zone { parts | year = year, month = monthConstant, day = day }
+
+        f :: _ ->
+            posix
+
+        [] ->
+            posix
 
 
 type alias Date =
@@ -177,6 +205,49 @@ sortDates order a b =
 
         _ ->
             LT
+
+
+toMonthType : Int -> Maybe Month
+toMonthType month =
+    case month of
+        1 ->
+            Just Jan
+
+        2 ->
+            Just Feb
+
+        3 ->
+            Just Mar
+
+        4 ->
+            Just Apr
+
+        5 ->
+            Just May
+
+        6 ->
+            Just Jun
+
+        7 ->
+            Just Jul
+
+        8 ->
+            Just Aug
+
+        9 ->
+            Just Sep
+
+        10 ->
+            Just Oct
+
+        11 ->
+            Just Nov
+
+        12 ->
+            Just Dec
+
+        _ ->
+            Nothing
 
 
 toMonthStr : Int -> String

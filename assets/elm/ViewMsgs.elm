@@ -17,5 +17,4 @@ type ViewMsg
     | Load
     | MinuteSelected Event String
     | TabClicked Int
-    | TimeUpdated Event String
     | Update Event
