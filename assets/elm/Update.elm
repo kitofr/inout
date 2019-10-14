@@ -3,27 +3,41 @@ module Update exposing (update)
 import Api exposing (check, deleteEvent, getEvents, updateEvent)
 import Browser
 import Browser.Navigation as Navigation
-import DateUtil exposing (dateStr, dateTuple, parseStringDate, timeTuple, zeroPad)
+import DateUtil exposing (..)
 import Msgs exposing (Msg(..))
 import Route exposing (route)
 import Time exposing (..)
-import Types exposing (Event, Model, Page(..))
+import Types exposing (DayItem, Event, Model, Page(..))
 import Url
 import Url.Parser exposing ((</>), Parser, int, map, oneOf, s, string, top)
 import ViewMsgs exposing (..)
 
 
 changeEvent : List Event -> Event -> List Event
-changeEvent lst e =
+changeEvent events event =
     List.map
         (\ev ->
-            if ev.id == e.id then
-                e
+            if ev.id == event.id then
+                event
 
             else
                 ev
         )
-        lst
+        events
+
+
+updateEdit : Model -> Event -> Posix -> Maybe DayItem
+updateEdit model event inserted =
+    let
+        event_ =
+            { event | inserted_at = inserted }
+    in
+    case model.edit of
+        Just dayitem ->
+            Just { dayitem | events = changeEvent dayitem.events event_ }
+
+        _ ->
+            Nothing
 
 
 update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
@@ -39,7 +53,6 @@ update msg model =
             in
             ( { model | currentTab = year }, Cmd.none )
 
-        --( model, Cmd.none )
         ViewEvent CloseEdit ->
             ( { model | edit = Nothing }, Cmd.none )
 
@@ -69,13 +82,31 @@ update msg model =
 
         ViewEvent (MinuteSelected event min) ->
             let
-                _ =
-                    Debug.log "minute" ( event, min )
-            in
-            ( model, Cmd.none )
+                minute =
+                    String.toInt min
+                        |> Maybe.withDefault 0
 
-        ViewEvent (HourSelected event hour) ->
-            ( model, Cmd.none )
+                inserted =
+                    Debug.log "minute" (changeMinuteInPosix model.zone event.inserted_at minute)
+
+                edit =
+                    updateEdit model event inserted
+            in
+            ( { model | edit = edit }, Cmd.none )
+
+        ViewEvent (HourSelected event h) ->
+            let
+                hour =
+                    String.toInt h
+                        |> Maybe.withDefault 0
+
+                inserted =
+                    Debug.log "hour" (changeHourInPosix model.zone event.inserted_at hour)
+
+                edit =
+                    updateEdit model event inserted
+            in
+            ( { model | edit = edit }, Cmd.none )
 
         ViewEvent (TimeUpdated event time) ->
             ( model, Cmd.none )
