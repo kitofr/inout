@@ -1,4 +1,8 @@
 {
+  "name": "inout",
+  "engines": {
+    "node": "8.5.0"
+  },
   "repository": {},
   "scripts": {
     "deploy": "webpack --config webpack.config.js --mode production",
