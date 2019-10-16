@@ -19,6 +19,7 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
 
 # Ecto queries
 ```
+iex> alias Ecto.Query
 iex> Inout.Event |> Ecto.Query.limit(2) |> Inout.Repo.all
 ```
 
