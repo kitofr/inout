@@ -9,5 +9,8 @@ docker exec -i "${DOCKER_DB_NAME}" pg_restore -C --verbose --clean --no-acl --no
 docker-compose stop db
 
 echo "Remember to rename the created database to inout_dev!"
-echo "ALTER DATABASE db RENAME TO newdb"
+echo "./connect.sh"
+echo "\c postgres"
+echo "drop database inout_dev;"
+echo "ALTER DATABASE db RENAME TO inout_dev;"
 
