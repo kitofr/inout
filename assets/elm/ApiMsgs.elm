@@ -1,12 +1,4 @@
-module ApiMsgs exposing
-    ( ApiMsg
-        ( CheckEvent
-        , DeleteEvent
-        , LoadContract
-        , LoadEvents
-        , UpdateEvent
-        )
-    )
+module ApiMsgs exposing (ApiMsg(..))
 
 import Http
 import Types exposing (Contract, Event)

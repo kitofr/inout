@@ -1,13 +1,18 @@
-module Msgs exposing (Msg(ApiEvent, Tick, ViewEvent, SetRoute))
+module Msgs exposing (Msg(..))
 
-import Navigation exposing (Location)
-import Time exposing (Time)
 import ApiMsgs exposing (ApiMsg)
+import Browser
+import Time exposing (Posix)
+import Url exposing (Url)
 import ViewMsgs exposing (ViewMsg)
 
 
 type Msg
     = ApiEvent ApiMsg
-    | Tick Time
+    | Tick Posix
     | ViewEvent ViewMsg
-    | SetRoute Location
+
+
+
+--    | LinkClicked Browser.UrlRequest
+--    | UrlChanged Url.Url

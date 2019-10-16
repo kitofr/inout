@@ -1,103 +1,43 @@
-module Update exposing (setRoute, update)
+module Update exposing (update)
 
 import Api exposing (check, deleteEvent, getEvents, updateEvent)
-import Date exposing (Date)
-import Date.Extra.Create exposing (getTimezoneOffset)
-import DateUtil exposing (dateStr, dateTuple, parseStringDate, timeTuple, zeroPad)
-import Msgs exposing (Msg(ApiEvent, SetRoute, Tick, ViewEvent))
-import Navigation exposing (Location)
+import Browser
+import Browser.Navigation as Navigation
+import DateUtil exposing (..)
+import Msgs exposing (Msg(..))
 import Route exposing (route)
-import Types exposing (Event, Model, Page(..))
-import UrlParser exposing (parsePath)
+import Time exposing (..)
+import Types exposing (DayItem, Event, Model, Page(..))
+import Url
+import Url.Parser exposing ((</>), Parser, int, map, oneOf, s, string, top)
 import ViewMsgs exposing (..)
 
 
-constructDate : String -> String -> String -> String -> String -> String -> Date
-constructDate year month day hour min sec =
-    (year ++ "-" ++ month ++ "-" ++ day ++ "T" ++ hour ++ ":" ++ min ++ ":" ++ sec)
-        |> parseStringDate
-
-
-updateMinute : Date -> String -> Date
-updateMinute date min =
-    let
-        ( year, month, day ) =
-            dateTuple date
-
-        ( hour, _, sec ) =
-            timeTuple date
-    in
-    constructDate year month day hour min sec
-
-
-updateHour : Date -> String -> Date
-updateHour date hour =
-    let
-        ( year, month, day ) =
-            dateTuple date
-
-        ( _, min, sec ) =
-            timeTuple date
-    in
-    constructDate year month day hour min sec
-
-
 changeEvent : List Event -> Event -> List Event
-changeEvent lst e =
+changeEvent events event =
     List.map
         (\ev ->
-            if ev.id == e.id then
-                e
+            if ev.id == event.id then
+                event
 
             else
                 ev
         )
-        lst
+        events
 
 
-createDateFromTime : Date -> String -> String
-createDateFromTime d str =
+updateEdit : Model -> Event -> Posix -> Maybe DayItem
+updateEdit model event inserted =
     let
-        date_ =
-            d |> dateStr
+        event_ =
+            { event | inserted_at = inserted }
     in
-    date_ ++ "T" ++ str
+    case model.edit of
+        Just dayitem ->
+            Just { dayitem | events = changeEvent dayitem.events event_ }
 
-
-createDateFromDate : Date -> String -> String
-createDateFromDate d str =
-    let
-        h =
-            Date.hour d |> toString |> zeroPad
-
-        m =
-            Date.minute d |> toString |> zeroPad
-
-        s =
-            Date.second d |> toString |> zeroPad
-    in
-    str
-        ++ "T"
-        ++ h
-        ++ ":"
-        ++ m
-        ++ ":"
-        ++ s
-
-
-setRoute : Location -> Types.Model -> Types.Model
-setRoute location model =
-    let
-        route =
-            UrlParser.parsePath Route.route location
-                |> Maybe.withDefault Route.Home
-    in
-    case route of
-        Route.Home ->
-            { model | page = Home }
-
-        Route.Invoice ->
-            { model | page = Home }
+        _ ->
+            Nothing
 
 
 update : Msgs.Msg -> Model -> ( Model, Cmd Msgs.Msg )
@@ -107,6 +47,10 @@ update msg model =
             Api.update apiMsg model
 
         ViewEvent (TabClicked year) ->
+            let
+                _ =
+                    Debug.log "year " year
+            in
             ( { model | currentTab = year }, Cmd.none )
 
         ViewEvent CloseEdit ->
@@ -134,91 +78,45 @@ update msg model =
             ( { model | page = Home }, Cmd.none )
 
         ViewEvent (CreateInvoice ( year, month ) total dayCount) ->
-            let
-                _ =
-                    Debug.log "INVOICE" ( year, month, total, dayCount )
-            in
             ( { model | page = Invoice ( year, month ) total dayCount }, Cmd.none )
 
         ViewEvent (MinuteSelected event min) ->
             let
-                dt =
-                    updateMinute event.inserted_at min
-                        |> Debug.log "selected minute"
+                minute =
+                    String.toInt min
+                        |> Maybe.withDefault 0
 
-                event_ =
-                    { event | inserted_at = dt }
+                inserted =
+                    Debug.log "minute" (changeMinuteInPosix model.zone event.inserted_at minute)
 
                 edit =
-                    case model.edit of
-                        Just dayitem ->
-                            Just { dayitem | events = changeEvent dayitem.events event_ }
-
-                        _ ->
-                            Nothing
+                    updateEdit model event inserted
             in
             ( { model | edit = edit }, Cmd.none )
 
-        ViewEvent (HourSelected event hour) ->
+        ViewEvent (HourSelected event h) ->
             let
-                dt =
-                    updateHour event.inserted_at hour
+                hour =
+                    String.toInt h
+                        |> Maybe.withDefault 0
 
-                event_ =
-                    { event | inserted_at = dt }
+                inserted =
+                    Debug.log "hour" (changeHourInPosix model.zone event.inserted_at hour)
 
                 edit =
-                    case model.edit of
-                        Just dayitem ->
-                            Just { dayitem | events = changeEvent dayitem.events event_ }
-
-                        _ ->
-                            Nothing
-            in
-            ( { model | edit = edit }, Cmd.none )
-
-        ViewEvent (TimeUpdated event time) ->
-            let
-                time_ =
-                    time
-                        |> createDateFromTime event.inserted_at
-                        |> parseStringDate
-
-                event_ =
-                    { event | inserted_at = time_ }
-
-                edit =
-                    case model.edit of
-                        Just dayitem ->
-                            Just { dayitem | events = changeEvent dayitem.events event_ }
-
-                        _ ->
-                            Nothing
+                    updateEdit model event inserted
             in
             ( { model | edit = edit }, Cmd.none )
 
         ViewEvent (DateUpdated event date) ->
             let
-                date_ =
-                    date
-                        |> createDateFromDate event.inserted_at
-                        |> parseStringDate
-
-                event_ =
-                    { event | inserted_at = date_ }
+                inserted =
+                    Debug.log "date" (changeDateInPosix model.zone event.inserted_at date)
 
                 edit =
-                    case model.edit of
-                        Just dayitem ->
-                            Just { dayitem | events = changeEvent dayitem.events event_ }
-
-                        _ ->
-                            Nothing
+                    updateEdit model event inserted
             in
             ( { model | edit = edit }, Cmd.none )
-
-        SetRoute location ->
-            ( setRoute location model, Cmd.none )
 
         Tick t ->
             let
@@ -228,12 +126,8 @@ update msg model =
                         * min
                         |> toFloat
 
-                withTimeZone =
-                    getTimezoneOffset (Date.fromTime model.checkInAt)
-                        |> (\x ->
-                                x
-                                    * -1
-                                    |> min2Millsec
-                           )
+                newTime =
+                    Time.posixToMillis t
+                        - Time.posixToMillis model.checkInAt
             in
-            ( { model | timeSinceLastCheckIn = t - model.checkInAt - withTimeZone }, Cmd.none )
+            ( { model | timeSinceLastCheckIn = Time.millisToPosix newTime }, Cmd.none )

@@ -1,0 +1,93 @@
+.alert:empty { display: none; }
+
+ul {
+  margin: 8px;
+}
+
+li {
+  border-radius: 5px;
+  padding: 4px;
+}
+
+.header,
+.marketing {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.row {
+  display: block;
+  margin: 8px;
+}
+
+.contract-header {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.marketing {
+  margin: 35px 0;
+}
+
+.monthly-count {
+  display: inline-block;
+  width: 3em;
+  text-align: center;
+  border: 1px solid #3BA99C;
+  border-radius: 5px;
+  padding: 4px;
+  margin-left: 4px;
+  margin-right: 4px;
+  background-color: #3BA99C;
+  color: white;
+}
+
+.content {
+  margin-top: 50px
+}
+
+.pure-button {
+  margin-right: 10px; 
+}
+
+.check-timer {
+  margin-top: 20px;
+}
+
+.time-period {
+  display: inline-block;
+  margin-top: 4px;
+  margin-right: 10px;
+}
+
+.time-period .amount {
+  font-size: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  background: #ccc;
+}
+
+.time-period .period {
+  font-size: 50%;
+  display: block;
+  color: #666;
+  padding-top: 12px;
+  text-transform: uppercase;
+}
+
+.nav-item {
+  display: inline-block;
+  padding: 4px;
+}
+.nav-item.active {
+  background-color: #9ac8c3;
+}
+
+.nav-link {
+  padding: 4px;
+}

@@ -1,10 +1,8 @@
 module View exposing (view)
 
+import Browser
 import Charts exposing (barChart)
-import Date
-import Date.Extra.Compare exposing (Compare2(SameOrBefore))
-import Date.Extra.Duration exposing (DeltaRecord)
-import DateUtil exposing (TimeDuration, addTimeDurations, dateToMonthStr, emptyTimeDuration, monthOrder, periodToStr, sortDates, toMonthStr, toTimeDuration)
+import DateUtil exposing (Compare2(..), Date, TimeDuration, addTimeDurations, dateToMonthStr, emptyTimeDuration, monthOrder, periodToStr, sortDates, toMonthStr, toTimeDuration)
 import Dict
 import EditEvent exposing (edit)
 import Html exposing (Html, a, button, div, h3, h5, li, p, text, ul)
@@ -12,11 +10,12 @@ import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
 import Invoice exposing (invoiceView)
 import Last6 exposing (last6)
-import Msgs exposing (Msg(ViewEvent))
+import Msgs exposing (Msg(..))
 import Seq exposing (desc, groupBy)
+import Time exposing (..)
 import TimeSinceLastCheckIn exposing (viewTimeSinceLastCheckIn)
-import Types exposing (DayItem, Event, Model, Page(Home, Invoice), emptyEvent, timeDifference)
-import ViewMsgs exposing (ViewMsg(CheckIn, CheckOut, CreateInvoice, GoHome, Load, TabClicked))
+import Types exposing (DayItem, Event, Model, Page(..), emptyEvent, timeDifference)
+import ViewMsgs exposing (ViewMsg(..))
 
 
 monthItem : { count : Int, year : Int, month : Int, total : TimeDuration, monthlyDayCount : List { hour : Int, minute : Int } } -> Html Msg
@@ -26,14 +25,14 @@ monthItem { count, year, month, total, monthlyDayCount } =
             periodToStr total
 
         dayCount =
-            toString count
+            String.fromInt count
 
         dates =
             ( year, month )
     in
     li [ class "list-group-item list-group-item-success row" ]
         [ h5 [ class "list-group-item-heading" ]
-            [ text (toMonthStr month ++ " " ++ toString year) ]
+            [ text (toMonthStr month ++ " " ++ String.fromInt year) ]
         , div
             [ class "row" ]
             [ p [ class "list-group-item-text monthly-hours col-md-6 col-xs-6" ] [ text totalStr ]
@@ -47,7 +46,7 @@ monthItem { count, year, month, total, monthlyDayCount } =
         ]
 
 
-monthlySum : List { a | diff : DeltaRecord } -> TimeDuration
+monthlySum : List { a | diff : Date } -> TimeDuration
 monthlySum month =
     List.foldl addTimeDurations emptyTimeDuration (List.map (\y -> toTimeDuration y.diff) month)
 
@@ -56,18 +55,11 @@ totalsRect :
     ( Int
     , List
         { a
-            | date : Date.Date
-            , diff :
-                { day : Int
-                , millisecond : Int
-                , month : Int
-                , second : Int
-                , year : Int
-                , hour : Int
-                , minute : Int
-                }
+            | date : Posix
+            , diff : Date
         }
     )
+    -> Zone
     ->
         { count : Int
         , month : Int
@@ -79,7 +71,7 @@ totalsRect :
         , total : TimeDuration
         , year : Int
         }
-totalsRect rec =
+totalsRect rec zone =
     let
         data =
             Tuple.second rec
@@ -87,7 +79,7 @@ totalsRect rec =
         year =
             case List.head data of
                 Just d ->
-                    Date.year d.date
+                    Time.toYear zone d.date
 
                 _ ->
                     0
@@ -102,24 +94,8 @@ totalsRect rec =
     }
 
 
-monthlyTotals :
-    Bool
-    ->
-        List
-            { a
-                | diff :
-                    { day : Int
-                    , hour : Int
-                    , millisecond : Int
-                    , minute : Int
-                    , month : Int
-                    , second : Int
-                    , year : Int
-                    }
-                , date : Date.Date
-            }
-    -> Html Msg
-monthlyTotals active sorted =
+monthlyTotals : Bool -> List DayItem -> Zone -> Html Msg
+monthlyTotals active sorted zone =
     let
         paneClass =
             if active then
@@ -129,11 +105,11 @@ monthlyTotals active sorted =
                 "tab-pane"
 
         perMonth =
-            groupBy (\x -> monthOrder x.date) sorted
+            groupBy (\x -> monthOrder x.date zone) sorted
                 |> Dict.toList
 
         sortedMonthTotals =
-            List.map totalsRect perMonth
+            List.map (\p -> totalsRect p zone) perMonth
                 |> List.sortWith (\x y -> desc x.month y.month)
     in
     div [ class paneClass ]
@@ -142,11 +118,11 @@ monthlyTotals active sorted =
         ]
 
 
-sortedDayItems : List Event -> List DayItem
-sortedDayItems events =
+sortedDayItems : List Event -> Zone -> List DayItem
+sortedDayItems events zone =
     let
         grouped =
-            groupBy (\x -> dateToMonthStr x.inserted_at) events
+            groupBy (\x -> dateToMonthStr x.inserted_at zone) events
 
         dayItems =
             List.map
@@ -158,7 +134,7 @@ sortedDayItems events =
                     { dateStr = Tuple.first x
                     , diff = timeDifference (Tuple.second x)
                     , date = date
-                    , dayNumber = Date.day date
+                    , dayNumber = Time.toDay zone date
                     , events = Tuple.second x
                     }
                 )
@@ -178,22 +154,22 @@ yearTab currentTab ( year, _ ) =
                 ""
     in
     li [ "nav-item" ++ active |> class ]
-        [ a [ class "nav-link", onClick (ViewEvent (TabClicked year)) ] [ text (toString year) ]
+        [ div [ class "nav-link", onClick (ViewEvent (TabClicked year)) ] [ text (String.fromInt year) ]
         ]
 
 
-groupedByYear : List Event -> List ( Int, List Event )
-groupedByYear events =
-    groupBy (\x -> Date.year x.inserted_at) events
+groupedByYear : List Event -> Zone -> List ( Int, List Event )
+groupedByYear events zone =
+    groupBy (\x -> Time.toYear zone x.inserted_at) events
         |> Dict.toList
         |> List.sortWith (\( x, _ ) ( y, _ ) -> desc x y)
 
 
-yearTabs : Int -> List Event -> Html Msg
-yearTabs currentTab events =
+yearTabs : Int -> List Event -> Zone -> Html Msg
+yearTabs currentTab events zone =
     let
         list =
-            groupedByYear events
+            groupedByYear events zone
     in
     div []
         [ ul [ class "nav nav-pills" ]
@@ -203,28 +179,28 @@ yearTabs currentTab events =
                 (\( y, es ) ->
                     let
                         sorted =
-                            sortedDayItems es
+                            sortedDayItems es zone
                     in
-                    monthlyTotals (y == currentTab) sorted
+                    monthlyTotals (y == currentTab) sorted zone
                 )
                 list
             )
         ]
 
 
-eventsComponent : Int -> List Event -> Html Msg
-eventsComponent currentTab events =
+eventsComponent : Int -> List Event -> Zone -> Html Msg
+eventsComponent currentTab events zone =
     let
         monthlySorted =
-            sortedDayItems events
+            sortedDayItems events zone
     in
-    div [ class "container-fluid" ]
+    div [ class "container" ]
         [ last6 monthlySorted
-        , yearTabs currentTab events
+        , yearTabs currentTab events zone
         ]
 
 
-view : Model -> Html Msg
+view : Model -> Html.Html Msg
 view model =
     let
         event =
@@ -232,12 +208,12 @@ view model =
                 |> Maybe.withDefault emptyEvent
 
         eventText =
-            toString (1000 * event.posix) ++ " " ++ toString event.inserted_at
+            String.fromInt (1000 * event.posix) ++ " " ++ String.fromInt (Time.toMillis model.zone event.inserted_at)
 
         shouldEdit =
             case model.edit of
                 Just dayItem ->
-                    edit dayItem
+                    edit dayItem model.zone
 
                 _ ->
                     div [] []
@@ -257,9 +233,13 @@ view model =
                     , div [ class "row check-timer" ] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
                     , div [ class "row check-timer" ] [ text eventText ]
                     , shouldEdit
-                    , eventsComponent model.currentTab model.events
+                    , eventsComponent model.currentTab model.events model.zone
                     ]
                 ]
 
         Invoice when duration count ->
-            invoiceView when duration count
+            div [] []
+
+
+
+--            invoiceView when duration count

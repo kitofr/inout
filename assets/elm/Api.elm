@@ -2,23 +2,16 @@ module Api exposing (check, deleteEvent, getEvents, loadContract, update, update
 
 import ApiMsgs
     exposing
-        ( ApiMsg
-            ( CheckEvent
-            , DeleteEvent
-            , LoadContract
-            , LoadEvents
-            , UpdateEvent
-            )
+        ( ApiMsg(..)
         )
-import Date exposing (Date)
-import Date.Extra.Compare exposing (Compare2(SameOrBefore))
-import Date.Extra.Format exposing (isoStringNoOffset)
-import DateUtil exposing (sortDates)
+import DateUtil exposing (Compare2(..), sortDates)
 import Http
+import Iso8601 exposing (decoder)
 import Json.Decode as JD exposing (Decoder, field, succeed)
-import Json.Decode.Extra exposing ((|:))
+import Json.Decode.Extra exposing (andMap)
 import Json.Encode as Encode
-import Msgs exposing (Msg(ApiEvent))
+import Msgs exposing (Msg(..))
+import Time
 import Types exposing (Contract, Event, Model)
 
 
@@ -74,13 +67,13 @@ update msg model =
                     case first of
                         Just e ->
                             if e.status == "check-in" then
-                                Date.toTime e.inserted_at
+                                e.inserted_at
 
                             else
-                                0
+                                Time.millisToPosix 0
 
                         _ ->
-                            0
+                            Time.millisToPosix 0
             in
             ( { model | events = ev, checkInAt = checkedIn }, Cmd.none )
 
@@ -127,8 +120,8 @@ encodeEvent { id, status, location, inserted_at, updated_at } =
                 [ ( "id", Encode.int <| id )
                 , ( "status", Encode.string <| status )
                 , ( "location", Encode.string <| location )
-                , ( "inserted_at", Encode.string <| isoStringNoOffset inserted_at )
-                , ( "updated_at", Encode.string <| isoStringNoOffset updated_at )
+                , ( "inserted_at", Encode.string <| Iso8601.fromTime inserted_at )
+                , ( "updated_at", Encode.string <| Iso8601.fromTime updated_at )
                 ]
           )
         ]
@@ -150,7 +143,7 @@ updateRequest url event =
 updateEvent : Event -> String -> Cmd Msg
 updateEvent event hostUrl =
     Http.send (ApiEvent << UpdateEvent) <|
-        updateRequest (hostUrl ++ "/events/" ++ toString event.id) event
+        updateRequest (hostUrl ++ "/events/" ++ String.fromInt event.id) event
 
 
 deleteRequest : String -> Http.Request String
@@ -169,13 +162,14 @@ deleteRequest url =
 deleteEvent : Event -> String -> Cmd Msg
 deleteEvent event hostUrl =
     Http.send (ApiEvent << DeleteEvent) <|
-        deleteRequest (hostUrl ++ "/events/" ++ toString event.id)
+        deleteRequest (hostUrl ++ "/events/" ++ String.fromInt event.id)
 
 
 decodeContracts : JD.Decoder (List Contract)
 decodeContracts =
     JD.succeed identity
-        |: field "contracts" (JD.list decodeContract)
+        |> andMap
+            (field "contracts" (JD.list decodeContract))
 
 
 decodeContract : JD.Decoder Contract
@@ -187,33 +181,19 @@ decodeContract =
 decodeEvents : JD.Decoder (List Event)
 decodeEvents =
     JD.succeed identity
-        |: field "events" (JD.list decodeEvent)
-
-
-cetTime : String -> Decoder Date
-cetTime str =
-    let
-        withTimeZone =
-            str ++ "+02:00"
-    in
-    case Date.fromString withTimeZone of
-        Ok d ->
-            JD.succeed d
-
-        Err e ->
-            JD.fail e
+        |> andMap (field "events" (JD.list decodeEvent))
 
 
 decodeEvent : JD.Decoder Event
 decodeEvent =
-    JD.map Event
-        (field "id" JD.int)
-        |: field "status" JD.string
-        |: field "location" JD.string
-        |: field "device" JD.string
-        |: field "posix" JD.int
-        |: (field "inserted_at" JD.string |> JD.andThen cetTime)
-        |: (field "updated_at" JD.string |> JD.andThen cetTime)
+    JD.succeed Event
+        |> andMap (field "id" JD.int)
+        |> andMap (field "status" JD.string)
+        |> andMap (field "location" JD.string)
+        |> andMap (field "device" JD.string)
+        |> andMap (field "posix" JD.int)
+        |> andMap (field "inserted_at" decoder)
+        |> andMap (field "updated_at" decoder)
 
 
 createCheck : { status : String, location : String } -> Encode.Value

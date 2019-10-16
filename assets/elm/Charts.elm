@@ -1,10 +1,10 @@
 module Charts exposing (barChart)
 
-import List
 import Html exposing (Html)
-import Svg exposing (svg, rect)
-import Svg.Attributes exposing (viewBox, width, stroke, strokeWidth, fill, x, y, height, transform)
+import List
 import Seq
+import Svg exposing (rect, svg)
+import Svg.Attributes exposing (fill, height, stroke, strokeWidth, transform, viewBox, width, x, y)
 
 
 rainbowColors : List String
@@ -12,12 +12,13 @@ rainbowColors =
     [ "#f80c12"
     , "#ee1100"
     , "#ff3311"
-      --    , "#ff4422"
-      --    , "#ff6644"
-      --    , "#ff9933"
-      --    , "#feae2d"
-      --    , "#ccbb33"
-      --    , "#d0c310"
+
+    --    , "#ff4422"
+    --    , "#ff6644"
+    --    , "#ff9933"
+    --    , "#feae2d"
+    --    , "#ccbb33"
+    --    , "#d0c310"
     , "#aacc22"
     , "#69d025"
     , "#22ccaa"
@@ -43,26 +44,26 @@ barChart dayCount =
             barSize * 26
 
         viewSizeStr =
-            viewSize |> toString
+            viewSize |> String.fromInt
     in
-        svg [ viewBox ("0 0 " ++ viewSizeStr ++ " 110"), width (viewSizeStr ++ "px") ]
-            (List.indexedMap
-                (\i day ->
-                    let
-                        color =
-                            Seq.nth (day.hour % List.length rainbowColors) rainbowColors "#442299"
-                    in
-                        rect
-                            [ stroke "#333"
-                            , strokeWidth "1"
-                            , fill color
-                            , x (toString ((i * barSize) + offSet))
-                            , y "5"
-                            , width (barSize - 2 |> toString)
-                            , height (toString (1 + day.hour) ++ "0")
-                            , transform "rotate(180) translate(-300 -100)"
-                            ]
-                            []
-                )
-                (List.reverse dayCount)
+    svg [ viewBox ("0 0 " ++ viewSizeStr ++ " 110"), width (viewSizeStr ++ "px") ]
+        (List.indexedMap
+            (\i day ->
+                let
+                    color =
+                        Seq.nth (modBy (List.length rainbowColors) day.hour) rainbowColors "#442299"
+                in
+                rect
+                    [ stroke "#333"
+                    , strokeWidth "1"
+                    , fill color
+                    , x (String.fromInt ((i * barSize) + offSet))
+                    , y "5"
+                    , width (barSize - 2 |> String.fromInt)
+                    , height (String.fromInt (1 + day.hour) ++ "0")
+                    , transform "rotate(180) translate(-300 -100)"
+                    ]
+                    []
             )
+            (List.reverse dayCount)
+        )

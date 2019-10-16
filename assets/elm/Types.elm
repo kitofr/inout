@@ -9,11 +9,10 @@ module Types exposing
     , timeDifference
     )
 
-import Date exposing (Date)
-import Date.Extra.Compare exposing (Compare2(SameOrBefore))
-import Date.Extra.Duration exposing (DeltaRecord, diff)
-import DateUtil exposing (TimeDuration, sortDates)
-import Time exposing (Time)
+import Browser.Navigation as Nav
+import DateUtil exposing (Compare2(..), Date, TimeDuration, sortDates)
+import Time exposing (..)
+import Url
 
 
 type alias Flags =
@@ -26,8 +25,8 @@ type alias Event =
     , location : String
     , device : String
     , posix : Int
-    , inserted_at : Date
-    , updated_at : Date
+    , inserted_at : Posix
+    , updated_at : Posix
     }
 
 
@@ -47,19 +46,20 @@ type alias Contract =
 type alias Model =
     { events : List Event
     , hostUrl : String
-    , checkInAt : Time
+    , checkInAt : Posix
+    , zone : Zone
     , page : Page
     , edit : Maybe DayItem
-    , timeSinceLastCheckIn : Time
+    , timeSinceLastCheckIn : Posix
     , currentTab : Int
     , contract : Contract
     }
 
 
 type alias DayItem =
-    { date : Date
+    { date : Posix
     , dateStr : String
-    , diff : DeltaRecord
+    , diff : Date
     , dayNumber : Int
     , events : List Event
     }
@@ -77,26 +77,42 @@ sortEvents events order =
 
 emptyEvent : Event
 emptyEvent =
-    let
-        date =
-            case Date.fromString "2000-01-01" of
-                Ok val ->
-                    val
-
-                Err _ ->
-                    Debug.crash "Can't create date"
-    in
     { id = 0
     , status = "empty"
     , location = "elm"
     , device = "none"
     , posix = 0
-    , inserted_at = date
-    , updated_at = date
+    , inserted_at = Time.millisToPosix 0
+    , updated_at = Time.millisToPosix 0
     }
 
 
-timeDifference : List Event -> DeltaRecord
+toDate : Time.Zone -> Time.Posix -> Date
+toDate zone time =
+    { year = Time.toYear zone time
+    , month = Time.toMonth zone time
+    , day = Time.toDay zone time
+    , weekDay = Time.toWeekday zone time
+    , hour = Time.toHour zone time
+    , minute = Time.toMinute zone time
+    , second = Time.toSecond zone time
+    , millisecond = Time.toMillis zone time
+    , posix = time
+    , zone = zone
+    }
+
+
+diff : Posix -> Posix -> Date
+diff a b =
+    let
+        d =
+            Time.posixToMillis a
+                - Time.posixToMillis b
+    in
+    toDate Time.utc (Time.millisToPosix d)
+
+
+timeDifference : List Event -> Date
 timeDifference coll =
     let
         sorted =

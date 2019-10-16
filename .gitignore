@@ -29,3 +29,5 @@ web/static/vendor/inout.js
 web/elm/elm.js
 latest.dump
 latest.dump.old
+.vscode/
+inout.code-workspace

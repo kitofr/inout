@@ -14,7 +14,7 @@ timeOption : String -> Int -> Html a
 timeOption selectedValue time =
     let
         val =
-            time |> toString |> zeroPad
+            time |> String.fromInt |> zeroPad
 
         current =
             if val == selectedValue then

@@ -4,12 +4,12 @@ import DateUtil exposing (dateStr, timeStr, timeTuple)
 import Html exposing (Html, button, div, h3, li, span, text, ul)
 import Html.Attributes exposing (class, style, type_, value)
 import Html.Events exposing (on, onClick, onInput, targetValue)
-import HtmlExtra exposing ((=>))
 import InputExtra exposing (dateInput, timeInput)
 import Json.Decode exposing (map)
-import Msgs exposing (Msg(ViewEvent))
+import Msgs exposing (Msg(..))
+import Time exposing (..)
 import Types exposing (DayItem, Event)
-import ViewMsgs exposing (ViewMsg(CloseEdit, DateUpdated, Delete, HourSelected, MinuteSelected, TimeUpdated, Update))
+import ViewMsgs exposing (ViewMsg(..))
 
 
 onChange : (String -> msg) -> Html.Attribute msg
@@ -17,11 +17,11 @@ onChange tagger =
     on "change" (Json.Decode.map tagger Html.Events.targetValue)
 
 
-editEvent : Types.Event -> Html Msg
-editEvent event =
+editEvent : Types.Event -> Zone -> Html Msg
+editEvent event zone =
     let
         marginLeft px =
-            style [ "margin-left" => (toString px ++ "px") ]
+            style "margin-left" (String.fromInt px ++ "px")
 
         shortText text =
             case text of
@@ -33,14 +33,19 @@ editEvent event =
 
         ( hourPart, minutePart, _ ) =
             event.inserted_at
-                |> timeTuple
+                |> (\posix -> timeTuple posix zone)
     in
     li [ class "list-group-item" ]
         [ div []
             [ span
-                [ style [ "width" => "30px", "display" => "inline-block" ], class (shortText event.status) ]
+                [ (\( a, b ) -> style a b) ( "width", "30px" ), (\( a, b ) -> style a b) ( "display", "inline-block" ), class (shortText event.status) ]
                 []
-            , dateInput [ marginLeft 10, onInput (ViewEvent << DateUpdated event), value (dateStr event.inserted_at) ] []
+            , dateInput
+                [ marginLeft 10
+                , onInput (ViewEvent << DateUpdated event)
+                , value (dateStr event.inserted_at zone)
+                ]
+                []
             , timeInput
                 [ marginLeft 10
                 , onChange (ViewEvent << HourSelected event)
@@ -61,15 +66,14 @@ editEvent event =
         ]
 
 
-edit : DayItem -> Html Msg
-edit dayItem =
+edit : DayItem -> Zone -> Html Msg
+edit dayItem zone =
     div []
-        [ h3 [ style [ "display" => "inline-block" ] ] [ text ("Edit: " ++ dayItem.dateStr) ]
+        [ h3 [ (\( a, b ) -> style a b) ( "display", "inline-block" ) ]
+            [ text ("Edit: " ++ dayItem.dateStr) ]
         , button
-            [ style
-                [ "display" => "inline-block"
-                , "margin-left" => "20px"
-                ]
+            [ (\( a, b ) -> style a b) ( "display", "inline-block" )
+            , (\( a, b ) -> style a b) ( "margin-left", "20px" )
             , type_ "button"
             , class "btn btn-warning"
             , onClick (ViewEvent CloseEdit)
@@ -77,5 +81,5 @@ edit dayItem =
             [ span [] [ text "close" ]
             ]
         , ul [ class "list-group" ]
-            (List.map editEvent dayItem.events)
+            (List.map (\p -> editEvent p zone) dayItem.events)
         ]
