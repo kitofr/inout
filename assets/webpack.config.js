@@ -40,6 +40,7 @@ module.exports = (env, options) => ({
           options: {
             pathToElm: "node_modules/.bin/elm",
             debug: options.mode === "development"
+            optimize: options.mode === "production"
           }
         }
       }
