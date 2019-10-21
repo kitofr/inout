@@ -47,10 +47,6 @@ update msg model =
             Api.update apiMsg model
 
         ViewEvent (TabClicked year) ->
-            let
-                _ =
-                    Debug.log "year " year
-            in
             ( { model | currentTab = year }, Cmd.none )
 
         ViewEvent CloseEdit ->
@@ -87,7 +83,7 @@ update msg model =
                         |> Maybe.withDefault 0
 
                 inserted =
-                    Debug.log "minute" (changeMinuteInPosix model.zone event.inserted_at minute)
+                    changeMinuteInPosix model.zone event.inserted_at minute
 
                 edit =
                     updateEdit model event inserted
@@ -101,7 +97,7 @@ update msg model =
                         |> Maybe.withDefault 0
 
                 inserted =
-                    Debug.log "hour" (changeHourInPosix model.zone event.inserted_at hour)
+                    changeHourInPosix model.zone event.inserted_at hour
 
                 edit =
                     updateEdit model event inserted
@@ -111,7 +107,7 @@ update msg model =
         ViewEvent (DateUpdated event date) ->
             let
                 inserted =
-                    Debug.log "date" (changeDateInPosix model.zone event.inserted_at date)
+                    changeDateInPosix model.zone event.inserted_at date
 
                 edit =
                     updateEdit model event inserted

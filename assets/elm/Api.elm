@@ -49,10 +49,6 @@ update msg model =
             ( { model | contract = contract }, Cmd.none )
 
         LoadContract (Err err) ->
-            let
-                _ =
-                    Debug.log "Could not load contract: " err
-            in
             ( model, Cmd.none )
 
         LoadEvents (Ok events) ->
@@ -98,10 +94,6 @@ check inOrOut contract hostUrl =
 
 loadContract : String -> Cmd Msg
 loadContract hostUrl =
-    let
-        _ =
-            Debug.log "loading contracts like a boss... "
-    in
     Http.send (ApiEvent << LoadContract) <|
         Http.get (hostUrl ++ "/contracts.json") decodeContracts
 

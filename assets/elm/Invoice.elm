@@ -30,7 +30,7 @@ pbv : String -> number -> Html Msg
 pbv txt value =
     p []
         [ b [ class "lbl" ] [ text (txt ++ ": ") ]
-        , text (Debug.toString value)
+        , text ">>>><<<<<" --value
         ]
 
 
