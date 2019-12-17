@@ -150,57 +150,61 @@ sortedDayItems events zone =
     dayItems |> List.sortWith (\x y -> sortDates SameOrBefore x.date y.date)
 
 
+yearTab : Int -> ( Int, List Event ) -> Element Msg
+yearTab currentTab ( year, _ ) =
+    let
+        active =
+            if currentTab == year then
+                Background.color <| rgb255 199 244 199
 
---yearTab : Int -> ( Int, List Event ) -> Html Msg
---yearTab currentTab ( year, _ ) =
---    let
---        active =
---            if currentTab == year then
---                " active"
---
---            else
---                ""
---    in
---    li [ "nav-item" ++ active |> class ]
---        [ div [ class "nav-link", onClick (ViewEvent (TabClicked year)) ] [ text (String.fromInt year) ]
---        ]
---groupedByYear : List Event -> Zone -> List ( Int, List Event )
---groupedByYear events zone =
---    groupBy (\x -> Time.toYear zone x.inserted_at) events
---        |> Dict.toList
---        |> List.sortWith (\( x, _ ) ( y, _ ) -> desc x y)
---
---yearTabs : Int -> List Event -> Zone -> Html Msg
---yearTabs currentTab events zone =
---    let
---        list =
---            groupedByYear events zone
---    in
---    div []
---        [ ul [ class "nav nav-pills" ]
---            (List.map (yearTab currentTab) list)
---        , div [ class "tab-content" ]
---            (List.map
---                (\( y, es ) ->
---                    let
---                        sorted =
---                            sortedDayItems es zone
---                    in
---                    monthlyTotals (y == currentTab) sorted zone
---                )
---                list
---            )
---        ]
---eventsComponent : Int -> List Event -> Zone -> Html Msg
---eventsComponent currentTab events zone =
---    let
---        monthlySorted =
---            sortedDayItems events zone
---    in
---    el [ class "container" ]
---        [ last6 monthlySorted
---        , yearTabs currentTab events zone
---        ]
+            else
+                Background.color <| rgb255 199 199 199
+    in
+    el [ active, padding 2 ]
+        (Input.button [] { onPress = Just (ViewEvent (TabClicked year)), label = text (String.fromInt year) })
+
+
+groupedByYear : List Event -> Zone -> List ( Int, List Event )
+groupedByYear events zone =
+    groupBy (\x -> Time.toYear zone x.inserted_at) events
+        |> Dict.toList
+        |> List.sortWith (\( x, _ ) ( y, _ ) -> desc x y)
+
+
+yearTabs : Int -> List Event -> Zone -> Element Msg
+yearTabs currentTab events zone =
+    let
+        list =
+            groupedByYear events zone
+    in
+    column []
+        [ row []
+            (List.map (yearTab currentTab) list)
+
+        --, div [ class "tab-content" ]
+        --    (List.map
+        --        (\( y, es ) ->
+        --            let
+        --                sorted =
+        --                    sortedDayItems es zone
+        --            in
+        --            monthlyTotals (y == currentTab) sorted zone
+        --        )
+        --        list
+        --    )
+        ]
+
+
+eventsComponent : Int -> List Event -> Zone -> Element Msg
+eventsComponent currentTab events zone =
+    let
+        monthlySorted =
+            sortedDayItems events zone
+    in
+    row []
+        [ -- last6 monthlySorted
+          yearTabs currentTab events zone
+        ]
 
 
 view : Model -> Element Msg
@@ -230,27 +234,30 @@ view model =
     case model.page of
         Home ->
             column
-                [ width fill
-                , Border.color <| rgb255 200 200 200
-                , Border.widthEach { bottom = 1, top = 0, left = 0, right = 0 }
-                ]
-                [ row [ width fill, height (px 55) ]
-                    [ el [] <|
-                        row []
-                            [ text "Current contract: "
-                            , link [] { url = "./contracts", label = text model.contract.name }
-                            ]
-                    , el [ alignRight ] (link [] { url = "./events", label = text "Events" })
+                [ width fill ]
+                [ column
+                    [ width fill
+                    , Border.color <| rgb255 200 200 200
+                    , Border.widthEach { bottom = 1, top = 0, left = 0, right = 0 }
                     ]
-                , row [ spacing 2, height (px 55), centerX ]
-                    [ Input.button (buttonStyle (rgb255 163 244 164)) { onPress = Just (ViewEvent CheckIn), label = text "check in" }
-                    , Input.button (buttonStyle (rgb255 164 164 244)) { onPress = Just (ViewEvent CheckOut), label = text "check out" }
-                    ]
+                    [ row [ width fill ]
+                        [ el [] <|
+                            row []
+                                [ text "Current contract: "
+                                , link [] { url = "./contracts", label = text model.contract.name }
+                                ]
+                        , el [ alignRight ] (link [] { url = "./events", label = text "Events" })
+                        ]
+                    , row [ spacing 4, height (px 55), centerX ]
+                        [ Input.button (buttonStyle (rgb255 163 244 164)) { onPress = Just (ViewEvent CheckIn), label = text "check in" }
+                        , Input.button (buttonStyle (rgb255 164 164 244)) { onPress = Just (ViewEvent CheckOut), label = text "check out" }
+                        ]
 
-                --, row [] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
-                -- -- -- -- -- -- -- -- -- , row [ centerX ] [ text eventText ]
-                --, shouldEdit
-                --, eventsComponent model.currentTab model.events model.zone
+                    --, row [] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
+                    -- -- -- -- -- -- -- -- -- , row [ centerX ] [ text eventText ]
+                    --, shouldEdit
+                    ]
+                , eventsComponent model.currentTab model.events model.zone
                 ]
 
         Invoice when duration count ->
