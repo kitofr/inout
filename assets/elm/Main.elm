@@ -3,6 +3,7 @@ module Main exposing (main)
 import Api exposing (getEvents, loadContract)
 import Browser
 import Browser.Navigation as Nav
+import Element as Element
 import Msgs exposing (Msg(..))
 import Time exposing (..)
 import Types exposing (Contract, Flags, Model, Page(..))
@@ -15,7 +16,7 @@ main : Program Flags Model Msg
 main =
     Browser.element
         { init = init
-        , view = view
+        , view = \model -> Element.layout [] (view model)
         , update = Update.update
         , subscriptions = subscriptions
 
