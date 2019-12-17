@@ -6,6 +6,9 @@ import DateUtil exposing (Compare2(..), Date, TimeDuration, addTimeDurations, da
 import Dict
 import EditEvent exposing (edit)
 import Element exposing (..)
+import Element.Background as Background
+import Element.Border as Border
+import Element.Font as Font
 import Element.Input as Input
 import Html exposing (Html)
 import Html.Attributes exposing (class, href)
@@ -216,22 +219,36 @@ view model =
         --            edit dayItem model.zone
         --        _ ->
         --            row [] []
+        buttonStyle bgColor =
+            [ padding 2
+            , Border.width 1
+            , Border.rounded 3
+            , Border.color <| rgb255 200 200 200
+            , Background.color <| bgColor
+            ]
     in
     case model.page of
         Home ->
-            row [ height fill, width fill ]
-                [ row []
-                    [ el [] (link [] { url = "./contracts", label = text ("Current contract: " ++ model.contract.name) })
-                    , el [] (link [] { url = "./events", label = text "Events" })
+            column
+                [ width fill
+                , Border.color <| rgb255 200 200 200
+                , Border.widthEach { bottom = 1, top = 0, left = 0, right = 0 }
+                ]
+                [ row [ width fill, height (px 55) ]
+                    [ el [] <|
+                        row []
+                            [ text "Current contract: "
+                            , link [] { url = "./contracts", label = text model.contract.name }
+                            ]
+                    , el [ alignRight ] (link [] { url = "./events", label = text "Events" })
                     ]
-                , row []
-                    [ Input.button [] { onPress = Just (ViewEvent CheckIn), label = text "check in" }
-                    , Input.button [] { onPress = Just (ViewEvent CheckOut), label = text "check out" }
+                , row [ spacing 2, height (px 55), centerX ]
+                    [ Input.button (buttonStyle (rgb255 163 244 164)) { onPress = Just (ViewEvent CheckIn), label = text "check in" }
+                    , Input.button (buttonStyle (rgb255 164 164 244)) { onPress = Just (ViewEvent CheckOut), label = text "check out" }
                     ]
 
                 --, row [] (viewTimeSinceLastCheckIn model.timeSinceLastCheckIn)
-                , row [] [ text eventText ]
-
+                -- -- -- -- -- -- -- -- -- , row [ centerX ] [ text eventText ]
                 --, shouldEdit
                 --, eventsComponent model.currentTab model.events model.zone
                 ]
