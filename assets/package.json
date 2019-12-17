@@ -1,7 +1,7 @@
 {
   "name": "inout",
   "engines": {
-    "node": "10.16.3"
+    "node": "12.13.0"
   },
   "repository": {},
   "scripts": {
