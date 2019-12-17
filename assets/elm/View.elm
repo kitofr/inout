@@ -35,30 +35,15 @@ monthItem { count, year, month, total, monthlyDayCount } =
         dates =
             ( year, month )
     in
-    column [ width fill, Background.color (rgb 55 123 39) ]
-        [ row [ width fill ]
+    column [ width fill, padding 2, Border.rounded 4, Border.width 1 ]
+        [ row [ width fill, padding 2 ]
+            [ text (toMonthStr month ++ " " ++ String.fromInt year) ]
+        , row [ width fill ]
             [ column (border (rgb 155 123 39)) [ text totalStr ]
             , column [ alignRight ] [ text (dayCount ++ " days") ]
             ]
-        , row [ width fill ] [ html (barChart monthlyDayCount) ]
+        , row [ width fill, padding 2 ] [ el [ centerX ] (html (barChart monthlyDayCount)) ]
         ]
-
-
-
---li [ class "list-group-item list-group-item-success row" ]
---    [ h5 [ class "list-group-item-heading" ]
---        [ text (toMonthStr month ++ " " ++ String.fromInt year) ]
---    , div
---        [ class "row" ]
---        [ p [ class "list-group-item-text monthly-hours col-md-6 col-xs-6" ] [ text totalStr ]
---        , p [ class "list-group-item-text monthly-count col-md-1 col-xs-2" ] [ text dayCount ]
---        , p [ class "list-group-item-text col-md-1 col-xs-3" ]
---            [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent (CreateInvoice dates total count)) ] [ text "Invoice" ] ]
---        ]
---    , div [ class "row" ]
---        [ p [ class "list-group-item-text monthly-chart col-md-8" ] [ barChart monthlyDayCount ]
---        ]
---    ]
 
 
 monthlySum : List { a | diff : Date } -> TimeDuration
@@ -134,9 +119,9 @@ monthlyTotals active sorted zone =
             List.map (\p -> totalsRect p zone) perMonth
                 |> List.sortWith (\x y -> desc x.month y.month)
     in
-    column (width fill :: border (rgb255 49 49 49))
+    column [ width fill ]
         [ List.map monthItem sortedMonthTotals
-            |> column [ width fill, height fill, Background.color (rgb 199 238 38) ]
+            |> column [ width fill, height fill, spacing 3 ]
         ]
 
 
