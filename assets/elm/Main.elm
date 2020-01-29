@@ -43,7 +43,7 @@ init flags =
       , timeSinceLastCheckIn = Time.millisToPosix 0
       , edit = Nothing
       , page = Home
-      , currentTab = 2019
+      , currentTab = 2020
       , contract = Contract "None"
       , zone = Time.utc
 
