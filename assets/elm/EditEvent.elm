@@ -39,7 +39,7 @@ editEvent event zone =
         [ div []
             [ span
                 [ (\( a, b ) -> style a b) ( "width", "30px" ), (\( a, b ) -> style a b) ( "display", "inline-block" ), class (shortText event.status) ]
-                []
+                [ event.status ]
             , dateInput
                 [ marginLeft 10
                 , onInput (ViewEvent << DateUpdated event)
