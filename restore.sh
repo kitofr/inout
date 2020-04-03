@@ -14,3 +14,17 @@ echo "\c postgres"
 echo "drop database inout_dev;"
 echo "ALTER DATABASE db RENAME TO inout_dev;"
 
+echo """inout_dev-# \c postgres
+You are now connected to database "postgres" as user "postgres".
+postgres=# drop database inout_dev;
+DROP DATABASE
+postgres=# ALTER DATABASE d5pugpujpktpup RENAME TO inout_dev;
+ALTER DATABASE
+postgres=# \c inout_dev ;
+You are now connected to database "inout_dev" as user "postgres".
+inout_dev=# select * from users;
+ id |      email       |                       crypted_password                       |     inserted_at     |     updated_at
+----+------------------+--------------------------------------------------------------+---------------------+---------------------
+  1 | kitofr@gmail.com | $2b$12$vvjhnpwBSqxaSBrHBCP4surRuD86ndpC3OJrjXBBtRMnhxEZvNDGG | 2016-10-11 18:43:42 | 2016-10-11 18:43:42
+(1 row)
+"""
