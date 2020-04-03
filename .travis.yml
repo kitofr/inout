@@ -1,26 +1,20 @@
 language: elixir
-elixir: '1.8.1'
-
+elixir: 1.8.1
 addons:
   postgresql: '9.4'
-
 services:
-  - postgresql
-
+- postgresql
 env:
- global:
+  global:
   - MIX_ENV=test
-
 before_script:
-  - cp config/travis.exs config/test.exs
-  - mix do ecto.create, ecto.migrate
-
+- cp config/travis.exs config/test.exs
+- mix do ecto.create, ecto.migrate
 script:
-  - mix compile
-
+- mix compile
 deploy:
   provider: heroku
   api_key:
-    secure: pd7WYuQfaysIU8T4gI63Lkxs8Nd5GpEqUWKL/ljASeFh/Q0h9Ekyzw79P5RRc08IFfOEO7WHARV3DmgkbgBpxEoSeD1si1NPE9EobjixJPNpmTneDTGmIPwy1IZbnOdl8CqOypVkDtjwEm6RWjsUZQn4ZknCtl+PhfE6wx2H25OVAXd+6/YJPHPNiYSE/IvJtloFWz3kmXuGhqyH5W7PbfBnteTgMC8gVKaMmc5VApcnY3c7PDyz+ZJbZ939jWtNSYHdquwVoWDrrktdV9vIBfqyQZt+6VTtv+sHRXn5CfeeIzkXxobOyrA6cCLB+bAw+jyGBVPUqbBhYXZTvsiKjELzY5unvSXs9J5ypw0kcpe3Bi9hIJqKFWDiqyY9SRc20DKnfTlXnTyn6XYMgrL7iWQLto7qRrfiWUE3kDIO39eGZC9p/Fz4kiYCVjqTO4y+AmGlB0n58mbnJHNfuW3eXerd4MPURUOfGlrhn09OIxO1O8MkY5Mk3mAfv087VtQ6JtxtKt8WGUDdXSywnDxBbWDUxbkRG1uDnoVjvpdAJcS2e0EUbVtzdg7MYiKkqwf8EVJapOEB3EYsblFY0QkWwqC8k1FsrCuyiHN6rKOFrn/1EbVWt6L+89cz+0+jn/FqmVNTrsuhrbN0d99pQLizdv14XpiyZmqLnGG5Sg/omsE=
+    secure: uLVh2RTvRBOcMpQ2WLS4u9EoiaaB1VpxUgbGLQ190R7CPufTbaO9Zh6TmAxkElVsvRUuwdD4huNdwzamI6Dy4CjikRM3kLxt4hLcsRe7RTzMQAYDfabw0VYy2Ysa11ZfN5O+voN3C1vAIsGWIeU9FhxDOmnsxgpj9Bi5ZMjabGQEd1ld7J2jAhABXDgxq3mhVGSbxLHdG7r2udzw/w8PP6dRBid8x8wbg6UpuhUcIjdSK9JZY6RVpPk1V9B7zB517QLbHhlAoZ9k8Qd43uWHYWxUs89yAmczKG4IHZndHSlSTggZpP4A8H0eWLfusL0OZV9AzAWw5GMOLHvvLI39FPSyqOS8KFnaBATKl0tuRsDi8iZ8x0iGgt7qSJTx9Ebj/IjJyP9z2dvaRDhkQyGSdxg5gAz5tvb7tvaDWVvV/vNhMgQ2im5QhOMNdh7VpsxIzApiMLYbylQkRUXK72mbaeHXVWGh/Y4EJt2egiOL7ZqnkA/tcDEBfh+IyW1y7rsV51GYEWVMwR0jtPN+8Bfc93fZl7duDsNark2oUSdiv5zKjUpUmzgR812nqciS1A5FTADvv5TBAIeoTVPAtg5ThpVJcUDjT1G1pV461kS2LVMpDJRIuXXW6bV9y8XDM+o9KVdsUa5AoKCRMAb6FfWawERwAq3goXZewNJueAorJx8=
   app:
     master: inochut
