@@ -8,7 +8,6 @@ import EditEvent exposing (edit)
 import Html exposing (Html, a, button, div, h3, h5, li, p, text, ul)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
-import Invoice exposing (invoiceView)
 import Last6 exposing (last6)
 import Msgs exposing (Msg(..))
 import Seq exposing (desc, groupBy)
@@ -37,8 +36,6 @@ monthItem { count, year, month, total, monthlyDayCount } =
             [ class "row" ]
             [ p [ class "list-group-item-text monthly-hours col-md-6 col-xs-6" ] [ text totalStr ]
             , p [ class "list-group-item-text monthly-count col-md-1 col-xs-2" ] [ text dayCount ]
-            , p [ class "list-group-item-text col-md-1 col-xs-3" ]
-                [ button [ class "btn btn-sm btn-danger", onClick (ViewEvent (CreateInvoice dates total count)) ] [ text "Invoice" ] ]
             ]
         , div [ class "row" ]
             [ p [ class "list-group-item-text monthly-chart col-md-8" ] [ barChart monthlyDayCount ]
