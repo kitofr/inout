@@ -11,6 +11,17 @@ defmodule Inout.Web.EventController do
 
   plug :scrub_params, "event" when action in [:create, :update]
 
+  defp get_event(conn, id) do
+    user_id = Session.current_user(conn).id
+    query = from e in Event,
+              join: c in Contract, on: e.contract_id == c.id,
+              where: e.user_id == ^user_id,
+              where: e.id == ^id,
+              preload: [contract: c]
+
+    Repo.one(query)
+  end
+
   def index(conn, _params) do
     user_id = Session.current_user(conn).id
     query = from e in Event,
@@ -67,20 +78,15 @@ defmodule Inout.Web.EventController do
   end
 
   def show(conn, %{"id" => id}) do
-    event = Repo.get!(Event, id)
+    event = get_event(conn, id)
+
     render(conn, "show.html", event: event)
   end
 
   def edit(conn, %{"id" => id}) do
-    user_id = Session.current_user(conn).id
-    query = from e in Event,
-              join: c in Contract, on: e.contract_id == c.id,
-              where: e.user_id == ^user_id,
-              where: e.id == ^id,
-              preload: [contract: c]
-
+    event = get_event(conn, id)
     contracts = Repo.all(from(c in Contract, select: { c.client, c.id }))
-    event = Repo.one(query)
+
     changeset = Event.changeset(event, %{})
     render(conn, "edit.html", event: event, contracts: contracts, changeset: changeset)
   end
@@ -90,9 +96,7 @@ defmodule Inout.Web.EventController do
   end
 
   def update(conn, %{"id" => id, "event" => event_params}) do
-    #TODO Make sure you only update your own events
-    # user_id = Session.current_user(conn).id
-    event = Repo.get!(Event, id)
+    event = get_event(conn, id)
     changeset = Event.changeset(event, event_params)
 
     case Repo.update(changeset) do
@@ -104,8 +108,7 @@ defmodule Inout.Web.EventController do
   end
 
   def delete(conn, %{"id" => id}) do
-    #TODO Make sure you only delete your own events
-    event = Repo.get!(Event, id)
+    event = get_event(conn, id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
