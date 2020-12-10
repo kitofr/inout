@@ -1,6 +1,7 @@
 DOCKER_DB_NAME="$(docker-compose ps -q db)"
 DB_HOSTNAME=inout_dev
 DB_USER=postgres
+DB_PWD=postgres
 LOCAL_DUMP_PATH="latest.dump"
 
 docker-compose up -d db
