@@ -1,15 +1,23 @@
-version: '2'
+version: "3.8"
+
 services:
+    adminer:
+      command: php -S 0.0.0.0:8080 -t /var/www/html
+      depends_on:
+          - db
+      image: adminer:4.7.7-standalone
+      networks:
+        blah:
+      ports:
+        - "8080:8080"
+    db:
+      image: postgres:9.5.12
+      ports:
+        - "5432:5432"
+      networks:
+        blah:
+      volumes:
+        - ./db/data/:/var/lib/postgresql/data/:rw
 
-  db: 
-    image: postgres:9.5.12
-    ports:
-      - "5432:5432"
-    volumes:
-      - .:/tmp/
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+networks:
+    blah:
